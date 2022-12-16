@@ -1,0 +1,170 @@
+﻿@using Main.Control.Core.Models
+@model Main.Control.Core.Models.CampaignDetails
+
+@{
+    ViewBag.Title = "File Upload";
+    bool inValidErrorMessage = false;
+    if (ViewBag.isInvalidTemplate != null)
+    {
+        inValidErrorMessage = (bool)ViewBag.isInvalidTemplate;
+    }
+}
+
+
+<div class="page-header">
+    <div class="page-head">
+        <h2 class="floatL">
+            @ViewBag.Title
+        </h2>
+    </div>
+</div>
+
+<div class="clear">
+</div>
+
+    <div class="col-md-12">
+        @using (Html.BeginForm("FileUploadTechTeam", "Campaign", FormMethod.Post, new { id = "FileUploadTechTeam", enctype = "multipart/form-data" }))
+        {
+            @Html.HiddenFor(m => m.CampaignDetailsId)
+            @Html.HiddenFor(m => m.ProductId)
+            @Html.HiddenFor(m => m.ProductName)
+            @Html.HiddenFor(m => m.CampaignName)
+            @Html.HiddenFor(m => m.DemoGrapicInformation)
+
+            <div class="mainBg">
+
+                @if (inValidErrorMessage)
+                {
+                    <div class="red">Invalid Template</div>
+                }
+
+
+                <div class="">
+                    <div class="">
+
+                        <table class="responsive">
+
+                            <tr>
+                                <td class="labelName">
+                                    <label for="AdminEmailAddress">
+                                        Product:
+                                    </label>
+                                </td>
+                                <td class="headField">
+                                    <b><label>@Model.ProductName</label></b>
+                                </td>
+                            </tr>
+                            <tr class="spacer10"></tr>
+                            <tr>
+                                <td class="labelName">
+                                    <label>
+                                        Campaign Name:
+                                    </label>
+                                </td>
+                                <td class="headField">
+                                    <b><label>@Model.CampaignName</label></b>
+                                </td>
+                            </tr>
+                            <tr class="spacer10"></tr>
+
+
+                            <tr>
+                                <td class="labelName">
+                                    <label>
+                                        <span id="">Demographic Information:</span> 
+                                    </label>
+                                </td>
+                                <td class="headField">
+                                    <b><label>@Model.DemoGrapicInformation</label></b>
+                                </td>
+
+                            </tr>
+                            <tr class="spacer10 techLeadClass"></tr>
+
+                            <tr class="techLeadClass">
+                                <td class="labelName">
+                                    <label>
+                                        <span class="red">*</span>Campaign File:
+                                    </label>
+                                </td>
+                                <td class="headField">
+                                    @Html.TextBox("campaignFile", "", new { type = "file" })
+                                </td>
+
+                            </tr>
+
+                            <tr class="spacer10"></tr>
+
+                            <tr class="techLeadClass">
+                                <td class="labelName">
+                                    <label>
+                                        Notes:
+                                    </label>
+                                </td>
+
+                                <td class="headField">
+                                    @Html.TextAreaFor(m => m.Notes, new { @style = "width:400px;height:200px;"  ,@maxlength = "500", onkeyup = "CalculateRemainingNotesTxt()" })
+                                    <br />
+                                    <i id="iNotesRemaingTxt"></i>
+                                </td>
+
+                            </tr>
+
+                            <tr class="spacer10"></tr>
+
+
+                            <tr>
+                                <td class="headField" colspan="4">
+                                    <div class="taC">
+                                        <a class="btn btn-cancel" onclick="cancelUpload()">Cancel</a>
+                                        <a class="btn btn-primary" onclick="submitForm()" >Upload<i id="spinner" style="display:none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+<div class="clear">
+</div>
+
+<script>
+
+    $('#FileUploadTechTeam').validate({
+        rules: {
+            campaignFile: {
+                required: true
+            }
+
+        },
+        messages: {
+
+            campaignFile: {
+                required: "Please Select a File"
+            },
+
+        }
+    });
+
+
+    function submitForm() {
+        if ($("#FileUploadTechTeam").valid()) {
+            $("#spinner").show();
+            $("#FileUploadTechTeam").submit();
+        }
+    }
+
+    function cancelUpload() {
+        var id = 2;
+        location.href = "/Campaign/Index/" + id;
+    }
+
+    function CalculateRemainingNotesTxt() {
+        var maxLength = parseInt($("#Notes").attr("maxlength"));
+        var remailningTxt = maxLength - $("#Notes").val().length;
+        $("#iNotesRemaingTxt").html(remailningTxt + "/" + maxLength.toString() + " characters left");
+    }
+</script>

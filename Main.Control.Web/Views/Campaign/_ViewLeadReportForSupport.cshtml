@@ -1,0 +1,122 @@
+﻿@model List<Main.Control.Core.Models.LeadDetails>
+@using Main.Control.Web.Utilities
+@using Main.Control.Core.Models
+@{
+    Layout = null;
+}
+
+
+<style>
+    .paginate_button{padding: 2px 7px !important;}
+
+    .paginate_button:hover{ background: #d27317 !important;
+    border: 1px solid #d27317 !important;}
+
+</style>
+
+
+@{
+    string campaignName = (TempData["CampaignName"] != null ? TempData["CampaignName"].ToString() + "-Report" : "Report");
+}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"></button>
+    
+    <h4 class="modal-title">@campaignName</h4>
+</div>
+<div class="modal-body">
+    <div class="codeIcon">
+        <div class="responsive ">
+            <div class="clear"></div>
+            <div class="">
+                <table class="table table-bordered table_design" id="leadReportList">
+                    <thead class="table_head">
+                        <tr>
+                            <th class="dash_table_head">
+                                Business
+                            </th>
+                                <th class="dash_table_head">
+                                    Method of Contact
+                                </th>
+                            <th class="dash_table_head taC">
+                                Comments
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="table_body">
+                        @if (Model != null && Model.Count > 0)
+                        {
+                            foreach (var items in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(items.BusinessName))
+                                        {
+                                            @Html.Raw(items.BusinessName)
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("-")
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (items.MethodOfContact == MethodOfContact.Mail)
+                                        {
+
+                                            <span>Mail</span>
+                                        }
+                                        else if (items.MethodOfContact == MethodOfContact.Phone || items.MethodOfContact==MethodOfContact.CallBack||items.MethodOfContact==MethodOfContact.DoNotContact || items.MethodOfContact==MethodOfContact.InvoiceSent ||items.MethodOfContact==MethodOfContact.LeftVM|| items.MethodOfContact==MethodOfContact.NotInterested)
+                                        {
+                                            <span>Phone</span>
+                                            @*if (items.TypeofCall == TypeofCall.Spoke)
+                                            {
+                                                <span>Spoke</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Voice Mail</span>
+                                            }*@
+                                        }
+                                        else
+                                        {
+                                            <span>-</span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(items.Comments))
+                                        {
+                                                @Html.Raw(items.Comments)
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("-")
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer taC">
+    <a class="btn btn-cancel" data-dismiss="modal">Cancel</a>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#leadReportList').dataTable({
+            "iDisplayLength": 10,
+            "language": {
+                "emptyTable": "You haven't contacted a user yet"
+            }
+        });
+       });
+</script>
+
+
+

@@ -1,0 +1,739 @@
+﻿@model Main.Control.Core.Models.CampaignDetails
+@using Main.Control.Core.Models
+@using Main.Control.Web.Utilities
+
+@{
+    bool isLive = Utility.GetBool(Utility.GetAppSettings("IsLive"));
+    ViewBag.Title = "Create Campaign";
+    List<AdminUser> adminSupportUsersList = new List<AdminUser>();
+    if (ViewBag.SupportUsersList != null && isLive)
+    {
+        adminSupportUsersList = (List<AdminUser>)ViewBag.SupportUsersList;
+        adminSupportUsersList = adminSupportUsersList.Where(x => !string.IsNullOrWhiteSpace(x.AdminLocation) && x.AdminLocation == Location.USA.ToString()).ToList();
+    }
+    else if (ViewBag.SupportUsersList != null && !isLive)
+    {
+        adminSupportUsersList = (List<AdminUser>)ViewBag.SupportUsersList;
+    }
+    bool inValidErrorMessage = false;
+    if (ViewBag.inValidErrorMessage != null)
+    {
+        inValidErrorMessage = (bool)ViewBag.inValidErrorMessage;
+    }
+}
+
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+
+<style>
+    .multiDrop .dropdown dt a:focus {
+        border-color: #000;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(0, 0, 0, 0.3);
+        outline: 0 none;
+    }
+
+    .multiDrop li {
+        padding: 4px 5px;
+    }
+
+        .multiDrop li:hover, .multiDrop li:focus {
+            background: #1C5BB1;
+            color: #fff;
+        }
+
+    .multiDrop input[type="radio"], .multiDrop input[type="checkbox"] {
+        margin: 2px 4px 0 4px;
+        vertical-align: top;
+        cursor: pointer;
+    }
+
+    .multiDrop .dropdown {
+        position: absolute;
+        transform: translateY(-50%);
+        width: 100%;
+        z-index: 99 !important;
+    }
+
+
+        .multiDrop .dropdown dd,
+        .multiDrop .dropdown dt {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .multiDrop .dropdown ul {
+            margin: -1px 0 0 0;
+        }
+
+        .multiDrop .dropdown dd {
+            position: relative;
+        }
+
+        .multiDrop .dropdown a,
+        .multiDrop .dropdown a:visited {
+            color: #fff;
+            text-decoration: none;
+            outline: none;
+            font-size: 12px;
+        }
+
+        .multiDrop .dropdown dt a {
+            background-color: #fff;
+            padding: 10px 20px 7px 10px;
+            min-height: 22px;
+            line-height: 14px;
+            overflow: hidden;
+            border: 0;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            width: 100%;
+            display: block;
+            color: #000;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 400;
+            position: relative;
+        }
+
+            .multiDrop .dropdown dt a:before {
+                content: "\f107";
+                position: absolute;
+                font-family: 'FontAwesome';
+                padding: 10px;
+                right: 0;
+                top: 0;
+                font-weight: bold;
+            }
+
+            .multiDrop .dropdown dt a span,
+            .multiDrop .multiSel span {
+                cursor: pointer;
+                display: inline-block;
+                padding: 0 3px 2px 0;
+                display: inline;
+            }
+
+        .multiDrop .dropdown dd ul {
+            background-color: #fff;
+            color: #000;
+            display: none;
+            left: 0px;
+            padding: 0;
+            position: absolute;
+            top: 2px;
+            width: 100%;
+            list-style: none;
+            height: 100px;
+            overflow: auto;
+            border: 1px solid #ccc;
+            margin-top: -4px;
+        }
+
+    .multiDrop dropdown span.value {
+        display: none;
+    }
+
+    .multiDrop .dropdown dd ul li a {
+        padding: 5px;
+        display: block;
+    }
+
+        .multiDrop .dropdown dd ul li a:hover {
+            background-color: #fff;
+        }
+
+
+    .labelName + label {
+        margin-bottom: 0;
+    }
+
+    .labelName {
+        width: 300px;
+    }
+</style>
+<div class="page-header">
+    <div class="page-head">
+        <h2 class="floatL">
+            <span>   @ViewBag.Title</span>
+        </h2>
+    </div>
+
+    @if (TempData["FileUploadError"] != null)
+    {
+        <div class="spacer10"></div>
+        <div id="UploadErrorMsg" class="taC pT10">
+            <label class="errorMsg">@TempData["FileUploadError"]</label>
+        </div>
+        TempData["FileUploadError"] = null;
+    }
+    
+    @if (!string.IsNullOrWhiteSpace(Model.CampaignErrorStatus))
+    {
+        <div class="spacer10"></div>
+        <div id="UploadErrorMsg" class="taC pT10">
+            <label class="errorMsg">@Model.CampaignErrorStatus</label>
+        </div>        
+    }
+</div>
+<div class="clear">
+</div>
+<div class="col-md-12">
+    @using (Html.BeginForm("CreateCampaign", "Campaign", FormMethod.Post, new { id = "CreateCampaign", enctype = "multipart/form-data" }))
+    {
+        @Html.HiddenFor(m => m.CampaignDetailsId)
+        @Html.HiddenFor(m => m.ProductId)
+        @Html.HiddenFor(m => m.FilePath)
+        @Html.HiddenFor(m => m.ProductName)
+        @Html.HiddenFor(m => m.Notes)
+        @Html.HiddenFor(m => m.NoOfLeads)
+        @Html.HiddenFor(m => m.CampaignType)
+        @Html.HiddenFor(m => m.TechTeamStatus)
+        @Html.HiddenFor(m => m.TechTeamFileUploadedTime)
+
+        @Html.Hidden("SupportUserIds")
+        if (inValidErrorMessage)
+        {
+            <div class="red">Invalid Template</div>
+        }
+        
+        
+        
+
+        <div class="mainBg">
+            <div class="minBox">
+                <table class="responsive centerField">
+                    <tr>
+                        <td class="labelName">
+                            Product:
+                        </td>
+                        <td class="fieldText">
+                            <b>@Model.ProductName</b>
+                            @*   @if (Model.CampaignDetailsId == 0)*@
+                            @*  {*@
+                            <span class="switch_icon">
+                                <i class="fa fa-exchange" aria-hidden="true" title="Change Product" data-toggle="tooltip" onclick="createCampaign()"></i>
+                            </span>
+                            @*   }*@
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="spacer15"></td>
+                    </tr>
+                    <tr>
+                        <td class="labelName">
+                            <label>
+                                <span class="red">*</span>Campaign Name:
+                            </label>
+                        </td>
+                        <td class="headField">
+                            @Html.TextBoxFor(m => m.CampaignName, new { @maxlength = 50, @style = "width:100%" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="spacer15"></td>
+                    </tr>
+                    @if (Model.TechTeamStatus == TechTeamStatus.FILE_UPLOADED.ToString() && Model.CampaignDetailsId > 0)
+                    {
+                        @Html.HiddenFor(m => m.IsUploadFileAssign)
+                        @Html.HiddenFor(m => m.DemoGrapicInformation)
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="labelName"></td>
+                            <td class="headField" colspan="4">
+                                <span>
+                                    @Html.RadioButton("IsUploadFileAssign", true, Model.IsUploadFileAssign, new { @id = "UploadAssign", @onchange = "FileUploadType(true)", @class = "css-radiobox" })
+                                    <label for="UploadAssign" class="css-labelradio">
+                                        Upload File and Assign
+                                    </label>
+                                </span>
+                                <span class="pLeft15">
+                                    @Html.RadioButton("IsUploadFileAssign", false, Model.IsUploadFileAssign, new { @id = "RequestTeam", @onchange = "FileUploadType(false)", @class = "css-radiobox" })
+                                    <label for="RequestTeam" class="css-labelradio">
+                                        Request Tech Team
+                                    </label>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="spacer15"></td>
+                        </tr>
+
+                    }
+
+
+                    <tr class="demoTR">
+                        <td class="labelName">
+                            <label>
+                                <span class="red">*</span><span id="goalTxt">Demographic Information</span>:
+                            </label>
+                        </td>
+                        <td class="fieldName">
+                            @if (Model.TechTeamStatus != TechTeamStatus.FILE_UPLOADED.ToString())
+                            {
+                                @Html.TextAreaFor(m => m.DemoGrapicInformation, new { @tabindex = 1014, @style = "width:100%;", @maxlength = "500", onkeyup = "CalculateRemainingDemoGraphicTxt()" })
+                            }
+                            <i id="iDemoGraphicRemaingTxt"></i>
+                        </td>
+                        <td class="labelName" colspan="2"></td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4" class="spacer5"></td>
+                    </tr>
+
+
+                    <tr class="goalsTR">
+                        <td class="labelName">
+                            <label>
+                                <span class="red">*</span><span id="goalTxt">Goals</span>:
+                            </label>
+
+
+                        </td>
+                        <td class="headField">
+                            @Html.TextAreaFor(m => m.Goals, new { @tabindex = 1014, @style = "width:100%;", @maxlength = "1000", onkeyup = "CalculateRemainingTxt()" })
+                            <i id="iGoalsRemaingTxt"></i>
+                        </td>
+                        <td class="labelName" colspan="2"></td>
+                    </tr>
+                    <tr class="goalsTR">
+                        <td colspan="4" class="spacer15"></td>
+                    </tr>
+
+
+                    <tr class="techLeadClass">
+                        <td class="labelName">
+                            <span class="red">*</span>Campaign Period:
+                        </td>
+                        <td class="headField" colspan="4">
+                            @Html.TextBoxFor(m => m.CampaignStartDate, new { @placeholder = "mm/dd/yyyy" })
+                            <span class="middleText">  To:</span>
+                            @Html.TextBoxFor(m => m.CampaignEndDate, new { @placeholder = "mm/dd/yyyy" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="spacer15"></td>
+                    </tr>
+                    <tr class="techLeadClass">
+                        <td class="labelName">
+                            <label>
+                                <span class="red">*</span>Campaign Team:
+                            </label>
+                        </td>
+                        <td class="headField multiDrop" id="dropdownTd">
+                            @if (adminSupportUsersList != null && adminSupportUsersList.Count > 0)
+                            {
+                                @Html.Hidden("listCheckbox")
+
+
+                                <label for="listCheckbox" class="error" style="display:none" id="listOfChecklabel">Please Select Team</label>
+
+
+                                <select id="insightList" multiple="multiple">
+                                    @foreach (var suportusers in adminSupportUsersList)
+                                    {
+                                        <option value="@suportusers.UserId">@suportusers.UserName</option>
+                                    }
+
+                                </select>
+
+                                @*<dl class="dropdown dropdown_drop">
+                                        <dt>
+                                            <a href="javascript:void(0)" tabindex="1016">
+                                                <span class="hida">Select Team</span>
+                                                <span class="multiSel"></span>
+                                            </a>
+                                        </dt>
+                                        <dd>
+                                            <div class="mutliSelect">
+                                                <ul>
+
+                                                </ul>
+                                            </div>
+                                        </dd>
+                                    </dl>*@
+                            }
+                        </td>
+                        <td class="labelName" colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="spacer15"></td>
+                    </tr>
+                    <tr class="techLeadClass">
+                        <td class="labelName">
+                            <label>
+                                <span class="red">*</span>Campaign Type:
+                            </label>
+                        </td>
+                        <td class="headField" colspan="3">
+                            <span>
+                                @Html.RadioButton("IsLead", true, Model.IsLead, new { @id = "CampaignLead", @class = "css-radiobox" })
+                                <label for="CampaignLead" class="css-labelradio">
+                                    Leads
+                                </label>
+                            </span>
+                            <span class="pLeft15">
+                                @Html.RadioButton("IsLead", false, Model.IsLead, new { @id = "CampaignClient", @class = "css-radiobox" })
+                                <label for="CampaignClient" class="css-labelradio">
+                                    Clients
+                                </label>
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr class="spacer15 techLeadClass"></tr>
+                    @if (Model.TechTeamStatus == TechTeamStatus.FILE_UPLOADED.ToString() && Model.CampaignDetailsId > 0)
+                    {
+                        @Html.HiddenFor(m => m.CampaignFileName)
+                        <tr class="techLeadClass">
+                            <td class="labelName">Campaign File:</td>
+                            <td class="headField">@Model.CampaignFileName</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="spacer15"></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr class="techLeadClass">
+                            <td class="labelName">
+                                <label>
+                                    <span class="red">*</span>Campaign File:
+                                </label>
+                            </td>
+                            <td class="headField downWrap" colspan="4">
+                                <span>
+                                    @Html.TextBox("campaignFile", "", new { type = "file" })
+                                </span>
+                                <span>
+                                    <a tabindex="1032" onclick="downloadTemplate()" class="btn btn_sm btn-third mLeft5" style="cursor:pointer">Download Template</a>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="spacer15"></td>
+                        </tr>
+                    }
+                </table>
+
+
+            </div>
+            <div class="spacer20"></div>
+            <div class="taC">
+                <a tabindex="1034" class="btn btn-cancel" onclick="cancelUpload()">Cancel</a>
+                <a tabindex="1033" class="btn btn-primary" onclick="submitForm()" id="btnsubmit">
+                    <span id="uploadBtntxt">Upload</span>
+                    <i id="spinner" style="display:none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i>
+                </a>
+
+                <div class="clearfix"></div>
+            </div>
+
+
+        </div>
+    }
+</div>
+<script>
+
+    var validation = "";
+    var CampaignName = $("#CampaignName").val();
+    var Goals = $("#Goals").val();
+    $(function () {
+        $('#UploadErrorMsg').fadeOut(8000);
+        $('[data-toggle="tooltip"]').tooltip();
+        $('#insightList').multiselect({
+            enableFiltering: true,
+            enableCaseInsensitiveFiltering: true,
+            nonSelectedText: 'Select Team',
+            maxHeight: 260
+        });
+
+        $("#CampaignStartDate").datetimepicker({ format: 'MM/DD/YYYY', minDate: moment().millisecond(0).second(0).minute(0).hour(0) });
+        $("#CampaignEndDate").datetimepicker({ format: 'MM/DD/YYYY', minDate: moment().millisecond(0).second(0).minute(0).hour(0) });
+
+        if (parseInt('@Model.CampaignDetailsId') > 0) {
+            if ('@Model.IsUploadFileAssign'.toLowerCase() == "true") {
+                FileUploadType(true);
+                $("#UploadAssign").attr("checked", true);
+            }
+            else {
+                FileUploadType(false);
+                $("#RequestTeam").attr("checked", true);
+            }
+        }
+        else {
+            $("#UploadAssign").attr("checked", true);
+            $(".goalsTR").show();
+            $(".demoTR").hide();
+            $("#uploadBtntxt").text('Upload & Next');
+        }
+
+
+        if ('@Model.CampaignType' == '@CampaignType.LEADS') {
+            $("#CampaignLead").attr("checked", true);
+        }
+        else if ('@Model.CampaignType' == '@CampaignType.CLIENTS') {
+            $("#CampaignClient").attr("checked", true);
+        }
+        else {
+            $("#CampaignLead").attr("checked", true);
+        }
+
+
+    });
+
+    $(".dropdown.dropdown_drop dt a").on('click', function () {
+        $(".dropdown.dropdown_drop dd ul").slideToggle('fast');
+    });
+
+    $(".dropdown.dropdown_drop dd ul li a").on('click', function () {
+        $(".dropdown.dropdown_drop dd ul").hide();
+    });
+
+    $('.mutliSelect input[type="checkbox"]:checked').each(function () {
+        var title = $(this).closest('.mutliSelect').find('input[type="checkbox"]').val(),
+        title = $(this).val() + ",";
+
+        if ($(this).is(':checked')) {
+            var html = '<span title="' + title + '">' + title + '</span>';
+            $('.multiSel').append(html);
+            $(".hida").hide();
+            $("#listOfChecklabel").hide();
+        } else {
+            $('span[title="' + title + '"]').remove();
+            var ret = $(".hida");
+            $('.dropdown dt a').append(ret);
+        }
+    });
+
+    function getSelectedValue(id) {
+        return $("#" + id).find("dt a span.value").html();
+    }
+
+    $(document).bind('click', function (e) {
+        var $clicked = $(e.target);
+        if (!$clicked.parents().hasClass("dropdown")) $(".dropdown dd ul").hide();
+    });
+
+    $('.mutliSelect input[type="checkbox"]').on('click', function () {
+
+        var selected = [];
+        $('.mutliSelect input:checked').each(function () {
+            selected.push($(this).val());
+        });
+        $('.multiSel').html('');
+        var selectedTxt = selected.join(", ");
+        var html = '<span title="' + selectedTxt + '">' + selectedTxt + '</span>';
+        $('.multiSel').append(html);
+        if (selected.length == 0) {
+            var ret = $(".hida");
+            $('.dropdown dt a').append(ret);
+
+        }
+        else {
+            $(".hida").hide();
+            $("#listOfChecklabel").hide();
+
+        }
+
+
+    });
+
+    validation = $('#CreateCampaign').validate({
+        rules: {
+            CampaignName: {
+                required: true
+            },
+            CampaignStartDate: {
+                required: true
+            },
+            CampaignEndDate: {
+                required: true,
+                CheckDate: true
+            },
+            Goals: {
+                required: true
+            },
+            IsUploadFileAssign: {
+                required: function () {
+                    if ($("#IsUploadFileAssign").is(":checked") || $("#IsRequestTechTeam").is(":checked")) {
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            },
+            listCheckbox: {
+                required: function () {
+
+                    if ($('.mutliSelect input[type="checkbox"]:checked').length > 0) {
+
+                        return false;
+                    }
+                    else {
+
+                        return true;
+                    }
+                }
+            },
+            campaignFile: {
+                required: true
+            },
+            DemoGrapicInformation: {
+                required: function () {
+                    if ($("#IsUploadFileAssign").is(":checked")) {
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+
+        },
+        messages: {
+            CampaignName: {
+                required: "Please enter Campaign Name"
+            },
+            Goals: {
+                required: "Please enter Goals"
+            },
+            CampaignStartDate: {
+                required: "Please select Start Date"
+            },
+            CampaignEndDate: {
+                required: "Please select End Date",
+                CheckDate: "End date should be greater than start date."
+            },
+            IsUploadFileAssign: {
+                required: "Please select any of the checkbox"
+            },
+            campaignFile: {
+                required: "Please select a File"
+            },
+            listCheckbox: {
+                required: "Please select Team"
+            },
+            DemoGrapicInformation: {
+                required: "Please enter Demographic Information"
+            }
+        }
+    });
+
+
+    function submitForm() {
+        $("#btnsubmit").attr("disabled", "disabled");
+        var userIds = [];
+        $('#insightList option:selected').each(function () {
+            userIds.push($(this).val());
+        });
+
+
+        $("#SupportUserIds").val(userIds.join(","));
+
+        if ($("#CreateCampaign").valid()) {
+            if ($('#insightList option:selected').length > 0 || $("#RequestTeam").is(":checked")) {
+                $("#listOfChecklabel").hide();
+                $("#spinner").show();
+                $("#CreateCampaign").submit();
+            }
+            else {
+                $("#listOfChecklabel").show();
+            }
+
+        }
+        else {
+            $("#btnsubmit").attr("disabled", false);
+            var length = $('#insightList option:selected').length;
+            if (length == 0) {
+                $("#listOfChecklabel").show();
+            }
+
+
+        }
+
+    }
+
+    function cancelUpload() {
+        location.href = "/Campaign/Index";
+    }
+
+
+    function FileUploadType(isChecked) {
+        //$("#CampaignName").val('');
+        //$("#Goals").val('');
+        validation.resetForm();
+        if (isChecked) {
+            $(".techLeadClass").show();
+            $(".goalsTR").show();
+            $(".demoTR").hide();
+            $("#uploadBtntxt").text('Upload & Next');
+        }
+        else {
+            if ('@Model.TechTeamStatus' == '@TechTeamStatus.FILE_UPLOADED.ToString()') {
+                $(".techLeadClass").show();
+                $(".goalsTR").show();
+                $(".demoTR").hide();
+                $("#uploadBtntxt").text('Upload');
+            }
+            else {
+                $("#uploadBtntxt").text('Send Request');
+                $(".goalsTR").hide();
+                $(".demoTR").show();
+                $(".techLeadClass").hide();
+            }
+        }
+    }
+    jQuery.validator.addMethod("CheckDate", function (value, element) {
+        var _FromDate = new Date($('#CampaignStartDate').val());
+        var _ToDate = new Date($('#CampaignEndDate').val());
+        if ($('#CampaignStartDate').val() != null && $('#CampaignStartDate').val() != '' && $('#CampaignStartDate').val() != undefined && $('#CampaignEndDate').val() != null && $('#CampaignEndDate').val() != '' && $('#CampaignEndDate').val() != undefined) {
+            if (_FromDate <= _ToDate) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return true;
+        }
+    });
+
+    function createCampaign() {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/_CampaignAccessProduct",
+            success: function (result) {
+                $("#ModelBody").html(result);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-800');
+            }
+        });
+    }
+
+
+    function downloadTemplate() {
+        var templateName = "CampaignTemplate.xlsx";
+        location.href = "/Content/Templates/Campaign Templates/" + templateName;
+    }
+
+    function CalculateRemainingTxt() {
+        var maxLength = parseInt($("#Goals").attr("maxlength"));
+        var remailningTxt = maxLength - $("#Goals").val().length;
+        $("#iGoalsRemaingTxt").html(remailningTxt + "/" + maxLength.toString() + " characters left");
+    }
+
+    function CalculateRemainingDemoGraphicTxt() {
+        var maxLength = parseInt($("#DemoGrapicInformation").attr("maxlength"));
+        var remailningTxt = maxLength - $("#DemoGrapicInformation").val().length;
+        $("#iDemoGraphicRemaingTxt").html(remailningTxt + "/" + maxLength.toString() + " characters left");
+    }
+
+</script>

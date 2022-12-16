@@ -1,0 +1,108 @@
+﻿@model Main.Control.Core.Models.CampaignDetails
+@using Main.Control.Web.Utilities
+@using Main.Control.Core.Models
+@{
+    ViewBag.Title = "View Campaign Leads";
+    var roles = Utility.GetAdminRoleFromSession();
+    long campaignDetailId = ViewData["campaignDetailId"] != null ? Utility.GetLong(ViewData["campaignDetailId"]) : 0;
+}
+@{
+    string campaignName = (TempData["CampaignName"] != null ? TempData["CampaignName"].ToString() : string.Empty);
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(m => m.CampaignDetailsId)
+    @Html.HiddenFor(m => m.StateCode)
+    @Html.HiddenFor(m => m.TimeZone)
+    @Html.Hidden("SupportUserId", Model.CampaignSupportUserDetails.SupportUserId)
+    @Html.HiddenFor(m => m.CampaignDetailsId)
+    @Html.Hidden("isSkipped", (bool)ViewBag.isSkipped)
+    
+}
+<div class="page-header ">
+    <div class="page-head">
+        <h2>
+            <span>Campaign- @campaignName</span>
+
+            <span class="floatR">
+                <a href="javascript:void(0)" class="prev_1 ctrl_btn BackbtntopButtom" onclick="Back()"> Previous </a>
+                <a href="javascript:void(0)" class="next_1 ctrl_btn Nextbtntopbuttom" onclick="Skip();"> Next</a>
+            </span>
+            <a class="btn btn-primary floatR mLeft10" style="margin-top:0 !important" href="/Campaign/Index/3">Go To Dashboard</a>
+            @if (roles == AdminRoleType.Manager.ToString() || roles == AdminRoleType.Administrator.ToString())
+            {
+            <select class="btn btn-primary floatR mBot10" style="margin-top:0 !important" id="selectReport" name="Reports">
+                <option value="default">Reports</option>
+            <option value="CallBack">Call Back</option>
+            <option value="LeftVM">Left VM</option>
+            <option value="InvoiceSent">Invoice Sent</option>
+            <option value="NotInterested">Not Interested</option>
+            <option value="DoNotContact">Do Not Contact</option>
+            </select>
+           }
+        </h2>
+    </div>
+
+</div>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="details">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="details_1">
+                <i class="fa fa-1x fa-user"></i><span id="contactnameText"></span>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="details_1">
+                <i class="fa fa-1x fa-university"></i><span id="businessnameText"></span>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="details_1">
+                <i class="fa fa-1x fa-phone"></i><span id="contactNametxt"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="details" id="FollowUpDetials" style="display:none">
+        
+    </div>
+</div>
+
+<div id="divLeadsDetails" class="col-md-5 col-sm-4 col-xs-12 pRight0">
+    <h3 class="h4_head"><span class="taL">Lead Details</span><span style="float:right;margin-right:70px;">(<span id="currentUsing"></span>/<span id="totalUsing"></span>)</span> </h3>
+    @if (Model != null && Model.CampaignSupportUserDetails != null)
+    {
+        { Html.RenderAction("_LeadsDetails", "Campaign", new { id = Model.CampaignDetailsId, id2 = Model.CampaignSupportUserDetails.SupportUserId, id3 = Model.StateCode, timeZone = Model.TimeZone, id4 = ViewBag.isSkipped }); }
+    }
+</div>
+
+<div class="col-md-7 col-sm-8 col-xs-12">
+
+    <div id="divCommunication">
+        @*@{Html.RenderAction("_Communication", "Campaign", new { id = Model.CampaignDetailsId, id2 = Model.CampaignSupportUserDetails.SupportUserId, id3 = Model.StateCode, timeZone = Model.TimeZone,id4=Model.cam });}*@
+    </div>
+    <span class="floatR">
+        <a href="javascript:void(0)" class="prev_1 ctrl_btn BackbtntopButtom" onclick="Back()"> Previous </a>
+        <a href="javascript:void(0)" class="next_1 ctrl_btn Nextbtntopbuttom" onclick="Skip();"> Next</a>
+    </span>
+</div>
+
+<div class="clearfix"></div>
+
+<script lang="javascript" type="text/javascript">
+
+    $(function () {
+        $("#selectReport").change(function () {
+            var selectedOption = $(this).children("option:selected").val();
+            if (selectedOption != "default") {
+                location.href = "/Campaign/DownloadCampaignReport?selectedOption=" + selectedOption + "&campaignDetailId=" + '@campaignDetailId';
+            }
+        });
+    });
+
+</script>

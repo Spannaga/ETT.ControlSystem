@@ -1,0 +1,184 @@
+﻿@model Main.Control.Web.Models.AdminUserRoleUI
+@{
+    ViewBag.Title = "_ViewAdminProjectRoles";
+}
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"></button>
+    <h4 class="modal-title">Admin Roles</h4>
+</div>
+<div class="modal-body" style="border-radius:0px 0px 6px 6px;">
+    <div class="formTable" style="max-height:500px; overflow:auto;">
+
+        <div>
+            <table width="100%" height="370px;" style="border: 1px solid #cadac3; background-color: #000000">
+                <tr>
+                    <td style="width: 75%; vertical-align: top">
+                        <div>
+                            <h4>Biz.SpanControl.Com</h4>
+                            <table id="LeadLogList1" class="listGrid">
+                                <thead>
+                                    <tr>
+
+                                        <th width="50%">
+                                            Product
+                                        </th>
+                                        <th width="40%">
+                                            Role
+                                        </th>
+
+                                        <th width="10%">
+                                            Action
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.AdminUserRoleList.Count() > 0)
+                                    {
+                                        foreach (var item in Model.AdminUserRoleList.Where(a => a.AdminCategoryId == 1))
+                                        {
+                                            <tr>
+
+                                                <td>
+                                                    @Html.Raw(item.ProjectName)
+                                                </td>
+                                                <td>
+                                                    @Html.Raw(item.Role)
+                                                </td>
+                                                <td>
+                                                    @*<a href="javascript:void(0);" title="Edit" name="Edit" onclick="EditUser(@item.AdminUserRoleId);" id="a3" class="edit floatL mRight5">Edit</a>*@
+                                                    <a href="javascript:void(0);" title="Delete" name="Delete" onclick="Deleteuser(@item.AdminUserRoleId);" class="delete floatL">Delete</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                            <h4>www.MainControl.Com</h4>
+                            <table id="LeadLogList2" class="listGrid">
+                                <thead>
+                                    <tr>
+
+                                        <th width="50%">
+                                            Product
+                                        </th>
+                                        <th width="40%">
+                                            Role
+                                        </th>
+
+                                        <th width="10%">
+                                            Action
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.AdminUserRoleList.Count() > 0)
+                                    {
+                                        foreach (var item in Model.AdminUserRoleList.Where(a => a.AdminCategoryId == 2))
+                                        {
+                                            <tr>
+
+                                                <td>
+                                                    @Html.Raw(item.ProjectName)
+                                                </td>
+                                                <td>
+                                                    @Html.Raw(item.Role)
+                                                </td>
+                                                <td>
+                                                    @*<a href="javascript:void(0);" title="Edit" name="Edit" onclick="EditUser(@item.AdminUserRoleId);" id="a3" class="edit floatL mRight5">Edit</a>*@
+
+                                                    <a href="javascript:void(0);" title="Delete" name="Delete" onclick="Deleteuser(@item.AdminUserRoleId);" class="delete floatL">Delete</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                            <h4>Tax.SpanControl.Com</h4>
+                            <table id="LeadLogList3" class="listGrid">
+                                <thead>
+                                    <tr>
+                                        <th width="50%">
+                                            Product
+                                        </th>
+                                        <th width="40%">
+                                            Role
+                                        </th>
+
+                                        <th width="10%">
+                                            Action
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.AdminUserRoleList.Count() > 0)
+                                    {
+                                        foreach (var item in Model.AdminUserRoleList.Where(a => a.AdminCategoryId == 3))
+                                        {
+                                            <tr>
+
+                                                <td>
+                                                    @Html.Raw(item.ProjectName)
+                                                </td>
+                                                <td>
+                                                    @Html.Raw(item.Role)
+                                                </td>
+                                                <td>
+                                                    @*<a href="javascript:void(0);" title="Edit" name="Edit" onclick="EditUser(@item.AdminUserRoleId);" id="a3" class="edit floatL mRight5">Edit</a>*@
+
+                                                    <a href="javascript:void(0);" title="Delete" name="Delete" onclick="Deleteuser(@item.AdminUserRoleId);" class="delete floatL">Delete</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" lang="javascript">
+    function EditUser(Id) {
+        location.href = "/Admin/CreateProjectRole/" + @Model.AdminUserId + "?id2=" + Id;
+    }
+
+    function Deleteuser(Id) {
+        bootbox.dialog({
+            message: "Are you sure you want to Delete Project Role?",
+            title: "Delete Role?",
+            buttons: {
+                cancel: {
+                    label: "Cancel",
+                    className: "btn-cancel floatL mTop3"
+                },
+                delete: {
+                    label: "Delete",
+                    className: "btn-org",
+                    callback: function () {
+                        $.getJSON("/Admin/DeleteProjectRole/?t=" + new Date(), { aId: Id },
+                         function (data) {
+                             if (data == true) {
+                                 $('#lblResult').show().removeClass('error').addClass('success').html('A deleted successfully.');
+                                 // location.href = "/Admin/CreateProjectRole";
+                                 location.reload();
+                             }
+                             else {
+                                 $('#lblResult').show().removeClass('success').addClass('error').html('Error while Deleting, Please Try Again.');
+                             }
+                         });
+                    }
+                }
+            }
+        }).find(".modal-dialog").removeClass("edit-modal-dialog");
+
+    }
+</script>

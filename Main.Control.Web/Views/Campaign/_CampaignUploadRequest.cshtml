@@ -1,0 +1,174 @@
+﻿@model List<Main.Control.Core.Models.CampaignDetails>
+@using Main.Control.Web.Utilities
+@using Main.Control.Core.Models
+<div>
+    @if(Model != null && Model.Count > 0)
+    {
+        foreach(var campaignDetails in Model)
+        {
+            string startdate = string.Empty;
+            string enddate = string.Empty;
+            if(campaignDetails.CampaignStartDate != null && campaignDetails.CampaignStartDate > DateTime.MinValue)
+            {
+                startdate = Utility.GetDateTime(campaignDetails.CampaignStartDate).ToString("MM/dd/yyyy");
+            }
+            if(campaignDetails.CampaignEndDate != null && campaignDetails.CampaignEndDate > DateTime.MinValue)
+            {
+                enddate = Utility.GetDateTime(campaignDetails.CampaignEndDate).ToString("MM/dd/yyyy");
+            }
+
+            string campaignPeroid = startdate + " to " + enddate;
+
+            decimal completedPercentage = 0;
+
+            if(campaignDetails.CampaignSupportUserDetailsList != null && campaignDetails.CampaignSupportUserDetailsList.Count > 0)
+            {
+                completedPercentage = (campaignDetails.CampaignSupportUserDetailsList.Sum(m => m.NoOfCompleted ?? 0)) / (campaignDetails.NoOfLeads);
+            }
+            if(string.IsNullOrWhiteSpace(campaignDetails.FilePath))
+            {
+                <div class="table-responsive dashboardTable mBot15">
+                    <table class="table_adp" border="1">
+                        <tr>
+                            <td class="Campaign_logo">
+                                @if(campaignDetails.AdminProjectId == (int)Project.UnitWise)
+                                {
+                                    <img src="~/Content/Images/uwLogo.gif" class="width_100px" alt="UnitWise" title="UnitWise" />
+
+                                }
+
+                                else if(campaignDetails.AdminProjectId == (int)Project.SpanPlan)
+                                {
+                                    <img src="~/Content/Images/spLogo.gif" alt="Inspherio" title="Inspherio" class="width_100px" />
+                                }
+                                else if(campaignDetails.AdminProjectId == (int)Project.ExpressTruckTax)
+                                {
+                                    <img src="~/Content/Images/ETT.png" alt="ETT" title="Express Truck Tax" class="width_100px" />
+
+                                }
+                                else if(campaignDetails.AdminProjectId == (int)Project.ExpressIFTA)
+                                {
+                                    <img src="~/Content/Images/IFTA.png" alt="EIFTA" title="Express IFTA" class="width_100px" />
+                                }
+                                else if (campaignDetails.AdminProjectId == (int)Project.ExpressTaxFilings)
+                                {
+                                    <img src="~/Content/Images/ETF.png" alt="ETF" title="Express Tax Filings" class="width_100px" />
+                                }
+                                else if (campaignDetails.AdminProjectId == (int)Project.ExpressExtension)
+                                {
+                                    <img src="~/Content/Images/EET.png" alt="EE" title="Express Extension" class="width_100px" />
+                                }
+                                else if(campaignDetails.AdminProjectId == (int)Project.Express990)
+                                {
+                                    <img src="~/Content/Images/E990.png" alt="ExpressTaxExempt" title="ExpressTaxExempt" class="width_100px" />
+                                }
+
+                                else if(campaignDetails.AdminProjectId == (int)Project.TruckLogics)
+                                {
+                                    <img src="~/Content/Images/ETL.png" alt="Truck Logics" title="Truck Logics" class="width_100px" />
+                                }
+                                else if(campaignDetails.AdminProjectId == (int)Project.TSNAAdmin)
+                                {
+                                    <img src="~/Content/Images/TSNA.png" alt="TSNAmerica" title="TSNAmerica" class="width_100px" />
+                                }
+                                else if(campaignDetails.AdminProjectId == (int)Project.StayTaxExempt)
+                                {
+                                    <img src="~/Content/Images/STE.jpg" alt="StayTaxExempt" title="StayTaxExempt" class="width_100px" />
+                                }
+                                else if(campaignDetails.AdminProjectId == (int)Project.ACAwise)
+                                {
+                                    <img src="~/Content/Images/ACAw.png" alt="ACAwise" title="ACAwise" class="width_100px" />
+                                }
+                            </td>
+                            <td class="CampaignDetails">
+                                <h2 class="h2_head">@(campaignDetails != null ? campaignDetails.CampaignName : string.Empty)</h2>
+                                <p><span class="semibold">Created On: </span>@((campaignDetails != null && campaignDetails.CreateTimeStamp != DateTime.MinValue) ? campaignDetails.CreateTimeStamp.ToString() : string.Empty)</p>
+                                @if(campaignDetails.TechTeamStatus != TechTeamStatus.TECH_TEAM_NOTIFY.ToString() && (Utility.GetDateTime(campaignDetails.CampaignStartDate) > DateTime.MinValue) && (Utility.GetDateTime(campaignDetails.CampaignEndDate) > DateTime.MinValue))
+                                {
+                                    <p><span class="semibold">Period: </span>@campaignPeroid</p>
+                                }
+                            </td>
+                            @if(campaignDetails.CampaignSupportUserDetailsList != null && campaignDetails.CampaignSupportUserDetailsList.Any())
+                            {
+                                <td class="Campaign_id_wrap">
+                                    <div>
+                                        <ul>
+
+
+                                            @foreach(var supportDetails in campaignDetails.CampaignSupportUserDetailsList)
+                                            {
+
+                                                <li class="Campaign_id">
+                                                    <h3 class="supp_name">@supportDetails.AdminUserName.First()</h3>
+                                                    <a href="javascript:void(0);" class="supportCount" data-toggle="tooltip" title="@supportDetails.AdminUserName">@(supportDetails.NoOfCompleted ?? 0)/@supportDetails.NoOfUserAssigned</a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <h2 class="h2_head">Demographic Information:</h2>
+                                    <p>@(!string.IsNullOrWhiteSpace(campaignDetails.Goals) ? campaignDetails.Goals : campaignDetails.DemoGrapicInformation)</p>
+                                </td>
+
+                            }
+                            <td>
+                                @if(campaignDetails.TechTeamStatus == TechTeamStatus.TECH_TEAM_NOTIFY.ToString())
+                                {
+                                    <p><a class="btn btn_sm btn-primary" href="/Campaign/FileUploadTechTeam/@campaignDetails.CampaignDetailsId">Upload File</a></p>
+
+                                    <p><a class="btn btn_sm btn-second" href="javascript:void(0)" onclick="DisCardedRequest('@campaignDetails.CampaignDetailsId')">Discard Request</a></p>
+                                }
+                                else if(campaignDetails.TechTeamStatus == TechTeamStatus.DISCARDED_REQUEST.ToString())
+                                {
+                                    <p class="taC" style="color: #f3481a; font-weight: 600; ">Declined</p>
+                                }
+                                else if(campaignDetails.TechTeamStatus == TechTeamStatus.FILE_UPLOADED.ToString())
+                                {
+                                    <div class="taC">
+                                        <span class="" style="color: #10b731; font-weight: 600; ">File Uploaded</span>
+                                        @if(Utility.GetDateTime(campaignDetails.TechTeamFileUploadedTime) > DateTime.MinValue)
+                                        {
+                                            <p>@Utility.GetDateTime(campaignDetails.TechTeamFileUploadedTime)</p>
+                                        }
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            }
+        }
+    }
+    else
+    {
+        <div class="alert alert-info fade in alert-dismissable" style="text-align:center;">
+            <strong>No Request Found!</strong>
+        </div>
+    }
+</div>
+<script>
+    $(function () {
+        $(".dashboardTable").niceScroll();
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+    function DisCardedRequest(CampaignDetailsId) {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/_DiscardedRequest",
+            data: { id: CampaignDetailsId },
+            success: function (result) {
+                $("#ModelBody").html(result);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-md');
+            }
+        });
+    }
+
+
+
+</script>

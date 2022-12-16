@@ -1,0 +1,538 @@
+﻿@model Main.Control.Web.Models.AdminUserRoleUI
+@{
+    ViewBag.Title = "Assign Project";
+}
+
+<div class="page-header">
+    <div class="page-head">
+        <h2 class="floatL">
+            Assign Project - <span>@ViewData["AdminUserName"]</span>
+        </h2>
+        <div class="floatR">
+            <a href="~/Admin/Index" class="btn btn-cancel backBtn mTop3"><i class="fa fa-chevron-left" aria-hidden="true"></i> Back</a>
+        </div>
+    </div>
+</div>
+
+
+<div class="clear"></div>
+@using (Html.BeginForm("CreateProjectRole", "Admin", FormMethod.Post, new { id = "createForm", enctype = "multipart/form-data" }))
+{
+    <div class="taC">
+        <label id="lblResult" class="successMsg taC" style="color:green">
+        </label>
+    </div>
+    <div class="col-md-9 col-sm-8 col-xs-12">
+
+        @if (Model.AdminUserRoleList.Exists(m => m.AdminCategoryId != null))
+        {
+            <div class="">
+                @if (Model.AdminUserRoleList.Exists(m => m.AdminCategoryId == 1))
+                {
+
+                    <div class="projectList">
+                        <h4 class="subTitle">Biz.SpanControl.Com</h4>
+                        <div class="spacer5"></div>
+                        <table id="LeadLogList1" class="listGrid">
+                            <thead>
+                                <tr>
+
+                                    <th width="50%">
+                                        Product
+                                    </th>
+                                    <th width="40%">
+                                        Role
+                                    </th>
+
+                                    <th width="10%">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.AdminUserRoleList.Count() > 0)
+                                {
+                                    foreach (var item in Model.AdminUserRoleList.Where(a => a.AdminCategoryId == 1))
+                                    {
+                                        <tr>
+
+                                            <td>
+                                                @Html.Raw(item.ProjectName)
+                                            </td>
+                                            <td>
+                                                @Html.Raw(item.Role)
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" title="Edit" name="Edit" onclick="EditUser(@item.AdminUserRoleId);" id="a3" class="floatL mRight5"><span class="borderCircle red"><i class="fa fa-pencil"></i></span></a>
+
+                                                <a href="javascript:void(0);" title="Remove" name="Delete" onclick="Deleteuser(@item.AdminUserRoleId);" class="floatL"><span class="borderCircle red"><i class="fa fa-trash"></i></span></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                @if (Model.AdminUserRoleList.Exists(m => m.AdminCategoryId == 2))
+                {
+
+                    <div class="projectList">
+                        <h4 class="subTitle">www.MainControl.Com</h4>
+                        <div class="spacer5"></div>
+                        <table id="LeadLogList2" class="listGrid">
+                            <thead>
+                                <tr>
+
+                                    <th width="50%">
+                                        Product
+                                    </th>
+                                    <th width="40%">
+                                        Role
+                                    </th>
+
+                                    <th width="10%">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.AdminUserRoleList.Count() > 0)
+                                {
+                                    foreach (var item in Model.AdminUserRoleList.Where(a => a.AdminCategoryId == 2))
+                                    {
+                                        <tr>
+
+                                            <td>
+                                                @Html.Raw(item.ProjectName)
+                                            </td>
+                                            <td>
+                                                @Html.Raw(item.Role)
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" title="Edit" name="Edit" onclick="EditUser(@item.AdminUserRoleId);" id="a3" class="floatL mRight5"><span class="borderCircle red"><i class="fa fa-pencil"></i></span></a>
+
+                                                <a href="javascript:void(0);" title="Remove" name="Delete" onclick="Deleteuser(@item.AdminUserRoleId);" class="floatL"><span class="borderCircle red"><i class="fa fa-trash"></i></span></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+
+                @if (Model.AdminUserRoleList.Exists(m => m.AdminCategoryId == 3))
+                {
+                    <div class="projectList">
+                        <h4 class="subTitle">Projects</h4>
+                        <div class="spacer5"></div>
+                        <table id="LeadLogList3" class="listGrid">
+                            <thead>
+                                <tr>
+                                    <th width="50%">
+                                        Product
+                                    </th>
+                                    <th width="40%">
+                                        Role
+                                    </th>
+
+                                    <th width="10%">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.AdminUserRoleList.Count() > 0)
+                                {
+                                    foreach (var item in Model.AdminUserRoleList.Where(a => a.AdminCategoryId == 3))
+                                    {
+                                        <tr>
+
+                                            <td>
+                                                @Html.Raw(item.ProjectName)
+                                            </td>
+                                            <td>
+                                                @Html.Raw(item.Role)
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" title="Edit" name="Edit" onclick="EditUser(@item.AdminUserRoleId);" id="a3" class="floatL mRight5"><span class="borderCircle red"><i class="fa fa-pencil"></i></span></a>
+
+                                                <a href="javascript:void(0);" title="Remove" name="Delete" onclick="Deleteuser(@item.AdminUserRoleId);" class="floatL"><span class="borderCircle red"><i class="fa fa-trash"></i></span></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                }
+
+                @if (Model.AdminUserRoleList.Exists(m => m.AdminCategoryId == 4))
+                {
+
+                    <div class="projectList">
+                        <h4 class="subTitle">Efile Admin</h4>
+                        <div class="spacer5"></div>
+                        <table id="LeadLogList4" class="listGrid">
+                            <thead>
+                                <tr>
+                                    <th width="50%">
+                                        Product
+                                    </th>
+                                    <th width="40%">
+                                        Role
+                                    </th>
+
+                                    <th width="10%">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.AdminUserRoleList.Count() > 0)
+                                {
+                                    foreach (var item in Model.AdminUserRoleList.Where(a => a.AdminCategoryId == 4))
+                                    {
+                                        <tr>
+
+                                            <td>
+                                                @Html.Raw(item.ProjectName)
+                                            </td>
+                                            <td>
+                                                @Html.Raw(item.Role)
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" title="Edit" name="Edit" onclick="EditUser(@item.AdminUserRoleId);" id="a3" class="floatL mRight5"><span class="borderCircle red"><i class="fa fa-pencil"></i></span></a>
+
+                                                <a href="javascript:void(0);" title="Remove" name="Delete" onclick="Deleteuser(@item.AdminUserRoleId);" class="floatL"><span class="borderCircle red"><i class="fa fa-trash"></i></span></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                }
+
+                @if (Model.AdminUserRoleList.Exists(m => m.AdminCategoryId == 5))
+                {
+
+                    <div class="projectList">
+                        <h4 class="subTitle">Tools</h4>
+                        <div class="spacer5"></div>
+                        <table id="LeadLogList5" class="listGrid">
+                            <thead>
+                                <tr>
+                                    <th width="50%">
+                                        Product
+                                    </th>
+                                    <th width="40%">
+                                        Role
+                                    </th>
+
+                                    <th width="10%">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.AdminUserRoleList.Count() > 0)
+                                {
+                                    foreach (var item in Model.AdminUserRoleList.Where(a => a.AdminCategoryId == 5))
+                                    {
+                                        <tr>
+
+                                            <td>
+                                                @Html.Raw(item.ProjectName)
+                                            </td>
+                                            <td>
+                                                @Html.Raw(item.Role)
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" title="Edit" name="Edit" onclick="EditUser(@item.AdminUserRoleId);" id="a3" class="floatL mRight5"><span class="borderCircle red"><i class="fa fa-pencil"></i></span></a>
+
+                                                <a href="javascript:void(0);" title="Remove" name="Delete" onclick="Deleteuser(@item.AdminUserRoleId);" class="floatL"><span class="borderCircle red"><i class="fa fa-trash"></i></span></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                }
+
+
+            </div>
+        }
+
+    </div>
+
+    <div class="col-md-3 col-sm-4 col-xs-12">
+        <div class="rightColumn">
+            <h3>Choose Category & Project</h3>
+            <div class="rolesAssign">
+                <table class="">
+                    <tr>
+
+                        <td class="taL">
+                            @Html.DropDownList("CategoryId", new SelectList(Model.AdminCategoryList, "AdminCategoryId", "AdminCategoryName"), "Select Site", new { @tabindex = "1009", id = "AdminCategoryIdId", @style = "width:100%" })
+                            <div class="spacer10"></div>
+                            <div id="AdminProjectIdDiv">
+                                <select id="AdminProjectId" class="textfield" name="AdminProject" style="width:100%;"></select>
+                            </div>
+                            <label id="errorProject" class="error"></label>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="taL">
+                            @if (Model.AdminRoleList != null && Model.AdminRoleList.Count > 0)
+                            {
+                                foreach (Main.Control.Core.Models.AdminRole _adminRole in Model.AdminRoleList)
+                                { <div class="floatL mTop10 mRight20">
+
+                                        @Html.RadioButton("Roles", _adminRole.AdminRoleId, new { @tabindex = "6", @class = "css-radiobox", @id = _adminRole.AdminRoleId })
+                                        <label for="RoleName" tabindex="1003" class="css-labelradio">@_adminRole.Role.ToString()</label>
+                                    </div>
+                                    <div class="clear"></div>
+                                }
+
+                            }
+
+                            <div id="roleslist"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="taC">
+                            <div class="spacer10"></div>
+                            <input type="button" id="btnSubmit" value="Add" tabindex="7" class="btn btn-primary" />
+                        </td>
+
+                    </tr>
+
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+}
+<script type="text/javascript" lang="javascript">
+
+    $("#ManageUserLink").addClass("active")
+    function EditUser(Id) {
+        location.href = "/Admin/CreateProjectRole/" + @Model.AdminUserId + "?id2=" + Id;
+    }
+
+    function Deleteuser(Id) {
+
+        bootbox.dialog({
+            message: "Are you sure you want to Delete Product Role?",
+            title: "Confirm Delete?",
+            buttons: {
+                cancel: {
+                    label: "Cancel",
+                    className: "btn-cancel floatL mTop3"
+                },
+                delete: {
+                    label: "Delete",
+                    className: "btn-org",
+                    callback: function () {
+                        $.getJSON("/Admin/DeleteProjectRole/?t=" + new Date(), { aId: Id },
+                         function (data) {
+                             if (data == true) {
+                                 $('#lblResult').show().removeClass('error').addClass('success').html('Role deleted successfully.');
+                                 location.href = "/Admin/CreateProjectRole/" + @Model.AdminUserId + "?id3=3";
+                             }
+                             else {
+                                 $('#lblResult').show().removeClass('success').addClass('error').html('Error while Deleting, Please Try Again.');
+                             }
+                         });
+                    }
+                }
+            }
+        }).find(".modal-dialog").removeClass("edit-modal-dialog");
+
+    }
+    var adminPrjctId = '@(Model != null && Model.ProjectId > 0 ? Model.ProjectId : 0)';
+    var adminCatogId = '@(Model != null && Model.AdminCategoryId > 0 ? Model.AdminCategoryId : 0)';
+    var adminRoleId = '@(Model != null && Model.Roles > 0 ? Model.Roles : 0)';
+    var adminUserRoleId = '@(Model != null && Model.AdminUserRoleId > 0 ? Model.AdminUserRoleId : 0)';
+
+    var isUpdate = false;
+    var suceessMsg = '@(TempData["SuccessMsg"] != null ? TempData["SuccessMsg"].ToString() : string.Empty)'
+    $(function () {
+
+        $('#errorProject').hide();
+        if (suceessMsg != null && suceessMsg != undefined && suceessMsg != "") {
+            $('#lblResult').show().html(suceessMsg);
+            setTimeout(function () {
+                $("#lblResult").fadeOut();
+            }, 6000);
+        }
+        else {
+            $('#lblResult').hide();
+        }
+
+        if (parseInt(adminCatogId) > 0) {
+            isUpdate = true;
+            $('#AdminProjectId').prop("disabled", true).addClass("disabled_btn");
+            $('#AdminCategoryIdId').prop("disabled", true).addClass("disabled_btn");
+            $('#AdminCategoryIdId option[value ="' + adminCatogId + '"]').attr("selected", true);
+        }
+        else {
+            $("#AdminCategoryIdId").val("Select Site");
+        }
+
+        var form = $('#createForm').get(0);
+        $.removeData(form, 'validator');
+        $('#createForm').validate({
+            ignore: ":not(:visible)",
+            rules: {
+                CategoryId: { required: true },
+                Roles: { required: true },
+            },
+            messages: {
+                CategoryId: { required: "Select a Site" },
+                Roles: { required: "Select a Role" },
+            }
+        });
+
+        var _adminCatId = $('#AdminCategoryIdId').val();
+        if (_adminCatId == 0) {
+            $('#AdminProjectIdDiv').hide();
+        }
+
+        $('#btnSubmit').click(function (e) {
+            e.preventDefault();
+            var project = $('#AdminProjectId').val();
+            var role = $("input:radio[name='Roles']:checked").val();
+            var selected = $("#AdminProjectId option:selected").text();
+            if ($('#createForm').valid()) {
+                if (selected != "Select Product" && project > 0 && role > 0) {
+                    $('#errorProject').hide();
+                    $.getJSON("/Admin/SaveProjectRole/?t=" + new Date(), { projectid: project, roleid: role, adminUserId: '@Model.AdminUserId', adminUserRoleId: adminUserRoleId },
+                            function (data) {
+                                if (data != null) {
+                                    $("#Rloader").hide();
+                                    if (parseInt(adminUserRoleId) > 0) {
+                                        location.href = "/Admin/CreateProjectRole/" + @Model.AdminUserId + "?id3=2";
+                                    }
+                                    else {
+                                        location.href = "/Admin/CreateProjectRole/" + @Model.AdminUserId + "?id3=1";
+                                    }
+
+                                }
+                                else {
+                                    $("#Rloader").hide();
+                                }
+                            });
+                } else {
+                    $('#errorProject').show().html('Select a product');
+                }
+            } else if (selected == "Select Product") {
+                $('#errorProject').show().html('Select a product');
+            }
+
+
+        });
+
+        $('#AdminCategoryIdId').change(function () {
+            $('#errorProject').hide();
+            if ($('#AdminCategoryIdId').val() == "") {
+                $('#roleslist').hide();
+            }
+            $('#AdminProjectIdDiv').show();
+            var _adminCatId = $('#AdminCategoryIdId').val();
+            if (_adminCatId > 0) {
+                $.getJSON('/Admin/ProjectList/' + $('#AdminCategoryIdId').val() + '/' + '@Model.AdminUserId' + '/' + isUpdate, function (data) {
+                    var items = '<option value="0" text="select">Select Product</option>';
+
+                    if (data != null && data.length > 0) {
+                        $.each(data, function (i, unassignlist) {
+
+                            items += "<option name='productList' value='" + unassignlist.Value + "'>" + unassignlist.Text + "</option>";
+                        });
+                    }
+
+                    else {
+                        items = '<option disabled="disabled">No Product Found</option>';
+                    }
+                    $('#AdminProjectId').html(items);
+                    if (parseInt(adminPrjctId) > 0) {
+                        $('#AdminProjectId option[value ="' + adminPrjctId + '"]').attr("selected", true);
+                    }
+                });
+
+
+            }
+            else {
+                $('#AdminProjectIdDiv').hide();
+                $('#AdminProjectId').empty();
+            }
+        });
+
+
+        $('#AdminProjectId').change(function () {
+            $('#errorProject').hide();
+            $.ajax({
+                type: "GET",
+                url: "/Admin/RoleList/" + $('#AdminCategoryIdId').val(),
+                cache: false,
+                success: function (data) {
+                    var items = '';
+                    var selectedProjectId = $("#AdminProjectId").val();
+                    if (parseInt(selectedProjectId) != parseInt("29")) {
+                        data[3].Value = 0;
+                    }
+                    $.each(data, function (i, list) {
+                        if (list.Value > 0) {
+                            items += '<div class="floatL mTop10 mRight20">';
+                            items += "<input type='radio' tabindex='1003' class='css-radiobox' name='Roles' id='Roles" + list.Value + "' value='" + list.Value + "'/><label class='css-labelradio' for='Roles" + list.Value + "'>" + list.Text;
+                            items += '</label></div><div class="clear"></div>';
+                        }
+                    });
+                    $('#roleslist').html(items);
+                    $('#roleslist').show();
+                    if (parseInt(adminRoleId) > 0) {
+                        $('#Roles' + adminRoleId + '').attr("checked", true);
+                    }
+                }
+            });
+
+            //    $.getJSON('/Admin/RoleList/' + $('#AdminCategoryIdId').val(), function (data) {
+            //        var items = '';
+            //        //if (selectedProjectId != '29' ) {
+            //        //        data.remove([3])
+            //        //    }
+            //        $.each(data, function (i, list) {
+            //            items += '<div class="floatL mTop10 mRight20">';
+            //            items += "<input type='radio' tabindex='1003' class='css-radiobox' name='Roles' id='Roles" + list.Value + "' value='" + list.Value + "'/><label class='css-labelradio' for='Roles" + list.Value + "'>" + list.Text;
+            //            items += '</label></div><div class="clear"></div>';
+            //        });
+            //        $('#roleslist').html(items);
+            //        $('#roleslist').show();
+            //        //if (selectedProjectId == "29") {
+
+            //       // }
+            //        if (parseInt(adminRoleId) > 0) {
+            //            $('#Roles' + adminRoleId + '').attr("checked", true);
+            //        }
+            //    });
+        });
+
+        if (parseInt(adminCatogId) > 0) {
+            $('#AdminCategoryIdId').trigger('change');
+            $('#AdminProjectId').trigger('change');
+            $("#btnSubmit").val("Update");
+        }
+
+        window.history.pushState(null,null,"/Admin/CreateProjectRole/" + @Model.AdminUserId);
+    });
+
+</script>
+

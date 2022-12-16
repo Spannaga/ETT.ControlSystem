@@ -1,0 +1,572 @@
+﻿@model List<Main.Control.Core.Models.CampaignDetails>
+@using Main.Control.Web.Utilities
+@using Main.Control.Core.Models
+@{
+    var productlist = ViewBag.AdminProjects as List<BizAdminProjects>;
+    IDictionary<string, string> dropdownCampaignStatus = new Dictionary<string, string>();
+
+    foreach (CampaignStatus r in Enum.GetValues(typeof(CampaignStatus)))
+    {
+        dropdownCampaignStatus.Add(r.ToString(), r.ToString());
+    }
+    int maxPageSizeCount = Utility.GetInt(ViewData["MaxPageCount"]);
+    bool isRecordsExist = false;
+    if (Model != null && Model.Count > 0)
+    {
+        isRecordsExist = true;
+    }
+}
+
+
+
+
+<div class="spacer15">
+    <div class="floatL">
+        @*@Html.DropDownList("ProductIdDropdown", new SelectList(productlist, "ProjectId", "ProjectName"), "All")*@
+        @*@Html.DropDownList("CampaignStatusDropdown", new SelectList(dropdownCampaignStatus, "key", "value"), "All")*@
+
+        <span class="labelName"><label>Select Product:</label></span> @Html.DropDownList("AdminProjects")
+        <span class="mLeft20">
+
+        </span>
+        <span class="labelName">
+            <label>Select Status:</label>
+        </span>
+        @Html.DropDownList("CampaignStatus")
+        <a class="btn btn_md btn-primary mLeft10" style="margin-top:-4px;" onclick="getRecords()">
+            Get Campaigns
+            <i id="getRecordSpinner" style="display:none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i>
+        </a>
+    </div>
+    <div class="floatR">
+
+        <a class="btn btn_md btn-second" style="margin-top:-4px;" onclick="createCampaign()">Create Campaign</a>
+
+
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="spacer10"></div>
+
+<div class="camp_dash_wrap">
+    @if (Model != null && Model.Count > 0)
+    {
+
+        string currentdate = Utility.GetDateTime(DateTime.Now).ToString("MM/dd/yyyy");
+        foreach (var campaignDetails in Model)
+        {
+            string startdate = string.Empty;
+            string enddate = string.Empty;
+            if (campaignDetails.CampaignStartDate != null && campaignDetails.CampaignStartDate > DateTime.MinValue)
+            {
+                startdate = Utility.GetDateTime(campaignDetails.CampaignStartDate).ToString("MM/dd/yyyy");
+            }
+            if (campaignDetails.CampaignEndDate != null && campaignDetails.CampaignEndDate > DateTime.MinValue)
+            {
+                enddate = Utility.GetDateTime(campaignDetails.CampaignEndDate).ToString("MM/dd/yyyy");
+            }
+
+            string campaignPeroid = startdate + " to " + enddate;
+
+            decimal completedPercentage = 0;
+
+            if (campaignDetails.CampaignSupportUserDetailsList != null && campaignDetails.CampaignSupportUserDetailsList.Count > 0)
+            {
+                completedPercentage = Utility.GetDecimal(campaignDetails.CampaignSupportUserDetailsList.Sum(m => m.NoOfCompleted ?? 0)) / Utility.GetDecimal(campaignDetails.NoOfLeads);
+                completedPercentage = Utility.GetDecimal2Digits(completedPercentage * 100);
+            }
+            <div class="camp_dash">
+                <div class="col-md-2 col-sm-6 col-xs-12 taC camp_dash_list camp_dash_first taC">
+                    @if (campaignDetails.AdminProjectId == (int)Project.UnitWise)
+                    {
+                        <img src="~/Content/Images/uwLogo.gif" class="width_100px" alt="UnitWise" title="UnitWise" />
+
+                    }
+
+                    else if (campaignDetails.AdminProjectId == (int)Project.SpanPlan)
+                    {
+                        <img src="~/Content/Images/spLogo.gif" alt="Inspherio" title="Inspherio" class="width_100px" />
+                    }
+                    else if (campaignDetails.AdminProjectId == (int)Project.ExpressTruckTax)
+                    {
+                        <img src="~/Content/Images/ETT.png" alt="ETT" title="Express Truck Tax" class="width_100px" />
+
+                    }
+                    else if (campaignDetails.AdminProjectId == (int)Project.ExpressIFTA)
+                    {
+                        <img src="~/Content/Images/IFTA.png" alt="EIFTA" title="Express IFTA" class="width_100px" />
+                    }
+                    else if (campaignDetails.AdminProjectId == (int)Project.ExpressTaxFilings)
+                    {
+                        <img src="~/Content/Images/ETF.png" alt="ETF" title="Express Tax Filings" class="width_100px" />
+                    }
+                    else if (campaignDetails.AdminProjectId == (int)Project.ExpressExtension)
+                    {
+                        <img src="~/Content/Images/EET.png" alt="EE" title="Express Extension" class="width_100px" />
+                    }
+                    else if (campaignDetails.AdminProjectId == (int)Project.Express990)
+                    {
+                        <img src="~/Content/Images/E990.png" alt="ExpressTaxExempt" title="ExpressTaxExempt" class="width_100px" />
+                    }
+
+                    else if (campaignDetails.AdminProjectId == (int)Project.TruckLogics)
+                    {
+                        <img src="~/Content/Images/ETL.png" alt="Truck Logics" title="Truck Logics" class="width_100px" />
+                    }
+                    else if (campaignDetails.AdminProjectId == (int)Project.TSNAAdmin)
+                    {
+                        <img src="~/Content/Images/TSNA.png" alt="TSNAmerica" title="TSNAmerica" class="width_100px" />
+                    }
+                    else if (campaignDetails.AdminProjectId == (int)Project.StayTaxExempt)
+                    {
+                        <img src="~/Content/Images/STE.jpg" alt="StayTaxExempt" title="StayTaxExempt" class="width_100px" />
+                    }
+                    else if (campaignDetails.AdminProjectId == (int)Project.ACAwise)
+                    {
+                        <img src="~/Content/Images/ACAw.png" alt="ACAwise" title="ACAwise" class="width_100px" />
+                    }
+
+                    @if (campaignDetails.TechTeamStatus == TechTeamStatus.FILE_UPLOADED.ToString() && campaignDetails.CampaignStartDate == null && campaignDetails.CampaignEndDate == null)
+                    {
+                        <h3 class="lead_text">@CampaignStatus.Draft.ToString()</h3>
+                    }
+                    else if (campaignDetails.IsSuspended)
+                    {
+                        <h3 class="lead_text">@CampaignStatus.Suspended.ToString()</h3>
+                    }
+                    else if (!string.IsNullOrWhiteSpace(startdate) && !string.IsNullOrWhiteSpace(enddate) && Utility.GetDateTime(startdate) <= Utility.GetDateTime(currentdate) && Utility.GetDateTime(enddate) >= Utility.GetDateTime(currentdate))
+                    {
+                        <h3 class="lead_text">@CampaignStatus.Active.ToString()</h3>
+                    }
+                    else if (!string.IsNullOrWhiteSpace(startdate) && Utility.GetDateTime(startdate) > Utility.GetDateTime(currentdate))
+                    {
+                        <h3 class="lead_text">@CampaignStatus.Upcoming.ToString()</h3>
+                    }
+                    else if (!string.IsNullOrWhiteSpace(enddate) && Utility.GetDateTime(enddate) < Utility.GetDateTime(currentdate))
+                    {
+                        <h3 class="lead_text">@CampaignStatus.Expired.ToString()</h3>
+                    }
+                </div>
+                <div class="col-md-10 col-sm-6 col-xs-12 padNo">
+                    <div class="col-md-4 col-sm-6 col-xs-12 camp_dash_list" style="width:30%;">
+                        <h2 class="h2_head" style="max-width:250px">@campaignDetails.CampaignName</h2>
+                        <p><span class="semibold">Created On: </span>@((campaignDetails.CreateTimeStamp != null && campaignDetails.CreateTimeStamp != DateTime.MinValue) ? campaignDetails.CreateTimeStamp.ToString() : string.Empty)</p>
+
+                        @if (campaignDetails.TechTeamStatus != TechTeamStatus.TECH_TEAM_NOTIFY.ToString() && (Utility.GetDateTime(campaignDetails.CampaignStartDate) > DateTime.MinValue) && (Utility.GetDateTime(campaignDetails.CampaignEndDate) > DateTime.MinValue))
+                        {
+                            <p><span class="semibold">Period: </span>@campaignPeroid</p>
+                        }
+                        <h3 class="type_text">@campaignDetails.CampaignType</h3>
+
+
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 camp_dash_list">
+                        @if (campaignDetails.CampaignSupportUserDetailsList != null && campaignDetails.CampaignSupportUserDetailsList.Any())
+                        {
+                            <div class="pos_rel">
+                                <div class="camp_wrap">
+
+                                    <ul class="camp_panel_wrap">
+                                        @foreach (var supportDetails in campaignDetails.CampaignSupportUserDetailsList)
+                                        {
+                                            decimal percentageOfCompleted = 0;
+
+                                            decimal noOfUserAssigned = Utility.GetDecimal(supportDetails.NoOfUserAssigned);
+
+                                            if (noOfUserAssigned > 0)
+                                            {
+                                                percentageOfCompleted = (Utility.GetDecimal(supportDetails.NoOfCompleted) / noOfUserAssigned) * 100;
+                                            }
+
+                                            int completedCircle = Convert.ToInt32(percentageOfCompleted);
+
+                                            <li class="pointer" onclick="ViewAssignedReport('@supportDetails.SupportUserId','@campaignDetails.CampaignDetailsId','@campaignDetails.AdminProjectId')">
+                                                <div class="panel camp_panel">
+                                                    <div class="panel-heading">
+                                                        <h3>
+                                                            @supportDetails.AdminUserName
+                                                        </h3>
+                                                    </div>
+
+                                                    <div class="panel-body">
+                                                        <div class="set-size charts-container">
+                                                            <div class="pie-wrapper progress-@completedCircle">
+                                                                <span class="label" style="cursor:pointer">@(supportDetails.NoOfCompleted ?? 0)<span class="smaller">/@supportDetails.NoOfUserAssigned</span></span>
+                                                                <div class="pie">
+                                                                    <div class="left-side half-circle"></div>
+                                                                    <div class="right-side half-circle"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                        }
+                                    </ul>
+                                    <div class="over_list" onclick="overList();"><i class="fa fa-angle-right"></i> </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrWhiteSpace(campaignDetails.Goals))
+                            {
+                                <h2 class="h2_head">Goals:</h2>
+                                <p>@(campaignDetails != null ? campaignDetails.Goals : string.Empty)</p>
+                            }
+                            else
+                            {
+                                <h2 class="h2_head">Demographic Information:</h2>
+                                <p>@(campaignDetails != null ? campaignDetails.DemoGrapicInformation : string.Empty)</p>
+                            }
+
+                        }
+                    </div>
+                    <div class="col-md-2 col-sm-6 col-xs-12 taC camp_dash_list last_list">
+                        @if (campaignDetails.CampaignSupportUserDetailsList != null && campaignDetails.CampaignSupportUserDetailsList.Any())
+                        {
+                            <div>
+                                @if (!campaignDetails.IsSuspended)
+                                {
+                                    <h2 class="h2_head taC">@campaignDetails.CampaignSupportUserDetailsList.Sum(m => m.NoOfCompleted ?? 0)/@campaignDetails.NoOfLeads</h2>
+                                    <h3 class="h2_head taC">@Utility.GetDecimal2Digits(completedPercentage)%</h3>
+                                    <div class="spacer10"></div>
+                                    <h3 class="h3_head taC">
+                                        <i class="fa fa-square padR8px pointer" aria-hidden="true" onclick="UpdateCampaignSuspendStatus('@campaignDetails.CampaignDetailsId',true, '@campaignDetails.CampaignName')" title="Suspend" data-toggle="tooltip"></i>
+                                        @if (!campaignDetails.IsPaused)
+                                        {
+                                            <i class="fa fa-pause padR8px pointer" aria-hidden="true" onclick="UpdateCampaignPauseStatus('@campaignDetails.CampaignDetailsId',true, '@campaignDetails.CampaignName')" title="Pause" data-toggle="tooltip"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-play padR8px pointer" aria-hidden="true" onclick="UpdateCampaignPauseStatus('@campaignDetails.CampaignDetailsId',false, '@campaignDetails.CampaignName')" title="Resume" data-toggle="tooltip"></i>
+                                        }
+                                        <i class="fa fa-external-link-square pointer" aria-hidden="true" onclick="ExtendPeroid('@campaignDetails.CampaignDetailsId')" title="Extend Period" data-toggle="tooltip"></i>
+                                    </h3>
+                                }
+                                else
+                                {
+                                    @*<h5 class="h3_head taC">
+                                            <i class="fa fa-square padR8px red" aria-hidden="true" title="Suspend"></i>
+                                        </h5>*@
+                                    <div class="taC">
+                                        <div class="spacer10"></div>
+                                        <span class="red taC"><b>Suspended</b></span>
+                                        <div class="spacer10"></div>
+                                        <div class="taC"><span class="labelName" style="width:auto;">Reason:</span> <span class="fieldText"> @campaignDetails.SuspendReason</span></div>
+                                        <div class="spacer10"></div>
+                                        <div class="taC"><span class="date_time"><i class="fa fa-calendar"></i> @campaignDetails.SuspendDate</span></div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else if (campaignDetails.TechTeamStatus == TechTeamStatus.TECH_TEAM_NOTIFY.ToString())
+                        {
+                            <p><span class="red">Tech Team Notified</span></p>
+
+                            <p><a href="javascript:void(0)" onclick="DisCardedCampaign('@campaignDetails.CampaignDetailsId')">Discard Campaign</a></p>
+                        }
+                        else if (campaignDetails.TechTeamStatus == TechTeamStatus.FILE_UPLOADED.ToString())
+                        {
+                            <div class="taC">
+                                <p><a href="javascript:void(0)" class="btn btn_sm btn-third" onclick="CreateTechTeamCampaign('@campaignDetails.AdminProjectId','@campaignDetails.CampaignDetailsId')">Create Campaign</a></p>
+                                <p class="spacer10"></p>
+                                <span class="" style="color: #10b731; font-weight: 600; ">File Uploaded</span>
+                                @if (Utility.GetDateTime(campaignDetails.TechTeamFileUploadedTime) > DateTime.MinValue)
+                                {
+                                    <p>@Utility.GetDateTime(campaignDetails.TechTeamFileUploadedTime)</p>
+                                }
+                            </div>
+                        }
+                        else if (campaignDetails.IsDiscardedRequest)
+                        {
+                            <div class="taC">
+                                <span class="red">Declined</span>
+                                <p><a href="javascript:void(0)" class="btn btn_sm btn-third" onclick="CreateTechTeamCampaign('@campaignDetails.AdminProjectId','@campaignDetails.CampaignDetailsId')">Update Campaign</a></p>
+                                <p class="spacer10"></p>
+                            </div>
+                        }
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 taC padNo">
+                        <div class="camp_status">
+                            @if (!string.IsNullOrWhiteSpace(enddate) && Utility.GetDateTime(enddate) < Utility.GetDateTime(currentdate))
+                            {
+                                <h3 class="h3_head cEndToday">Campaign Ended</h3>
+                            }
+                            else if (!string.IsNullOrWhiteSpace(startdate) && Utility.GetDateTime(startdate) > Utility.GetDateTime(currentdate))
+                            {
+                                int days = Utility.GetInt((Utility.GetDateTime(startdate) - Utility.GetDateTime(currentdate)).TotalDays);
+                                <h3 class="h3_head cEndToday">Campaign Starts In: <b>@days Day(s)</b></h3>
+                            }
+                            else if (!string.IsNullOrWhiteSpace(enddate) && Utility.GetDateTime(enddate) == Utility.GetDateTime(currentdate))
+                            {
+                                <h3 class="h3_head cEndToday">Campaign Ends today</h3>
+                            }
+                            else
+                            {
+                                if (!string.IsNullOrWhiteSpace(enddate))
+                                {
+                                    int days = Utility.GetInt((Utility.GetDateTime(enddate) - Utility.GetDateTime(currentdate)).TotalDays) + 1;
+                                    <h3 class="h3_head cEndToday">Campaign Ends In: <b>@days Day(s)</b></h3>
+                                }
+
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
+        }
+    }
+    else
+    {
+
+        <div class="alert alert-info fade in alert-dismissable" style="text-align:center;">
+            <strong>No Campaign Found!</strong>
+        </div>
+
+    }
+
+</div>
+
+<script>
+    $(function () {
+        //$(".camp_dash_wrap").niceScroll();
+        $(".camp_wrap").niceScroll();
+        $(".Campaign_id_wrap").niceScroll();
+        $('[data-toggle="tooltip"]').tooltip();
+        $('#MaxPageCount').val(@maxPageSizeCount);
+        $('#IsRecordExist').val('@isRecordsExist');  
+        if ($("#CampaignStatus").val() == "Suspended") {
+            $(".cEndToday").hide();
+        }
+        
+    });
+    $('.over_list').click(function () {
+        var leftPos = $('.camp_wrap').scrollLeft();
+        console.log(leftPos);
+        $(".camp_wrap").animate({
+            scrollLeft: leftPos + 400
+        }, 800);
+    });
+
+    $("#AdminProjects").change(function () {
+        //$("#campaignTab").load("/Campaign/_CampaignDashboard?ProjectId=" + parseInt($('#AdminProjects').val()) + "&CampaignStatus=" + $("#CampaignStatus").val());
+    });
+
+    $("#CampaignStatus").change(function () {
+        //$("#campaignTab").load("/Campaign/_CampaignDashboard?ProjectId=" + parseInt($('#AdminProjects').val()) + "&CampaignStatus=" + $("#CampaignStatus").val());
+    });
+
+
+
+    function createCampaign() {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/_CampaignAccessProduct",
+            success: function (result) {
+                $("#ModelBody").html(result);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-800');
+            }
+        });
+    }
+
+    function ExtendPeroid(id) {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/_ExtendPeroid",
+            data: { id: id },
+            success: function (result) {
+                $("#ModelBody").html(result);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-700');
+            }
+        });
+    }
+
+    function UpdateCampaignPauseStatus(id, isPaused, campaignName) {
+
+        var confirmMsg;
+
+        if (isPaused) {
+            confirmMsg = "Are you sure you want to pause the campaign?"
+        }
+        else {
+            confirmMsg = "Are you sure you want to resume the campaign?"
+        }
+
+        bootbox.dialog({
+            message: confirmMsg,
+            title: campaignName,
+            buttons: {
+                Cancel: {
+                    label: "No",
+                    className: "btn-cancel"
+                },
+                Discarded: {
+                    label: "Yes",
+                    className: "btn-danger",
+                    callback: function () {
+                        $.ajax({
+                            type: "GET",
+                            url: "/Campaign/UpdateCampaignPauseStatus",
+                            data: { id: id, id2: isPaused },
+                            success: function (data) {
+                                if (data && isPaused) {
+                                    toastr.success("Campaign Paused successfully!");
+                                    $("#campaignTab").load("/Campaign/_CampaignDashboard");
+                                }
+                                else if (data && !isPaused) {
+                                    toastr.success("Campaign has been resumed successfully!");
+                                    $("#campaignTab").load("/Campaign/_CampaignDashboard");
+                                }
+                            }
+                        });
+
+                    }
+                },
+
+            }
+        });
+    }
+
+    function UpdateCampaignSuspendStatus(id, isSuspend, campaignName) {
+        SuspendCampaignpopup(id);
+        //bootbox.dialog({
+        //    message: "Are you sure you want to suspend the campaign?",
+        //    title: "Suspend Campaign",
+        //    buttons: {
+        //        Cancel: {
+        //            label: "No",
+        //            className: "btn-cancel"
+        //        },
+        //        Discarded: {
+        //            label: "Yes",
+        //            className: "btn-danger",
+        //            callback: function () {
+        //                $('.bootbox.modal').modal('hide');
+
+        //                //SuspendCampaign(id);
+        //            }
+        //        },
+        //    },
+        //    onEscape: function () {
+        //        $('.bootbox.modal').modal('hide');
+        //    }
+        //});
+
+    }
+
+    function SuspendCampaignpopup(id) {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/_SuspendCampaign",
+            data: { id: id },
+            success: function (result) {
+                $("#ModelBody").html(result);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-700');
+            }
+        });
+    }
+
+    function SuspendCampaign(id) {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/DisCardedCampaign",
+            data: { id: id },
+            success: function (data) {
+                if (data) {
+                    toastr.success("Campaign Suspended successfully!");
+                    $("#campaignTab").load("/Campaign/_CampaignDashboard");
+                }
+            }
+        });
+    }
+
+
+    function DisCardedCampaign(CampaignDetailsId) {
+
+        bootbox.dialog({
+            message: "Are you sure you want to discard the Campaign?",
+            title: "Discard Campaign",
+            buttons: {
+                Cancel: {
+                    label: "No",
+                    className: "btn-cancel"
+                },
+                Discarded: {
+                    label: "Yes",
+                    className: "btn-danger",
+                    callback: function () {
+                        DeleteCampaign(CampaignDetailsId);
+                    }
+                },
+
+            },
+            onEscape: function () {
+                $('.bootbox.modal').modal('hide');
+            }
+        });
+
+    }
+
+    function DeleteCampaign(CampaignDetailsId) {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/DisCardedCampaign",
+            data: { id: CampaignDetailsId },
+            success: function (data) {
+                if (data) {
+                    toastr.success("Campaign Discarded successfully!");
+                    $("#campaignTab").load("/Campaign/_CampaignDashboard");
+                }
+            },
+            error: function (err) {
+            }
+        });
+    }
+
+    function CreateTechTeamCampaign(productId, campaignDetailsId) {
+        window.location.href = "/Campaign/CreateCampaign?id=" + productId + "&id3=" + campaignDetailsId;
+    }
+
+    function ViewAssignedReport(supportUserId, CampaignDetailsId, projectId) {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/_ViewSupportUserReport",
+            data: { id: CampaignDetailsId, id2: supportUserId, id3: projectId },
+            success: function (result) {
+                $("#ModelBody").empty();
+                $("#ModelBody").html(result);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-md');
+            },
+        });
+    }
+
+    function getRecords() {
+        $('#getRecordSpinner').show();
+        $('#PageIndex').val(0);
+        $("#campaignTab").load("/Campaign/_CampaignDashboard?ProjectId=" + parseInt($('#AdminProjects').val()) + "&CampaignStatus=" + $("#CampaignStatus").val() + "&PageIndex=" + $('#PageIndex').val() + "&PageSize=" + $('#PageSize').val(), function () {
+            $('#getRecordSpinner').hide();
+            disablePaginationButtons();
+            if ($('#IsRecordExist').val().toString().toLowerCase() == 'true') {
+                $('#divPagination').show();
+            }
+            else {
+                $('#divPagination').hide();
+            }
+        });
+    }
+
+</script>

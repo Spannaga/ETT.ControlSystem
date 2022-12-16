@@ -1,0 +1,192 @@
+﻿@model  Main.Control.Core.Models.CampaignDetails
+@using Main.Control.Web.Utilities
+@using Main.Control.Core.Models
+@using Main.Control.Service.Utilities
+
+@{
+    Layout = null;
+}
+
+
+@using (Html.BeginForm("_StartWithFilter", "Campaign", FormMethod.Post, new { id = "StartWithFilterForm", enctype = "multipart/form-data" }))
+{
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"></button>
+        <h4 class="modal-title">Start with Filter</h4>
+    </div>
+    <div class="modal-body">
+        <div class="codeIcon">
+            <div class="responsive ">
+                <div class="clear"></div>
+                <div style="overflow: auto;">
+                    <p> Select a Time Zone or State to start the campaign.</p>
+                    <table class="responsive">
+                        <tr>
+                            <td class="spacer10" colspan="4"></td>
+                        </tr>
+                        <tr>
+                            <td class="labelName">
+                                Filter By:
+                            </td>
+
+                            <td class="fieldName">
+
+                                <span>
+                                    <input type="radio" id="IsTimeZone" name="IsTimeZoneState" class="css-radiobox" value="TimeZone" onclick="ChooseFilter()" checked>
+                                    <label class="css-labelradio" for="IsTimeZone"><span>Time Zone</span></label>
+                                </span>
+
+                                <span>
+                                    <input type="radio" id="IsState" name="IsTimeZoneState" value="State" class="css-radiobox" onclick="ChooseFilter()">
+                                    <label class="css-labelradio" for="IsState"><span>State</span></label>
+                                </span>
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="spacer10"></div>
+                            </td>
+                        </tr>
+
+                        <tr id="rowTimeZone">
+                            <td class="labelName">
+                                <label><span class="red">*</span>Time Zone:</label>
+                            </td>
+                            <td class="fieldName">
+                                @Html.DropDownList("ddlTimeZone",
+                         new[]
+                         {
+                                new SelectListItem
+                                {
+                                        Text = "Select Time Zone",
+                                        Value = ""
+                                },
+                               //new SelectListItem
+                               //  {
+                               //          Text = "(GMT-04:00)  Atlantic Time",
+                               //          Value =  "AST"
+                               //  },
+                             new SelectListItem
+                                 {
+                                         Text = "(GMT-05:00)  Eastern Time",
+                                         Value = LeadTimeZone.EST.ToString()
+                                 },
+                             new SelectListItem
+                                 {
+                                         Text = "(GMT-06:00)  Central Time",
+                                         Value = LeadTimeZone.CST.ToString()
+                                 },
+                                  new SelectListItem
+                                 {
+                                         Text = "(GMT-07:00)  Mountain Time",
+                                         Value = LeadTimeZone.MST.ToString()
+                                 },
+                                  new SelectListItem
+                                 {
+                                         Text = "(GMT-08:00)  Pacific Time",
+                                         Value = LeadTimeZone.PST.ToString()
+                                 },
+                                    new SelectListItem
+                                 {
+                                         Text = "(GMT-09:00)   Alaska Time",
+                                         Value = LeadTimeZone.AST.ToString()
+                                 },
+                                    new SelectListItem
+                                 {
+                                         Text = "(GMT-10:00)  Hawaii Time",
+                                         Value = LeadTimeZone.HST.ToString()
+                                 }
+
+                        }, new { id = "LeadTimeZone" })
+                            </td>
+                        </tr>
+
+                        <tr id="rowState" style="display:none;">
+                            <td class="labelName">
+                                <label><span class="red">*</span>State:</label>
+                            </td>
+                            <td class="fieldName">
+                                @Html.DropDownList("ddlLeadStates", new SelectList(Model.StateList, "StateCode", "StateName"), "Select State", new { id = "LeadStateName" })
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal-footer taC">
+    <a class="btn btn-primary" href="javascript:void(0)" onclick="StartLead(@Model.CampaignDetailsId, @Model.CampaignSupportUserDetails.SupportUserId);">Start <i id="startspinner" style="display:none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></a>
+    <a class="btn btn-cancel" data-dismiss="modal">Cancel</a>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#StartWithFilterForm').validate({
+            ignore: ":not(:visible)",
+            rules: {
+                ddlLeadStates: { required: true },
+                ddlTimeZone: { required: true }
+            },
+            messages: {
+                ddlLeadStates: { required: "Select State" },
+                ddlTimeZone: { required: "Select Time Zone" }
+            }
+        });
+    });
+
+    function ChooseFilter() {
+        if ($("#IsTimeZone").is(':checked')) {
+            $("#rowTimeZone").show();
+            $("#rowState").hide();
+        }
+        else {
+            {
+                $("#rowTimeZone").hide();
+                $("#rowState").show();
+            }
+        }
+    }
+
+    function StartLead(id, id2) {
+
+        if ($('#StartWithFilterForm').valid()) {
+            $("#startspinner").show();
+            if ($("#IsTimeZone").is(':checked')) {
+                var id4 = $("#LeadTimeZone option:selected").val();
+                window.location.href = '/Campaign/ViewCampaignLeads/' + id + '/' + id2 + '/' + null + '/' + id4;
+                //toastr.error("No Records Were Found For The Time Zone - @@time zone");
+            }
+            else {
+                var id3 = $("#LeadStateName option:selected").val();
+                $.ajax({
+                    type: "Post",
+                    url: "/Campaign/_IsStateExsits",
+                    data: { id: id, id2: id2, stateCode: id3},
+                    success: function (result) {
+                        if(result)
+                        {
+                            window.location.href = '/Campaign/ViewCampaignLeads/' + id + '/' + id2 + '/' + id3;
+                        }
+                        else
+                        {
+                            $("#startspinner").hide();
+                            var Statename= $("#LeadStateName option:selected").text();
+                            toastr.error("No Records Were Found For The State - " + Statename);
+                        }
+
+                    }
+                });
+
+            }
+        }
+    }
+</script>
+
+
+

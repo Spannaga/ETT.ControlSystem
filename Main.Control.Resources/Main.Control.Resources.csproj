@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1B6B63E1-4009-4596-BA9A-01D7999CDFA8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Main.Control.Resources</RootNamespace>
+    <AssemblyName>Main.Control.Resources</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Dapper, Version=1.50.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.0\lib\net451\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.Formatting.Extension.5.2.3.0\lib\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.Formatting.Extension.5.2.3.0\lib\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.Formatting.Extension.5.2.3.0\lib\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Biz_Admin_LeadLog.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Admin_LeadLog_Follow.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Admin_LeadLog_Notes.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Admin_Log.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Admin_Roles.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Admin_SpanPlan_Lead_Log.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Admin_SpanPlan_Lead_Log_Follow.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Admin_Users.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Admin_User_Roles.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Campaign_Additional_Contacts_Details.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Campaign_Assigned_Details.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Campaign_Details.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Campaign_Excel_Headers.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Campaign_Excel_Values.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Campaign_Follow_Up_Log.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Campaign_Lead_Activity.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Campaign_Manager_Follow_Up_Details.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Campaign_Support_User_Details.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_CoBrowse_Log.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Ip_Address.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_SCActivityLog.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Servers.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_User_Payments.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_User_Payments_Logs.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Windows_Services.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Biz_Windows_Service_Activity_Log.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Gmail_User_Details.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MainControl.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MainControl.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MainControl.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MainControl.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MainControl.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Mobile_Verification.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Admin\AdminRepository.cs" />
+    <Compile Include="Resources\Admin\EmailRepository.cs" />
+    <Compile Include="Resources\Admin\LeadRepository.cs" />
+    <Compile Include="Resources\Admin\SaveCampaignSupportU.cs" />
+    <Compile Include="Resources\Admin\SpanControlRepository.cs" />
+    <Compile Include="Resources\Admin\TaxCustomerRepository.cs" />
+    <Compile Include="Resources\Admin\TaxDashboardRepository.cs" />
+    <Compile Include="Resources\Admin\TaxNotesRepository.cs" />
+    <Compile Include="Utilities\DataUtility.cs" />
+    <Compile Include="Sc_Activity_Log.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SC_Authorize_Payment_Report.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SC_Static_Authorize_Credential.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Static_Biz_Admin_Category.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Static_Biz_Admin_Category_Project.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Static_Biz_Admin_Countries.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Static_Biz_Admin_Log_Category.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Static_Biz_Admin_Positions.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Static_Biz_Admin_Project.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Static_Biz_Admin_States.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Static_Biz_Lead_Status.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Static_Biz_Lead_Status_Details.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Static_Biz_Mail_templates.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Static_Biz_Payment_Templates.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Static_Biz_Span_Service_Finders.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Support_User_Instructions.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tax_Lead_Log.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tax_Lead_Log_Follow.cs">
+      <DependentUpon>MainControl.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Main.Control.Core\Main.Control.Core.csproj">
+      <Project>{794e22e7-01fe-487e-8e28-b1cc4cf880c5}</Project>
+      <Name>Main.Control.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Main.Control.Services\Main.Control.Services.csproj">
+      <Project>{98dfcdf6-304a-4322-a83a-686dbf800140}</Project>
+      <Name>Main.Control.Services</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <EntityDeploy Include="MainControl.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>MainControl.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="MainControl.edmx.diagram">
+      <DependentUpon>MainControl.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MainControl.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MainControl.edmx</DependentUpon>
+      <LastGenOutput>MainControl.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="MainControl.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MainControl.edmx</DependentUpon>
+      <LastGenOutput>MainControl.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+</Project>

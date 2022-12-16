@@ -1,0 +1,194 @@
+﻿@{
+    ViewBag.Title = "Two Factor Authentication";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+@{
+    bool isEnabledAuthentication = Main.Control.Web.Utilities.Utility.GetBool(ViewData["IsEnabledAuthentication"]);
+    var adminUserId = ViewData["AdminUserId"];
+}
+
+@using (Html.BeginForm("VerifyAuthenticationCode", "Admin", FormMethod.Post, new { id = "formMultiFactorVerification", autocomplete = "off" }))
+{
+
+    if (!isEnabledAuthentication)
+    {
+
+     
+<div class="container">
+   
+    <div class="row" style="max-width: 700px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; min-height: 80vh; align-items: center;
+">
+        <div class="bg-white" style="padding-left: 20px; padding-bottom: 20px;">
+            <h3 class="taC font-weight-bold mBot15">
+                Two Factor Authentication Setup
+            </h3>
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="timeline-content">
+                            <h2>Step1</h2>
+                            Download a compatible Authenticator App from the iOS App store or the Android Play store.
+                        </div>
+                        <div class="timeline-content">
+                            <h2>Step2</h2>
+                            Scan the displayed QR code from the downloaded Authenticator App.
+                        </div>
+                    </div>
+                    <div class="col-lg-4" style="text-align: center;position: absolute;right: 0;top: 30px;">
+                        <div id="EnableQRcode">
+                            <div class="mRight10" style="opacity:0.1;">
+                                <img src="@ViewBag.BarcodeImageUrl" style="width: 120px !important;" class="" />
+                            </div>
+                            <a href="javascript:void(0)" onclick="ViewQRcode()">View QR Code</a>
+
+                        </div>
+                        <div class="" style="display:none" id="EnableQRcodeNoBlur">
+                            <div class="mRight10">
+                                <img src="@ViewBag.BarcodeImageUrl" style="width: 120px !important;" class="" />
+                            </div>
+                            <a href="javascript:void(0)" style="display:none" onclick="HideQRCode()" id="hideQrCode">Hide QR Code</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div class="col-lg-12 mBot15">
+            <div class="bg-white">
+                <div class="timeline-content">
+                    <h2>Step2</h2>
+                    <div class="d-flex flex-lg-nowrap flex-wrap" id="EnableQRcode">
+                        <div class="mRight10" style="opacity:0.1;">
+                            <img src="@ViewBag.BarcodeImageUrl" style="width: 120px !important;" class="" />
+                        </div>
+                        <a href="javascript:void(0)" onclick="ViewQRcode()">View</a>
+                        <div>
+                            Scan the displayed QR code from the downloaded Authenticator App.
+                        </div>
+                    </div>
+                    <div class="d-flex flex-lg-nowrap flex-wrap" style="display:none" id="EnableQRcodeNoBlur">
+                        <div class="mRight10">
+                            <img src="@ViewBag.BarcodeImageUrl" style="width: 120px !important;" class="" />
+                        </div>
+                        <a href="javascript:void(0)" style="display:none" onclick="HideQRCode()" id="hideQrCode">Hide</a>
+                        <div>
+                            Scan the displayed QR code from the downloaded Authenticator App.
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>*@
+            <div class="col-lg-12">
+                <div class="bg-white">
+                    <div class="timeline-content pb-0">
+                        <h2>Step3</h2>
+                        After Scanning the QR code image, the Authenticator App will display a 6 digit code that you should enter below.
+                        <div class="mTop10">
+                            <input type="text" id="VerificationCode" maxlength="6" name="VerificationCode" placeholder="Enter Verification code" onkeypress="return isNumber(event)" />
+                            <button class="btn-orange btn-size mLeft10" type="button" onclick="VerifyTwoFactorAuthentication()">
+                                Verify
+                                <span id="SpinnerAuthAPP" style="display:none"><i class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></span>
+                            </button>
+                            <div id="lblVerifyCode" class="pos_rel errorBg" style="display:none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    }
+    else
+    {
+      
+        <div class="row" style="max-width: 900px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; min-height: 80vh; align-items: center;
+">
+            <div class="col-lg-8 mBot15 bg-white" style="padding: 30px 15px;">
+                <h3 class="taC font-weight-bold mBot15 mTop0">
+                    Two Factor Authentication
+                </h3>
+                <div class="d-flex mTop15">
+                    <div class="mRight10">
+                        <img src="~/Content/Authentication.png" alt="Authentication" style="width:150px" />
+                    </div>
+                    <div class="taL">
+                        <p class="mBot-15 font16">
+                            Enter the Verification code displayed on your device to sign-in
+                        </p>
+                        <input type="text" id="VerificationCode" maxlength="6" name="VerificationCode" placeholder="Enter Verification code" onkeypress="return isNumber(event)" />
+                        <button class="btn-orange btn-size mLeft10" type="button" onclick="VerifyTwoFactorAuthentication()">
+                            Verify
+                            <span id="SpinnerAuthAPP" style="display:none"><i class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></span>
+                        </button>
+                        <div id="lblVerifyCode" class="pos_rel errorBg" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<script>
+    $(function () {
+        $("#VerificationCode").focus();
+    });
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+    $('#formMultiFactorVerification').on('keypress', function (e) {
+        var keyCode = e.keyCode || e.which;
+        if (keyCode === 13) {
+                VerifyTwoFactorAuthentication()
+            e.preventDefault();
+            return false;
+        }
+    });
+    function VerifyTwoFactorAuthentication() {
+        if ($("#VerificationCode").val().length > 0) {
+            $.ajax({
+                url: '/Admin/VerifyAuthenticationCode',
+                type: "POST",
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader("X-Robots-Tag", "noindex, nofollow");
+                },
+                data: { VerificationCode: $("#VerificationCode").val(), AdminUserId: '@adminUserId', ProductName: $("#hdnproductName").val() },
+                success: function (data) {
+                    if (data != null && data != false) {
+                        location.href = data;
+                    }
+                    else {
+                        $('#lblVerifyCode').html('<label id="Label2New" class="error">Invalid Verification code</label>');
+                        $('#lblVerifyCode').show();
+                        $("#VerificationCode").val('');
+                    }
+                }
+            });
+        }
+        else {
+            $('#lblVerifyCode').html('<label id="Label2New" class="error">Please enter Verification code</label>');
+            $('#lblVerifyCode').show();
+        }
+    }
+    function ViewQRcode() {
+        $("#EnableQRcodeNoBlur").show()
+        $("#viewQrCode").hide();
+        $("#EnableQRcode").hide();
+        $("#hideQrCode").show();
+
+    }
+    function HideQRCode() {
+        $("#EnableQRcodeNoBlur").hide()
+        $("#viewQrCode").show();
+        $("#EnableQRcode").show();
+        $("#hideQrCode").hide();
+    }
+</script>
+
+
+
+

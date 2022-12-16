@@ -1,0 +1,395 @@
+﻿@model List<Main.Control.Core.Models.CampaignDetails>
+@using Main.Control.Web.Utilities
+@using Main.Control.Core.Models
+@{
+    DateTime filtercurrentdate = DateTime.Now;
+    var CampaigndetailsWithFilter = Model.Where(x => x.CampaignStartDate != DateTime.MinValue);
+    var ProjectList = new List<SelectListItem>();
+    int maxPageSizeCount = Utility.GetInt(ViewData["MaxPageCount"]);
+    bool isRecordsExist = false;
+    if (Model != null && Model.Count > 0)
+    {
+        isRecordsExist = true;
+    }
+}
+<div>
+
+    <style>
+        .h2_head {
+            max-width: initial;
+        }
+    </style>
+    <div class="">
+
+        <div class="get_camp">
+            <div class="" id="rowProduct">
+                <span class="labelName"><label>Select Product:</label></span>
+                <span class="fieldName">
+                    @*@Html.DropDownList("ddlProduct", ProjectList, "All", new { @id = "Product" })*@
+                    @Html.DropDownList("Product")
+
+                </span>
+            </div>
+        </div>
+        <div class="get_camp">
+
+            <div id="rowStatus">
+                <span class="labelName">
+                    <label>Select Status:</label>
+                </span>
+                <span class="fieldName">
+                    @*@Html.DropDownList("ddlStatus",
+                         new[]
+                         {
+                                new SelectListItem
+                                {
+                                        Text = "All",
+                                        Value = LeadListStatus.All.ToString()
+                                },
+                                  new SelectListItem
+                                 {
+                                         Text = "Upcoming",
+                                         Value = LeadListStatus.Upcoming.ToString()
+                                 },
+                                  new SelectListItem
+                                 {
+                                         Text = "Active",
+                                         Value = LeadListStatus.Active.ToString()
+                                 },
+                                    new SelectListItem
+                                 {
+                                         Text = "Expired",
+                                         Value = LeadListStatus.Expired.ToString()
+                                 }
+
+                        }, new { id = "Status" })*@
+                    @Html.DropDownList("Status")
+
+
+                </span>
+
+
+            </div>
+
+        </div>
+
+        <div class="get_camp mR0">
+
+            <div>
+                <span colspan="2" class="floatR">
+                    <a class="btn btn-primary" href="javascript:void(0);" onclick="GetRecords(true);">
+                        Get Campaigns
+                        <i id="getSupportRecordSpinner" style="display:none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i>
+                    </a>
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    @if (CampaigndetailsWithFilter != null && CampaigndetailsWithFilter.Count() > 0)
+    {
+        <div class="camp_dash_wrap">
+            <div class="">
+
+            </div>
+            <div class="spacer15" style="float: left; width: 100%;"></div>
+
+            @foreach (var campaignDetails in CampaigndetailsWithFilter)
+            {
+                string startdate = string.Empty;
+                string enddate = string.Empty;
+                // DateTime currentdate = DateTime.Now;
+                string currentdate = Utility.GetDateTime(DateTime.Now).ToString("MM/dd/yyyy");
+                if (campaignDetails.CampaignStartDate != null && campaignDetails.CampaignStartDate > DateTime.MinValue)
+                {
+                    startdate = Utility.GetDateTime(campaignDetails.CampaignStartDate).ToString("MM/dd/yyyy");
+                }
+                if (campaignDetails.CampaignEndDate != null && campaignDetails.CampaignEndDate > DateTime.MinValue)
+                {
+                    enddate = Utility.GetDateTime(campaignDetails.CampaignEndDate).ToString("MM/dd/yyyy");
+                }
+                string campaignPeroid = startdate + " to " + enddate;
+
+                decimal completedPercentage = 0;
+
+                if (campaignDetails.CampaignSupportUserDetails != null && campaignDetails.CampaignSupportUserDetails.NoOfCompleted > 0)
+                {
+                    decimal NoOfUserAssigned = Utility.GetDecimal(campaignDetails.CampaignSupportUserDetails.NoOfUserAssigned);
+                    if (NoOfUserAssigned > 0)
+                    {
+                        completedPercentage = Utility.GetDecimal(campaignDetails.CampaignSupportUserDetails.NoOfCompleted) / NoOfUserAssigned;
+                        completedPercentage = Utility.GetDecimal2Digits(completedPercentage * 100);
+                    }
+                }
+                <div class="table-responsive dashboardTable mBot15" style="width:100%">
+                    <table class="table_adp" border="1">
+                        <tr>
+                            <td class="Campaign_logo taC" rowspan="2">
+                                @if (campaignDetails.AdminProjectId == (int)Project.UnitWise)
+                                {
+                                    <img src="~/Content/Images/uwLogo.gif" class="width_100px" alt="UnitWise" title="UnitWise" />
+                                }
+                                else if (campaignDetails.AdminProjectId == (int)Project.SpanPlan)
+                                {
+                                    <img src="~/Content/Images/spLogo.gif" alt="Inspherio" title="Inspherio" class="width_100px" />
+                                }
+                                else if (campaignDetails.AdminProjectId == (int)Project.ExpressTruckTax)
+                                {
+                                    <img src="~/Content/Images/ETT.png" alt="ETT" title="Express Truck Tax" class="width_100px" />
+                                }
+                                else if (campaignDetails.AdminProjectId == (int)Project.ExpressIFTA)
+                                {
+                                    <img src="~/Content/Images/IFTA.png" alt="EIFTA" title="Express IFTA" class="width_100px" />
+                                }
+                                else if (campaignDetails.AdminProjectId == (int)Project.ExpressTaxFilings)
+                                {
+                                    <img src="~/Content/Images/ETF.png" alt="ETF" title="Express Tax Filings" class="width_100px" />
+                                }
+                                else if (campaignDetails.AdminProjectId == (int)Project.ExpressExtension)
+                                {
+                                    <img src="~/Content/Images/EET.png" alt="EE" title="Express Extension" class="width_100px" />
+                                }
+                                else if (campaignDetails.AdminProjectId == (int)Project.Express990)
+                                {
+                                    <img src="~/Content/Images/E990.png" alt="ExpressTaxExempt" title="ExpressTaxExempt" class="width_100px" />
+                                }
+                                else if (campaignDetails.AdminProjectId == (int)Project.TruckLogics)
+                                {
+                                    <img src="~/Content/Images/ETL.png" alt="Truck Logics" title="Truck Logics" class="width_100px" />
+                                }
+                                else if (campaignDetails.AdminProjectId == (int)Project.TSNAAdmin)
+                                {
+                                    <img src="~/Content/Images/TSNA.png" alt="TSNAmerica" title="TSNAmerica" class="width_100px" />
+                                }
+                                else if (campaignDetails.AdminProjectId == (int)Project.StayTaxExempt)
+                                {
+                                    <img src="~/Content/Images/STE.jpg" alt="StayTaxExempt" title="StayTaxExempt" class="width_100px" />
+                                }
+                                else if (campaignDetails.AdminProjectId == (int)Project.ACAwise)
+                                {
+                                    <img src="~/Content/Images/ACAw.png" alt="ACAwise" title="ACAwise" class="width_100px" />
+                                }
+
+                                @if (campaignDetails.IsSuspended)
+                                {
+                                    <h3 class="lead_text">@CampaignStatus.Suspended.ToString()</h3>
+                                }
+                                else if (!string.IsNullOrWhiteSpace(startdate) && !string.IsNullOrWhiteSpace(enddate) && Utility.GetDateTime(startdate) <= Utility.GetDateTime(currentdate) && Utility.GetDateTime(enddate) >= Utility.GetDateTime(currentdate))
+                                {
+                                    <h3 class="lead_text">@CampaignStatus.Active.ToString()</h3>
+                                }
+                                else if (!string.IsNullOrWhiteSpace(startdate) && Utility.GetDateTime(startdate) > Utility.GetDateTime(currentdate))
+                                {
+                                    <h3 class="lead_text">@CampaignStatus.Upcoming.ToString()</h3>
+                                }
+                                else if (!string.IsNullOrWhiteSpace(enddate) && Utility.GetDateTime(enddate) < Utility.GetDateTime(currentdate))
+                                {
+                                    <h3 class="lead_text">@CampaignStatus.Expired.ToString()</h3>
+                                }
+                            </td>
+                            <td class="CampaignDetails" style="width:30%">
+                                <h2 class="h2_head floatL">@campaignDetails.CampaignName</h2>
+                                @if (!campaignDetails.IsManagerFollowUp)
+                                {
+                                <p><a href="javascript:void(0);" class="btn btn_sm btn-second floatR" style="margin-top: -5px;" onclick="ViewGoals('@campaignDetails.CampaignDetailsId');">Goals</a></p>
+                                <div class="clearfix"></div>
+                                <p><span class="semibold">Created By: </span>@(!string.IsNullOrWhiteSpace(campaignDetails.AdminUserName) ? campaignDetails.AdminUserName : "-")</p>
+                                }
+                                <div class="clearfix"></div>
+                                <p><span class="semibold">Created: </span>@campaignDetails.CreateTimeStamp</p>
+                                <p><span class="semibold">Period: </span>@campaignPeroid</p>
+                                <h3 class="type_text">@campaignDetails.CampaignType</h3>
+
+                            </td>
+                            <td class="taC">
+                                <h2 class="h2_head">Phone</h2>
+                                <p class="supp_name">@campaignDetails.PhoneCount</p>
+                            </td>
+                            @*<td class="taC">
+                                <h2 class="h2_head">Email</h2>
+                                <p class="supp_name">@campaignDetails.EmailCount</p>
+                            </td>*@
+                            <td class="taC">
+                                <h2 class="h2_head">Follow Up</h2>
+                                <p class="supp_name">@campaignDetails.FollowupCount</p>
+                            </td>
+                            @*@if (campaignDetails.CampaignStartDate != null && campaignDetails.CampaignStartDate != DateTime.MinValue &&
+                                         campaignDetails.CampaignEndDate != null && campaignDetails.CampaignEndDate != DateTime.MinValue &&
+                                         campaignDetails.CampaignStartDate < currentdate && campaignDetails.CampaignEndDate > currentdate)
+                                {*@
+                            @if (campaignDetails.CampaignSupportUserDetails.LastLeadId == 0 && (campaignDetails.BatchStatus == null || campaignDetails.BatchStatus == BatchUploadStatus.SUCCESS.ToString()))
+                            {
+                                if (ViewBag.CampaignStatus != CampaignStatus.Expired.ToString())
+                                {
+                                    <td class="taC" style="width:19%;">
+                                        <a class="btn btn_sm btn-primary" href="/Campaign/ViewCampaignLeads/@campaignDetails.CampaignDetailsId/@campaignDetails.CampaignSupportUserDetails.SupportUserId">Start</a>
+                                        <a class="btn btn_sm btn-second" style="margin-left: 15px;" href="javascript:void(0);" onclick="StartWithFilter(@campaignDetails.CampaignDetailsId, @campaignDetails.CampaignSupportUserDetails.SupportUserId);">Start with Filter</a>
+                                    </td>
+                                }
+
+                            }
+                            else
+                            {
+                                if (ViewBag.CampaignStatus != CampaignStatus.Expired.ToString() && (campaignDetails.BatchStatus == null || campaignDetails.BatchStatus == BatchUploadStatus.SUCCESS.ToString()))
+                                {
+
+                                    <td class="taC" style="width:16%;">
+                                        <a class="btn btn_sm btn-primary" href="/Campaign/ViewCampaignLeads/@campaignDetails.CampaignDetailsId/@campaignDetails.CampaignSupportUserDetails.SupportUserId" onclick="">Continue where you left</a>
+                                        <br />
+                                        <br />
+                                        <a class="btn btn_sm btn-second" style="margin-left: 15px;" href="javascript:void(0);" onclick="StartWithFilter(@campaignDetails.CampaignDetailsId, @campaignDetails.CampaignSupportUserDetails.SupportUserId);">Start with Filter</a>
+                                        @if (campaignDetails.SkippedCount > 0)
+                                        {
+                                            <br />
+                                            <br />
+                                            <a class="btn btn_sm btn-primary" href="/Campaign/ViewCampaignLeads/@campaignDetails.CampaignDetailsId/@campaignDetails.CampaignSupportUserDetails.SupportUserId?id5=true" onclick="">Skipped Leads</a>
+                                        }
+                                    </td>
+                                }
+
+                            }
+
+                            @* }*@
+
+                            <td class="taC" style="width:10%;">
+                                @if (campaignDetails.CampaignSupportUserDetails != null && campaignDetails.CampaignSupportUserDetails.NoOfUserAssigned > 0)
+                                {
+                                    int nOfCompleted = campaignDetails.CampaignSupportUserDetails.NoOfCompleted ?? 0;
+                                    <h2 class="h2_head taC">@nOfCompleted / @campaignDetails.CampaignSupportUserDetails.NoOfUserAssigned</h2>
+                                    <h3 class="h2_head taC">@(completedPercentage > 0 ? Utility.GetDecimal2Digits(completedPercentage) : 0)%</h3>
+                                    <p><a class="btn btn_sm btn-third" href="javascript:void(0);" onclick="ViewReport(@campaignDetails.CampaignDetailsId, @campaignDetails.CampaignSupportUserDetails.SupportUserId);">View Report</a></p>
+                                }
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td rowspan="1" colspan="6" class="camp_status">
+                                @if (Utility.GetDateTime(enddate) < Utility.GetDateTime(currentdate))
+                                {
+                                    <h3 class="h3_head">Campaign Ended</h3>
+                                }
+                                else if (Utility.GetDateTime(startdate) > Utility.GetDateTime(currentdate))
+                                {
+                                    int days = Utility.GetInt((Utility.GetDateTime(startdate) - Utility.GetDateTime(currentdate)).TotalDays);
+                                    <h3 class="h3_head">Campaign Starts In: <b>@days Day(s)</b></h3>
+                                }
+                                else if (Utility.GetDateTime(enddate) == Utility.GetDateTime(currentdate))
+                                {
+                                    <h3 class="h3_head">Campaign Ends today</h3>
+                                }
+                                else
+                                {
+                                    int days = Utility.GetInt((Utility.GetDateTime(enddate) - Utility.GetDateTime(currentdate)).TotalDays) + 1;
+                                    <h3 class="h3_head">Campaign Ends In: <b>@days Day(s)</b></h3>
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            }
+        </div>
+
+    }
+    else
+    {
+        <div class="spacer15 clearfix" style="float: left; width: 100%;"></div>
+
+        <div class="alert alert-info fade in alert-dismissable" style="text-align:center;display: table;width: 100%;">
+            <strong>No Campaign's Assigned!</strong>
+        </div>
+    }
+</div>
+
+
+<script lang="javascript" type="text/javascript">
+
+    $(function () {
+        $(".dashboardTable").niceScroll();
+        $("#Status option[value='Draft']").remove();
+        $("#Status option[value='Suspended']").remove();
+        $('#MaxPageCount').val(@maxPageSizeCount)
+        $('#IsRecordExist').val('@isRecordsExist');
+
+    });
+    function ViewGoals(CampaignDetailsId) {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/_ViewGoalsByCampaignDetailsId",
+            data: { id: CampaignDetailsId },
+            success: function (result) {
+                $("#ModelBody").html(result);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-600');
+            }
+        });
+    }
+
+    function ViewReport(campaignId, supportId) {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/_ViewLeadReportForSupport",
+            data: { id: campaignId, id2: supportId },
+            success: function (data) {
+                $("#ModelBody").html(data);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-md');
+            }
+        });
+    }
+
+    function StartWithFilter(campaignId, supportId) {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/_StartWithFilter",
+            data: { id: campaignId, id2: supportId },
+            success: function (data) {
+                $("#ModelBody").html(data);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-700');
+            }
+        })
+    }
+
+    function GetRecords(isRecordAvail) {
+        $('#PageIndex').val(0);
+        var projectId = $("#Product option:selected").val();
+        if (projectId == "") {
+            projectId = 0;
+        }
+        var listStatus = $("#Status option:selected").val();
+        $('#getSupportRecordSpinner').show();
+        if (isRecordAvail) {
+
+
+
+            $("#supportTab").load("/Campaign/_SupportDashboard/" + projectId + "/" + listStatus + "?PageIndex=" + $('#PageIndex').val() + "&PageSize=" + $('#PageSize').val(), function () {
+                if ($('#IsRecordExist').val().toString().toLowerCase() == 'true') {
+                    $('#divPagination').show();
+                }
+                else {
+                    $('#divPagination').hide();
+                }
+                disablePaginationButtons();
+                $('#getSupportRecordSpinner').hide();
+            });
+        }
+        else {
+            $("#supportTab").load("/Campaign/_SupportDashboard/" + projectId + "/" + listStatus + "?PageIndex=" + $('#PageIndex').val() + "&PageSize=" + $('#PageSize').val(), function () {
+                if ($('#IsRecordExist').val().toString().toLowerCase() == 'true') {
+                    $('#divPagination').show();
+                }
+                else {
+                    $('#divPagination').hide();
+                }
+                disablePaginationButtons();
+                $('#getSupportRecordSpinner').hide();
+            });
+        }
+    }
+</script>

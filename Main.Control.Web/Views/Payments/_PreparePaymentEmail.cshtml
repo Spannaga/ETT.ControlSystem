@@ -1,0 +1,66 @@
+﻿@using Main.Control.Core.Models;
+@model UserPayments
+
+<style>
+    .modal-dialog-md{max-width:850px}
+</style>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"></button>
+    <h4 class="modal-title">Payment Request Email</h4>
+</div>
+<div class="modal-body" style="height:800px;">
+    @using (Html.BeginForm("SendEmailUsser", "Payments", FormMethod.Post, new { @id = "frmmailpayment" }))
+    {
+    <div class="subjectDiv">
+        <label>Subject:</label>@Html.TextBoxFor(x => x.MailSubject)
+    </div>
+        <iframe id="ifrmusrpayment" style="width: 800px; height: 700px; margin: auto; text-align: center; border: 1px solid #ccc;">
+
+        </iframe>
+        @Html.HiddenFor(x=>x.UserPaymentId)
+    }
+</div>
+<div class="modal-footer edit-modal-footer footBtn mTopNo">
+    <button data-bb-handler="cancel" type="button" class="btn btn-cancel floatL mTop3"  id="backbtn">Back</button>
+    <button data-bb-handler="delete" type="button" class="btn btn-org" id="sendbtn">Send</button>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var ifrmusrpayment = document.getElementById('ifrmusrpayment');
+        ifrmusrpayment.srcdoc = '@Html.Raw(Model.MailHtml.Replace(Environment.NewLine, "").Replace("'", "'+\"'\"+'"))';
+
+        $("#sendbtn").on('click', function () {
+            $.ajax({
+                url: '/Payments/PreparePaymentEmail',
+                type: 'POST',
+                data: $("#frmmailpayment").serialize(),
+                cache: false,
+                async: false,
+                success: function (userPayment) {
+                    if (userPayment.PaymentStatus == "MAILSENT") {
+                        toastr.success("Payment Mail sent successfully");
+                        location.reload(true);
+                    } else {
+                        toastr.error(data.FailureMsg);
+                    }
+                }
+            })
+        });
+
+        $("#backbtn").on('click', function () {
+            $.ajax({
+                url: '/Payments/_AddUserPayment?UserPaymentId=' + $("#UserPaymentId").val(),
+                type: 'GET',
+                cache: false,
+                async: false,
+                success: function (data) {
+                    $('#ModelBody').html(data);
+                    $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                    $('#myModal').modal('show');
+                    $('.modal-dialog').addClass('modal-dialog-md');
+                }
+            })
+        });
+    });
+</script>

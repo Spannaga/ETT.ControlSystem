@@ -1,0 +1,22 @@
+﻿@if (Session[Main.Control.Utilities.Infrastructure.SessionItemKey.AdminUserId] != null)
+{
+   
+    if (Session[Main.Control.Utilities.Infrastructure.SessionItemKey.AdminRole].ToString() == Main.Control.Utilities.Infrastructure.PURoles.Administrator.ToString() || Session[Main.Control.Utilities.Infrastructure.SessionItemKey.ProjectType].ToString().Contains(","))
+    {
+    <div class="floatR">
+        <a href="javascript:void(0);" title="Switch Project" name="Edit" onclick="ChangeProject();" id="a3" class="textLink"><img src="@Url.Content("~/Content/Images/NewImages/switchIcon.png")" title="" alt="" />Switch Product</a>
+    </div>
+    }
+    <div class="clear"></div>
+    <div class="mTop10">
+        Welcome
+        @Html.Encode(Session[Main.Control.Utilities.Infrastructure.SessionItemKey.AdminDisplayName].ToString())!
+       
+       <span class="logOut">@Html.ActionLink("Log Out", "SignOut", "Admin")</span></div>
+}
+
+<script type="text/javascript">
+    function ChangeProject() {
+        $.colorbox({ href: '/Admin/_Projects/', width: "850px", height: "500px", overlayClose: false, escKey: false, onLoad: function () { $('#cboxClose').hide() }, onComplete: function () { $('#cboxClose').show() } });
+    }
+</script>

@@ -1,0 +1,381 @@
+﻿@using Main.Control.Core.Models;
+@using Main.Control.Web.Utilities;
+@model UserPayments
+
+@{
+    ViewBag.Title = "UserPayments";
+    var adminProjectDropDown = new List<SelectListItem>();
+    adminProjectDropDown = Model.Projects.Select(x => new SelectListItem
+    {
+        Value = x.AdminProjectId.ToString(),
+        Text = x.ProjectName
+    }).ToList();
+    var stateDropDown = new List<SelectListItem>();
+    stateDropDown  = Model.States.Select(x => new SelectListItem
+    {
+        Value = x.StateId.ToString(),
+        Text = x.StateName
+    }).ToList();
+    var countryDropDown = new List<SelectListItem>();
+    countryDropDown = Model.Countries.Select(x => new SelectListItem
+    {
+        Value = x.CountryId.ToString(),
+        Text = x.CountryName
+    }).ToList();
+    
+}
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"></button>
+    <h4 class="modal-title">Create Payment Request</h4>
+</div>
+<div class="modal-body">
+    @using (Html.BeginForm("SavePaymentDetails", "Payments", FormMethod.Post, new { @id = "frmaddpayment", @autocomplete = "off" }))
+    {
+        <table class="responsive">
+            <tbody>
+                <tr>
+                    <td class="labelName" style="width:200px;">
+                        <label for="AdminEmailAddress">
+                            <span class=" red">*</span>Product:
+                        </label>
+                    </td>
+                    <td class="fieldName">
+                        @Html.DropDownList("Projectid", adminProjectDropDown, "Select Product", new { id = "ddlAdminProjectList" })
+                    </td>
+                </tr>
+                <tr class="spacer10"></tr>
+                <tr>
+                    <td class="labelName" style="width:200px;">
+                        <label for="AdminEmailAddress">
+                            <span class=" red">*</span>From Email:
+                        </label>
+                    </td>
+                    <td class="fieldName">
+                        @Html.TextBoxFor(x => x.FromEmail)
+                    </td>
+                    <td class="labelName" style="width:200px;">
+                        <label for="AdminEmailAddress">
+                            <span class=" red">*</span>To Email:
+                        </label>
+                    </td>
+                    <td class="fieldName">
+                        @Html.TextBoxFor(x => x.ToEmail)
+                    </td>
+
+                </tr>
+                <tr class="spacer10"></tr>
+                <tr>
+                    <td class="labelName" style="width:200px;">
+                        <label for="AdminEmailAddress">
+                            <span class=" red">*</span>Business/Contact Name:
+                        </label>
+                    </td>
+                    <td class="fieldName">
+                        @Html.TextBoxFor(x => x.BusinessName)
+                    </td>
+                    <td class="labelName" style="width:200px;">
+                        <label for="AdminEmailAddress">
+                            <span class=" red">*</span>Phone Number:
+                        </label>
+                    </td>
+                    <td class="fieldName">
+                        @Html.TextBoxFor(x => x.PhoneNo)
+                    </td>
+                </tr>
+                <tr class="spacer10"></tr>
+                <tr>
+                    <td class="labelName" style="width:200px;">
+                        <label for="AdminEmailAddress">
+                            <span class=" red">*</span>Services:
+                        </label>
+                    </td>
+                </tr>
+                <tr class="spacer10"></tr>
+                <tr>
+                    <td class="labelName" colspan="4">
+                        <table class="serviceTbl">
+                            <thead>
+                                <tr>
+                                    <th style="width:60%">
+                                        <span class="red">*</span>Service
+                                    </th>
+                                    <th style="width:5%" class="taR">
+                                        <span class="red">*</span>Qty
+                                    </th>
+                                    <th style="width:10%" class="taR">
+                                        <span class="red">*</span>Rate
+                                    </th>
+                                    <th style="width:10%" class="taR">
+                                        <span class="red">*</span>Amount
+                                    </th>
+                                    <th class="taC" style="width:15%">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbdysrvcdet">
+                                @for (int i = 0; i < Model.UserPaymentDetails.Count; i++)
+                                {
+                                    <tr id="trsrvc_@i">
+                                        <td class="taL">
+                                            @Html.TextBoxFor(m => m.UserPaymentDetails[i].ServiceName, new { @style = "width:100%;" })
+                                        </td>
+                                        <td class="taR customError">
+                                            @Html.TextBoxFor(m => m.UserPaymentDetails[i].Quantity, new { @onchange = "fnReCalc(" + i + ")", @class = "taR" })
+                                        </td>
+                                        <td class="taR customError">
+                                            @Html.TextBoxFor(m => m.UserPaymentDetails[i].Rate, new { @onchange = "fnReCalc(" + i + ")", @class = "taR" })
+                                        </td>
+                                        <td class="taR">
+                                            @Html.TextBoxFor(m => m.UserPaymentDetails[i].Amount, new { @readonly = "readonly", @class = "taR" })
+                                        </td>
+                                        <td class="taC">
+                                            @*<a href="javascript:void(0);" onclick="fnAddService()" class="add">Add <b style="font-size: 18px;">+</b></a>*@
+                                            <a href="javascript:void(0);" onclick="fnRemoveService(@i)" class="del">Remove <b style="font-size: 15px;">x</b></a>
+
+                                        </td>
+                                    </tr>
+                                }
+                                @*<tr data-lasttrs="true">
+                                        <td colspan="5" class="taL">
+                                            <a href="javascript:void(0);" onclick="fnAddService()">Add</a>
+                                        </td>
+                                    </tr>*@
+                                <tr data-lasttrs="true">
+                                    <td style="padding:10px;border:none;text-align:left;">
+                                        <a href="javascript:void(0);" onclick="fnAddService()" class="add">Add <b style="font-size: 18px;">+</b></a>
+                                    </td>
+                                    <td colspan="4" class="taR" style="padding:10px;border:none;">
+                                        <b>Total: <span id="totalamt" style="padding-left:5px;"></span></b>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </td>
+                </tr>
+                <tr style="display:none;">
+                    <td class="labelName" style="width:200px;">
+                        <label for="AdminEmailAddress">
+                            <span class=" red">*</span>Order Amount:
+                        </label>
+                    </td>
+                    <td class="fieldName">
+                        @Html.TextBoxFor(x => x.PaymentAmount,)
+                    </td>
+
+                </tr>
+                <tr class="spacer10"></tr>
+            </tbody>
+        </table>
+        @Html.HiddenFor(x => x.UserPaymentId)
+        @Html.HiddenFor(x => x.ProductUserId)
+    }
+</div>
+<div class="modal-footer edit-modal-footer footBtn mTopNo">
+    <button data-bb-handler="cancel" type="button" class="btn btn-cancel floatL mTop3">Cancel</button>
+    <button data-bb-handler="delete" type="button" class="btn btn-org" id="btnCreate">Create</button>
+</div>
+
+<script type="text/javascript">
+    var form = $('#frmaddpayment').get(0);
+    $.removeData(form, 'validator');
+    $('#frmaddpayment').validate({
+        ignore: ":not(:visible)",
+        rules: {
+            Projectid: { required: true },
+            FromEmail: { required: true },
+            ToEmail: { required: true },
+            BusinessName: { required: true },
+            OrderDescription: { required: true },
+            PaymentAmount: { required: true },
+            PhoneNo: {
+                minlength: 14,
+                required: true
+            }
+        }
+    });
+    var servcDetailCnt = parseInt('@Model.UserPaymentDetails.Count');
+    var isLive = '@Utility.GetAppSettings("IsLive")';
+    var emailList = [];
+    $(function () {
+        if ($("#ToEmail").val()=='') {
+            $("#ToEmail").attr('readonly','readonly');
+        }
+        $("#ToEmail").autocomplete({
+            "source": function (request,response) {
+                $.ajax({
+                    url: '/Payments/SearchEmailByProduct?emailAddress=' + $("#ToEmail").val() + "&project=" + $("#ddlAdminProjectList").val(),
+                    type: 'GET',
+                    cache: false,
+                    async:false,
+                    success: function (data) {
+                        if (data!=null) {
+                            emailList = [];
+                            var emaillst = [];
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i] != null) {
+                                    var uData = data[i].split('|');
+                                    var uDat = {};
+                                    uDat.Email = uData[1];
+                                    uDat.UId = uData[0];
+                                    uDat.ContactName = uData[2];
+                                    uDat.PhoneNo = uData[3];
+                                    emaillst[i] = uDat.Email;
+                                    emailList[i] = uDat;
+                                }
+                            }
+                            response(emaillst);
+                        }
+
+                    }
+                });
+            },
+            select: function (data,ui) {
+                debugger;
+                var emailData = fnGetEmailData(ui.item.value);
+                $("#ProductUserId").val(emailData.UId);
+                $("#BusinessName").val(emailData.ContactName);
+                $("#PhoneNo").val(emailData.PhoneNo);
+            }
+            
+        });
+        $("#PhoneNo").mask("(999) 999-9999");
+        $("#ddlAdminProjectList").on('change', function () {
+            if (isLive == "true") {
+                if ($(this).val() == '@Project.ExpressTruckTax') $("#FromEmail").val('support@expresstrucktax.com');
+                if ($(this).val() == '@Project.ExpressTaxFilings') $("#FromEmail").val('support@taxbandits.com');
+            }
+            else {
+                $("#FromEmail").val('vistaemailstbs@gmail.com');
+            }
+            if ($(this).val()!='') {
+                $("#ToEmail").removeAttr('readonly');
+                $("#ToEmail").val('');
+            }
+            else{
+                $("#ToEmail").attr('readonly', 'readonly');
+                $("#ToEmail").val('');
+            }
+        });
+        fnBindValidation();
+        $("#btnCreate").on('click', function () {
+            if ($("#frmaddpayment").valid()) {
+                $.ajax({
+                    url: '/Payments/SavePaymentDetails',
+                    type: 'POST',
+                    data: $("#frmaddpayment").serialize(),
+                    cache: false,
+                    async: false,
+                    success: function (data) {
+                        $('#ModelBody').load('/Payments/_PreparePaymentEmail?UserPaymentId=' + data);
+                        $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                        $('#myModal').modal('show');
+                        $('.modal-dialog').addClass('modal-dialog-md');
+                    }
+                })
+            }
+        });
+        fnRemoveChk();
+    });
+
+    function fnAddService() {
+        var servcTr = '';
+        servcTr += '<tr id="trsrvc_'+servcDetailCnt+'">';
+        servcTr += '<td class="taL">';
+        servcTr += '<input style = "width:100%;" id="UserPaymentDetails_' + servcDetailCnt + '__ServiceName" name="UserPaymentDetails[' + servcDetailCnt +'].ServiceName" type="text" value="">';
+        servcTr += '</td>';
+        servcTr += '<td class="taR customError">';
+        servcTr += '<input class="taR" data-val="true" data-val-number="The field Quantity must be a number." data-val-required="The Quantity field is required." id="UserPaymentDetails_' + servcDetailCnt + '__Quantity" name="UserPaymentDetails[' + servcDetailCnt + '].Quantity" type="text" value="0" onchange="fnReCalc(' + servcDetailCnt +')">';
+        servcTr += '</td>';
+        servcTr += '<td class="taR customError">';
+        servcTr += '<input class="taR" data-val="true" data-val-number="The field Rate must be a number." data-val-required="The Rate field is required." id="UserPaymentDetails_' + servcDetailCnt + '__Rate" name="UserPaymentDetails[' + servcDetailCnt + '].Rate" type="text" value="0" onchange="fnReCalc(' + servcDetailCnt +')">';
+        servcTr += '</td>';
+        servcTr += '<td class="taR">';
+        servcTr += '<input class="taR" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." id="UserPaymentDetails_' + servcDetailCnt + '__Amount" name="UserPaymentDetails[' + servcDetailCnt +'].Amount" readonly="readonly" type="text" value="0">';
+        servcTr += '</td>';
+        servcTr += '<td class="taC">';
+        servcTr += '<a href="javascript:void(0);" onclick="fnRemoveService(' + servcDetailCnt + ')" class="del">Remove<b style="font-size: 15px;">x</b></a>';
+        servcTr += '</td>';
+        servcTr += '</tr><tr data-lasttrs="true"><td style="padding:10px;border:none;text-align:left;"><a href="javascript:void(0);" onclick="fnAddService()" class="add">Add <b style="font-size: 18px;">+</b></a></td><td colspan="4" class="taR"  style="padding:10px;border:none;"><b>Total: <span id="totalamt"></span></b></td></tr>';
+        $('[data-lasttrs="true"]').remove();
+        $("#tbdysrvcdet").append(servcTr);
+        fnRefreshTotalAmt();
+        servcDetailCnt++;
+        fnBindValidation();
+        fnRemoveChk();
+    }
+
+    function fnRemoveService(idx) {
+        $("#trsrvc_" + idx).hide();
+        $('#UserPaymentDetails_' + idx + '__ServiceName').val('##REMOVED');
+        fnRemoveChk();
+    }
+    function fnReCalc(idx) {
+        var qty = parseInt($('#UserPaymentDetails_' + idx + '__Quantity').val());
+        var rate = parseFloat($('#UserPaymentDetails_' + idx + '__Rate').val());
+        var amount = (qty * rate).toFixed(2);
+        $('#UserPaymentDetails_' + idx + '__Amount').val(amount);
+        fnRefreshTotalAmt();
+    }
+
+    function fnRefreshTotalAmt() {
+        var totAmt = parseFloat(fnGetTotalAmt());
+        $("#totalamt").text('$' + totAmt.toFixed(2));
+        
+    }
+
+    function fnGetTotalAmt() {
+        var amt = 0;
+        for (var i = 0; i < servcDetailCnt; i++) {
+            if ($('#UserPaymentDetails_' + i + '__ServiceName').val() != '##REMOVED')
+            {
+                var qty = parseFloat($('#UserPaymentDetails_' + i + '__Quantity').val());
+                var rate = parseFloat($('#UserPaymentDetails_' + i + '__Rate').val());
+                var amount = (qty * rate).toFixed(2);
+                amt = parseFloat(amount) + parseFloat(amt);
+            }
+        }
+        return amt;
+    }
+
+    function fnBindValidation()
+    {
+        for (var i = 0; i < servcDetailCnt; i++) {
+            $('#UserPaymentDetails_' + i + '__ServiceName').rules('add', {
+                required:true
+            });
+            $('#UserPaymentDetails_' + i + '__Quantity').rules('add', {
+                required: true,
+                min: 1 
+            });
+            $('#UserPaymentDetails_' + i + '__Rate').rules('add', {
+                required: true,
+                min: 1
+            });
+        }
+    }
+
+    function fnRemoveChk()
+    {
+        var visibleCnt = 0;
+        for (var i = 0; i < servcDetailCnt; i++) {
+            if ($('#UserPaymentDetails_' + i + '__ServiceName').val() != '##REMOVED') {
+                visibleCnt++;
+            }
+        }
+        if (visibleCnt == 1) $(".del").hide();
+        else $(".del").show(); 
+    }
+
+    function fnGetEmailData(email) {
+        var emailDat = {};
+        for (var i = 0; i < emailList.length; i++) {
+            if (emailList[i].Email==email) {
+                emailDat = emailList[i];
+            }
+        }
+        return emailDat;
+    }
+</script>

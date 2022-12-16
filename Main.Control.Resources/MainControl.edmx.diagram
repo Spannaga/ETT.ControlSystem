@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="97085987ef7c49d3a4feb59dc2c8988c" Name="Diagram1" ZoomLevel="50">
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Admin_LeadLog" Width="1.5" PointX="0.75" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Admin_LeadLog_Follow" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Admin_LeadLog_Notes" Width="1.5" PointX="3" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Admin_Log" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Admin_Roles" Width="1.5" PointX="0.75" PointY="25.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Admin_SpanPlan_Lead_Log" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Admin_SpanPlan_Lead_Log_Follow" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Admin_User_Roles" Width="1.5" PointX="5.25" PointY="28.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Admin_Users" Width="1.5" PointX="3" PointY="26.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Campaign_Additional_Contacts_Details" Width="1.5" PointX="10.5" PointY="32.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Campaign_Assigned_Details" Width="1.5" PointX="8.25" PointY="27.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Campaign_Details" Width="1.5" PointX="5.25" PointY="32.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Campaign_Excel_Headers" Width="1.5" PointX="7.5" PointY="35.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Campaign_Excel_Values" Width="1.5" PointX="13.5" PointY="31" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Campaign_Follow_Up_Log" Width="1.5" PointX="13.5" PointY="35.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Campaign_Lead_Activity" Width="1.5" PointX="10.5" PointY="37.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Campaign_Manager_Follow_Up_Details" Width="1.5" PointX="6" PointY="19.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Campaign_Support_User_Details" Width="1.5" PointX="13.5" PointY="25.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_CoBrowse_Log" Width="1.5" PointX="10.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Ip_Address" Width="1.5" PointX="3" PointY="10.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_SCActivityLog" Width="1.5" PointX="12.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Servers" Width="1.5" PointX="12.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_User_Payments" Width="1.5" PointX="3" PointY="14.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_User_Payments_Logs" Width="1.5" PointX="5.25" PointY="23.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Windows_Service_Activity_Log" Width="1.5" PointX="11.25" PointY="29" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Biz_Windows_Services" Width="1.5" PointX="9" PointY="21.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Gmail_User_Details" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Mobile_Verification" Width="1.5" PointX="5.25" PointY="49.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Sc_Activity_Log" Width="1.5" PointX="5.25" PointY="53.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.SC_Authorize_Payment_Report" Width="1.5" PointX="10" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.SC_Static_Authorize_Credential" Width="1.5" PointX="7.75" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Static_Biz_Admin_Category" Width="1.5" PointX="14.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Static_Biz_Admin_Category_Project" Width="1.5" PointX="14.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Static_Biz_Admin_Countries" Width="1.5" PointX="0.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Static_Biz_Admin_Log_Category" Width="1.5" PointX="9.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Static_Biz_Admin_Positions" Width="1.5" PointX="14.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Static_Biz_Admin_Project" Width="1.5" PointX="0.75" PointY="16.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Static_Biz_Admin_States" Width="1.5" PointX="0.75" PointY="21" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Static_Biz_Lead_Status" Width="1.5" PointX="11.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Static_Biz_Lead_Status_Details" Width="1.5" PointX="13.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Static_Biz_Mail_templates" Width="1.5" PointX="5.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Static_Biz_Payment_Templates" Width="1.5" PointX="3" PointY="35.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Static_Biz_Span_Service_Finders" Width="1.5" PointX="15.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Support_User_Instructions" Width="1.5" PointX="16.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Tax_Lead_Log" Width="1.5" PointX="5.75" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainControlDB_Model.Tax_Lead_Log_Follow" Width="1.5" PointX="8" PointY="4.5" IsExpanded="true" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Admin_LeadLog_Follow_Up1_Biz_Admin_LeadLog1" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Admin_LeadLog_Notes_Biz_Admin_LeadLog" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Admin_User_Roles_Biz_Admin_Roles" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_pu_Admin_Users_Pu_Admin_Roles" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Admin_User_Roles_Biz_Admin_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Assigned_Details_Biz_Admin_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Details_Biz_Admin_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Follow_Up_Log_Biz_Admin_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Follow_Up_Log_Biz_Admin_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Support_User_Batch_Details_Biz_Admin_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Support_User_Batch_Details_Biz_Admin_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_User_Payments_Logs_Biz_Admin_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Windows_Service_Activity_Log_Biz_Admin_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Mobile_Verification_Biz_Admin_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Sc_Activity_Log_Biz_Admin_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Additional_Contacts_Details_Biz_Campaign_Assigned_Details" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Assigned_Details_Biz_Campaign_Manager_Follow_Up_Details" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Excel_Values_Biz_Campaign_Assigned_Details" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Follow_Up_Log_Biz_Campaign_Assigned_Details" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Lead_Activity_Biz_Campaign_Assigned_Details" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Upload_User_Details_Biz_Campaign_Details" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Details_Biz_Campaign_Details" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Details_Static_Biz_Admin_Project" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Excel_Headers_Biz_Campaign_Details" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Follow_Up_Log_Biz_Campaign_Details" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Lead_Activity_Biz_Campaign_Details" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Support_User_Batch_Details_Biz_Campaign_Details" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Excel_Values_Biz_Campaign_Excel_Headers" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Campaign_Support_User_Batch_Details_Biz_Campaign_Support_User_Batch_Details" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Ip_Address_Biz_Ip_Address" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_User_Payments_Logs_Biz_User_Payments" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_User_Payments_Static_Biz_Admin_Countries" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_User_Payments_Static_Biz_Admin_Project" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_User_Payments_Static_Biz_Admin_States" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Biz_Windows_Service_Activity_Log_Biz_Windows_Services" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_SC_Authorize_Payment_Report_SC_Static_Authorize_Credential" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Static_Biz_Admin_States_Static_Biz_Admin_Countries" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Static_Biz_Payment_Templates_Static_Biz_Admin_Project" ManuallyRouted="false" />
+        <AssociationConnector Association="MainControlDB_Model.FK_Tax_Lead_Log_Follow_Tax_Lead_Log" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

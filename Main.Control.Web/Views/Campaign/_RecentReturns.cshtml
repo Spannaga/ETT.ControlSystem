@@ -1,0 +1,124 @@
+﻿@model List<Main.Control.Core.Models.RecentReturns>
+
+<div class="ui-widgets">
+<div class="ui-widget-title">
+    <h4 class="floatL">
+        Recent Returns
+    </h4>
+</div>
+    <div class="ui-widget-contents">
+        <div class="table-responsive">
+            <table style="width: 100%" class="table table-bordered table_design" id="RecentReturnslist">
+                <thead class="table_head">
+                    <tr>
+                        <th class="contact_phone">
+                            Return
+                        </th>
+                        <th class="contact_mail">
+                            Business Name
+                        </th>
+                        <th class="contact_name">
+                            FUM
+                        </th>
+                        <th class="contact_phone">
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="table_body">
+                        @foreach (var items in Model)
+                        {
+                            <tr>
+                                <td class="contact_name" style="width:40% !important">
+                                    @if (items.ReturnId > 0 && !string.IsNullOrWhiteSpace(items.CreatedTimeStamp.ToString()))
+                                    {
+                                        if (items.FormId == 1)
+                                        {
+                                            @Html.Raw("2290 -" + items.ReturnId)<br />
+                                            @Html.Raw(items.CreatedTimeStamp)
+                                        }
+                                        else if (items.FormId == 2)
+                                        {
+                                            @Html.Raw("8849 -" + items.ReturnId)<br />
+                                            @Html.Raw(items.CreatedTimeStamp)
+                                        }
+                                        else if (items.FormId == 3)
+                                        {
+                                            @Html.Raw("2290A -" + items.ReturnId)<br />
+                                            @Html.Raw(items.CreatedTimeStamp)
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("-")
+                                    }
+                                </td>
+                                <td class="contact_title" style="width:30% !important">
+                                    @if (!string.IsNullOrWhiteSpace(items.BusinessName) && !string.IsNullOrWhiteSpace(items.EIN))
+                                    {
+                                        @Html.Raw(items.BusinessName)<br />
+                                        @Html.Raw(items.EIN)
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("-")
+                                    }
+                                </td>
+                                <td class="contact_mail" style="width:20% !important">
+                                    @if (!string.IsNullOrWhiteSpace(items.FUM))
+                                    {
+                                        @Html.Raw(items.FUM)
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("-")
+                                    }
+                                </td>
+                                <td class="contact_phone" style="width:20% !important">
+                                    @if (items.FilingStatusId > 0)
+                                    {
+                                        if (items.FilingStatusId == 1)
+                                        {
+                                            @Html.Raw("Incomplete")
+                                        }
+                                        else if (items.FilingStatusId == 2)
+                                        {
+                                            @Html.Raw("Transmitted")
+                                        }
+                                        else if (items.FilingStatusId == 3)
+                                        {
+                                            @Html.Raw("Accepted")
+                                        }
+                                        else if (items.FilingStatusId == 4)
+                                        {
+                                            @Html.Raw("Rejected")
+                                        }
+                                        else if (items.FilingStatusId == 5)
+                                        {
+                                            @Html.Raw("Schedule 1")
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("-")
+                                    }
+                                </td>
+                            </tr>
+                        }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#RecentReturnslist').dataTable({
+        "paging": false,
+        "bFilter": false,
+        "bInfo": false,
+        "language": {
+            "emptyTable": "No Records Found"
+        }
+    });
+
+</script>

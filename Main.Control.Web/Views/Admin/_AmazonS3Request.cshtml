@@ -1,0 +1,167 @@
+﻿@using Main.Control.Core.Models;
+@model List<TransactionReportDetails>
+<script src="~/Scripts/jjsonviewer.min.js"></script>
+<link href="~/Content/jjsonviewer.css" rel="stylesheet" />
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"></button>
+    <h4 class="modal-title">Transaction Request</h4>
+</div>
+<div class="modal-body ModalBodyScroll">
+    <div class="codeIcon" style=" ">
+        @if (Model != null && Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                @*if (item.PaymentProcessorType == 1)
+                {
+                    <div>
+                        <h1>Authorize</h1>
+                    </div>
+
+                }
+                else if (item.PaymentProcessorType == 2)
+                {
+                    <div>
+                        <h1>Stripe</h1>
+                    </div>
+                }
+                else if (item.PaymentProcessorType == 4)
+                {
+                    <div>
+                        <h1>ACI</h1>
+                    </div>
+                }
+                else if (item.PaymentProcessorType == 5)
+                {
+                    <div>
+                        <h1>WELLSFARGO</h1>
+                    </div>
+                }*@
+
+        <div id="tabs">
+            <ul>
+                @if (item.PaymentProcessorType != 4)
+                {
+                    <li><a href="#tabs-1">API Request/Response</a></li>
+                }
+                @if (item.PaymentProcessorType == 5)
+                {
+                    <li><a href="#tabs-2">CyberSource Request/Response</a></li>
+                }
+                @if (item.PaymentProcessorType == 2)
+                {
+                    <li><a href="#tabs-3">Stripe Request/Response</a></li>
+                }
+                @if (item.PaymentProcessorType == 4)
+                {
+                    <li><a href="#tabs-4">ACI Request/Response</a></li>
+                }
+            </ul>
+            <div id="tabs-1">
+                @if (item.PaymentProcessorType == 5)
+                {
+                    <h2>Request</h2>
+                    <div id="divAPIReqJSONLog">
+                    </div>
+                    <h2>Response</h2>
+                    <div id="divAPIResJSONLog">
+                    </div>
+                }
+                @if (item.PaymentProcessorType == 2)
+                {
+                    <h2>Request</h2>
+                    <div id="divStripeTokenRequestLog">
+                    </div>
+                    <h2>Response</h2>
+                    <div id="divStripeTokenResponseLog">
+                    </div>
+                }
+                @if (item.PaymentProcessorType != 4)
+                {
+                    <h2>Request</h2>
+                    <div id="divACITokenRequestLog">
+                    </div>
+                    <h2>Response</h2>
+                    <div id="divACITokenResponseLog">
+                    </div>
+                }
+            </div>
+            @if (item.PaymentProcessorType == 5)
+            {
+                <div id="tabs-2">
+                    <h2>Request</h2>
+                    <div id="divWfPaymentRequestLog">
+                    </div>
+                    <h2>Response</h2>
+                    <div id="divWfPaymentResponseLog">
+                    </div>
+                </div>
+            }
+            @if (item.PaymentProcessorType == 2)
+            {
+                <div id="tabs-3">
+                    <h2>Request</h2>
+                    <div id="divStripeMakePaymentRequestLog">
+                    </div>
+                    <h2>Response</h2>
+                    <div id="divStripeMakePaymentResponseLog">
+                    </div>
+                </div>
+            }
+            @if (item.PaymentProcessorType == 4)
+            {
+                <div id="tabs-4">
+                    <h2>Request</h2>
+                    <div id="divACIMakePaymentRequestLog">
+                    </div>
+                    <h2>Response</h2>
+                    <div id="divACIMakePaymentResponseLog">
+                    </div>
+                </div>
+            }
+        </div>
+                @*<div id="divTransactionReferenceIdLog">
+                </div>
+                <div id="divPaymentApprovalCodeLog">
+                </div>*@
+
+                if (item.RequestResponseLogDetails != null)
+                {
+                    <input type="hidden" value="@item.RequestResponseLogDetails.ApiRequest" id="txtAreaAPIReqJSONLog" />
+                    <input type="hidden" value="@item.RequestResponseLogDetails.ApiResponse" id="txtAreaAPIResJSONLog" />
+                    <input type="hidden" value="@item.RequestResponseLogDetails.WfPaymentRequest" id="txtAreaWfPaymentRequestLog" />
+                    <input type="hidden" value="@item.RequestResponseLogDetails.WfPaymentResponse" id="txtAreaWfPaymentResponseLog" />
+                    <input type="hidden" value="@item.RequestResponseLogDetails.StripeTokenRequest" id="txtAreaStripeTokenRequestLog" />
+                    <input type="hidden" value="@item.RequestResponseLogDetails.StripeTokenResponse" id="txtAreaStripeTokenResponseLog" />
+                    <input type="hidden" value="@item.RequestResponseLogDetails.StripeMakePaymentRequest" id="txtAreaStripeMakePaymentRequestLog" />
+                    <input type="hidden" value="@item.RequestResponseLogDetails.StripeMakePaymentResponse" id="txtAreaStripeMakePaymentResponseLog" />
+                    <input type="hidden" value="@item.RequestResponseLogDetails.ApiRequest" id="txtAreaACIMakePaymentRequestLog" />
+                    <input type="hidden" value="@item.RequestResponseLogDetails.ApiResponse" id="txtAreaACIMakePaymentResponseLog" />
+                    @*<input type="hidden" value="@item.RequestResponseLogDetails.TransactionReferenceId" id="txtAreaTransactionReferenceIdLog" />
+                    <input type="hidden" value="@item.RequestResponseLogDetails.PaymentApprovalCode" id="txtAreaPaymentApprovalCodeLog" />*@
+                }
+            }
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        $("#tabs").tabs();
+        //get the json and add beautifier for divTransactionJSONLog
+        $("#divAPIReqJSONLog").jJsonViewer($("#txtAreaAPIReqJSONLog").val(), { expanded: true });
+        $("#divAPIResJSONLog").jJsonViewer($("#txtAreaAPIResJSONLog").val(), { expanded: true });
+        $("#divWfPaymentRequestLog").jJsonViewer($("#txtAreaWfPaymentRequestLog").val(), { expanded: true });
+        $("#divWfPaymentResponseLog").jJsonViewer($("#txtAreaWfPaymentResponseLog").val(), { expanded: true });
+        $("#divStripeTokenRequestLog").jJsonViewer($("#txtAreaStripeTokenRequestLog").val(), { expanded: true });
+        $("#divStripeTokenResponseLog").jJsonViewer($("#txtAreaStripeTokenResponseLog").val(), { expanded: true });
+        $("#divStripeMakePaymentRequestLog").jJsonViewer($("#txtAreaStripeMakePaymentRequestLog").val(), { expanded: true });
+        $("#divStripeMakePaymentResponseLog").jJsonViewer($("#txtAreaStripeMakePaymentResponseLog").val(), { expanded: true });
+        $("#divACIMakePaymentRequestLog").jJsonViewer($("#txtAreaACIMakePaymentRequestLog").val(), { expanded: true });
+        $("#divACIMakePaymentResponseLog").jJsonViewer($("#txtAreaACIMakePaymentResponseLog").val(), { expanded: true });
+
+        //$("#divTransactionReferenceIdLog").jJsonViewer($("#txtAreaTransactionReferenceIdLog").val(), { expanded: true });
+        //$("#divPaymentApprovalCodeLog").jJsonViewer($("#txtAreaPaymentApprovalCodeLog").val(), { expanded: true });
+    });
+</script>

@@ -1,0 +1,181 @@
+﻿@model Main.Control.Core.Models.AdminUser
+@using Main.Control.Core.Models
+@{  bool _adminSkuType = Main.Control.Web.Utilities.Utility.CheckAdminFromSession();}
+@{
+    Layout = null;
+    var AdminUserRoleList = Model.AdminUserRoleList.Where(a => a.Role == AdminRoleType.Administrator.ToString() || a.Role == AdminRoleType.Manager.ToString()).ToList();
+}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"></button>
+    <h4 class="modal-title">Choose Product</h4>
+</div>
+<div class="modal-body popup_scroll">
+    <div class="codeIcon">
+        <div class="responsive ">
+            @if (AdminUserRoleList != null && AdminUserRoleList.Count() > 0)
+            {
+
+                <div class="projectList">
+                    @if (AdminUserRoleList.Exists(m => m.AdminCategoryId == 1) || AdminUserRoleList.Exists(m => m.AdminCategoryId == 3))
+                    {
+
+
+                    }
+                    <div class="clear"></div>
+                    <div id="payerListDiv">
+                        <div class="row">
+                            @foreach (var _adminrole in AdminUserRoleList.Where(a => a.AdminCategoryId == 1 || a.AdminCategoryId == 3))
+                            {
+
+                                if (_adminrole.AdminProjectId == (int)Project.UnitWise)
+                                {
+                                    <div class="col-md-3 col-sm-4 col-xs-6">
+                                        <div class="projectBox">
+                                            <a href="/Campaign/CreateCampaign/@_adminrole.AdminProjectId" title="UnitWise" name="UnitWise" class="ETT">
+                                                <img src="~/Content/Images/uwLogo.gif" alt="UnitWise" title="UnitWise" />
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                }
+
+                                else if (_adminrole.AdminProjectId == (int)Project.SpanPlan)
+                                {
+                                    <div class="col-md-3 col-sm-4 col-xs-6">
+                                        <div class="projectBox">
+                                            <a href="/Campaign/CreateCampaign/@_adminrole.AdminProjectId" title="Inshperio" name="Inspherio" class="ETT">
+                                                <img src="~/Content/Images/spLogo.gif" alt="Inspherio" title="Inspherio" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
+                                else if (_adminrole.AdminProjectId == (int)Project.ExpressTruckTax)
+                                {
+                                    <div class="col-md-3 col-sm-4 col-xs-6">
+                                        <div class="projectBox">
+                                            <a href="/Campaign/CreateCampaign/@_adminrole.AdminProjectId" title="Express Truck Tax" class="ETT">
+                                                <img src="~/Content/Images/ETT.png" alt="ETT" title="Express Truck Tax" />
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                }
+                                else if (_adminrole.AdminProjectId == (int)Project.ExpressIFTA)
+                                {
+                                    <div class="col-md-3 col-sm-4 col-xs-6">
+                                        <div class="projectBox">
+                                            <a href="/Campaign/CreateCampaign/@_adminrole.AdminProjectId" title="Express IFTA" class="ETT">
+                                                <img src="~/Content/Images/IFTA.png" alt="EIFTA" title="Express IFTA" />
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                }
+                                else if (_adminrole.AdminProjectId == (int)Project.ExpressTaxFilings)
+                                {
+                                    <div class="col-md-3 col-sm-4 col-xs-6">
+                                        <div class="projectBox">
+                                            <a href="/Campaign/CreateCampaign/@_adminrole.AdminProjectId" title="Express Tax Filings" class="ETT">
+                                                <img src="~/Content/Images/ETF.png" alt="ETF" title="Express Tax Filings" />
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                }
+                                else if (_adminrole.AdminProjectId == (int)Project.ExpressExtension)
+                                {
+                                    <div class="col-md-3 col-sm-4 col-xs-6">
+                                        <div class="projectBox">
+                                            <a href="/Campaign/CreateCampaign/@_adminrole.AdminProjectId" title="Express Extension" class="ETT">
+                                                <img src="~/Content/Images/EET.png" alt="EE" title="Express Extension" />
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                }
+                                else if (_adminrole.AdminProjectId == (int)Project.Express990)
+                                {
+                                    <div class="col-md-3 col-sm-4 col-xs-6">
+                                        <div class="projectBox">
+                                            <a href="/Campaign/CreateCampaign/@_adminrole.AdminProjectId" title="ExpressTaxExempt" class="ETT">
+                                                <img src="~/Content/Images/E990.png" alt="ExpressTaxExempt" title="ExpressTaxExempt" />
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                }
+
+                                else if (_adminrole.AdminProjectId == (int)Project.TruckLogics)
+                                {
+                                    <div class="col-md-3 col-sm-4 col-xs-6">
+                                        <div class="projectBox">
+                                            <a href="/Campaign/CreateCampaign/@_adminrole.AdminProjectId" title="Truck Logics" class="ETT">
+                                                <img src="~/Content/Images/ETL.png" alt="Truck Logics" title="Truck Logics" />
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                }
+                                else if (_adminrole.AdminProjectId == (int)Project.TSNAAdmin)
+                                {
+                                    <div class="col-md-3 col-sm-4 col-xs-6">
+                                        <div class="projectBox">
+                                            <a href="/Campaign/CreateCampaign/@_adminrole.AdminProjectId" title="TSNAmerica" class="ETT">
+                                                <img src="~/Content/Images/TSNA.png" alt="TSNAmerica" title="TSNAmerica" />
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                }
+                                else if (_adminrole.AdminProjectId == (int)Project.StayTaxExempt)
+                                {
+                                    <div class="col-md-3 col-sm-4 col-xs-6">
+                                        <div class="projectBox">
+                                            <a href="/Campaign/CreateCampaign/@_adminrole.AdminProjectId" title="StayTaxExempt" class="ETT">
+                                                <img src="~/Content/Images/STE.jpg" alt="StayTaxExempt" title="StayTaxExempt" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
+                                else if (_adminrole.AdminProjectId == (int)Project.ACAwise)
+                                {
+                                    <div class="col-md-3 col-sm-4 col-xs-6">
+                                        <div class="projectBox">
+                                            <a href="/Campaign/CreateCampaign/@_adminrole.AdminProjectId" title="StayTaxExempt" class="ETT">
+                                                <img src="~/Content/Images/ACAw.png" alt="ACAwise" title="ACAwise" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
+                                else if (_adminrole.AdminProjectId == (int)Project.ExpressPaystubGenerator)
+                                {
+                                    <div class="col-md-3 col-sm-4 col-xs-6">
+                                        <div class="projectBox">
+                                            <a href="/Campaign/CreateCampaign/@_adminrole.AdminProjectId" title="123PayStubs" class="ETT">
+                                                <img src="~/Content/Images/123-paystubs.png" alt="123PayStubs" title="123PayStubs" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
+
+                            }
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <label>No Product Assigned</label>
+            }
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer taC">
+    <a class="btn btn-cancel" data-dismiss="modal">Cancel</a>
+</div>
+<script>
+
+</script>

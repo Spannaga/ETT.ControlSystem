@@ -1,0 +1,92 @@
+﻿@model Main.Control.Core.Models.CampaignDetails
+@using Main.Control.Core.Models
+@using Main.Control.Web.Utilities
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"></button>
+    <h4 class="modal-title">Extend Period - @Model.CampaignName</h4>
+</div>
+<div class="modal-body">
+    <div class="codeIcon">
+
+        <div class="responsive ">
+            @using (Html.BeginForm("_ExtendPeroid", "Campaign", FormMethod.Post, new { id = "fromExtendPeroid", enctype = "multipart/form-data" }))
+            {
+                @Html.HiddenFor(m => m.CampaignDetailsId)
+                @Html.HiddenFor(m => m.CampaignStartDate)
+
+                <table class="responsive">
+
+                    <tr>
+                        <td class="labelName">
+                                Campaign Start Date:
+                        </td>
+                        <td class="fieldText">
+                            <b><label>@Utility.GetDateTime(Model.CampaignStartDate).ToString("MM/dd/yyyy")</label></b>
+                        </td>
+                    </tr>
+                    <tr class="spacer10"></tr>
+                    <tr>
+                        <td class="labelName">
+                            <label>
+                                <span class="red">*</span>Campaign End Date:
+
+                            </label>
+                        </td>
+                        <td class="headField">
+                            @Html.TextBoxFor(m => m.CampaignEndDate, new { @placeholder = "mm/dd/yyyy" })
+                        </td>
+                    </tr>
+                    <tr class="spacer10"></tr>
+
+                </table>
+            }
+
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer taC">
+    <a class="btn btn-cancel" data-dismiss="modal">Cancel</a>
+    <a class="btn btn-primary" href="javascript:void(0)" onclick="SaveExtendPeroid()">Save<i id="extendPopupSpinner" style="display:none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></a>
+</div>
+
+<script>
+
+    $(function () {
+        $("#CampaignEndDate").datetimepicker({ format: 'MM/DD/YYYY', minDate: moment().millisecond(0).second(0).minute(0).hour(0) });
+    });
+
+    $('#fromExtendPeroid').validate({
+        rules: {
+            CampaignEndDate: {
+                required: true
+            },
+        },
+        messages: {
+            CampaignEndDate: {
+                required: "Please select End Date"
+            },
+
+        }
+    });
+
+
+    function SaveExtendPeroid() {
+        if ($('#fromExtendPeroid').valid()) {
+            $("#extendPopupSpinner").show();
+            $.post("/Campaign/_ExtendPeroid", $("#fromExtendPeroid").serialize(), function (data) {
+                if (data) {
+                    toastr.success("Campaign Period Extended successfully!");
+                    $('#myModal').modal('hide');
+                    $("#campaignList").load("/Campaign/_CampaignDashboard");
+                }
+            });
+        }
+    }
+
+</script>
+

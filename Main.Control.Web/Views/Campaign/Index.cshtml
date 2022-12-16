@@ -1,0 +1,343 @@
+﻿@using Main.Control.Core.Models
+@{
+    ViewBag.Title = "Campaign";
+    long adminRoleId = ViewBag.AdminRoleId;
+    long showTabId = ViewBag.ShowTab;
+}
+
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+
+
+<div class="page-header">
+    <div class="page-head">
+
+        @if (ViewBag.SearchLeadCount > 0)
+        {
+            @*<h2 class="floatL">
+                    <span>Dashboard</span>
+                </h2>*@
+            <a class="btn btn-primary" style="float:right;" onclick="SearchLead()">Search Lead<i id="SearchLeadSpinner" style="display:none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></a>
+            <div class="clearfix"></div>
+        }
+    </div>
+</div>
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="minBox">
+        <ul class="nav nav-tabs">
+            @if (adminRoleId == (int)AdminRoleType.Manager || adminRoleId == (int)AdminRoleType.Administrator)
+            {
+                <li class="active" id="licampaignTab"><a data-toggle="tab" href="#campaignTab" onclick="campaignClick()">Campaigns</a></li>
+            }
+
+            <li id="lisupportTab"><a data-toggle="tab" href="#supportTab" onclick="SupportDashboard()">Dashboard</a></li>
+            <li id="lifollowupTab"><a data-toggle="tab" href="#followupTab" onclick="SupportFollowUp()">Follow Up</a></li>
+            @if (adminRoleId == (int)AdminRoleType.Administrator)
+            {
+                <li id="lirequestTab"><a data-toggle="tab" href="#requestTab" onclick="campainUploadRequest();">Upload Request</a></li>
+            }
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="campaignTab">
+            </div>
+            <div class="tab-pane fade" id="supportTab">
+            </div>
+            <div class="tab-pane fade" id="requestTab">
+            </div>
+            <div class="floatR taR" id="divfollowfilter" style="display:none">
+                <span class="labelName"><label>Show :</label></span>
+                <span class="fieldName">
+                    @Html.DropDownList("ddlfollowupfilter", new List<SelectListItem>
+                          {
+                              new SelectListItem() {Text = FollowupFilter.All.ToString(), Value=FollowupFilter.All .ToString()},
+                        new SelectListItem() {Text = FollowupFilter.Today.ToString(), Value=FollowupFilter.Today.ToString()},
+                        new SelectListItem() {Text = FollowupFilter.PastDue.ToString(), Value=FollowupFilter.PastDue.ToString()},
+                         new SelectListItem() {Text = FollowupFilter.Upcoming.ToString(), Value=FollowupFilter.Upcoming.ToString()}
+                         }, new { @id = "ddlfollowupfilter", @onchange = "GetFollowupRecords();" })
+
+                </span>
+
+            </div>
+            <div class="clearfix"></div>
+            <div class="spacer10"></div>
+            <div class="tab-pane fade" id="followupTab">
+            </div>
+        </div>
+        <div class="clearfix">
+        </div>
+        <div class="spacer20"></div>
+    </div>
+    <div id="divPagination">
+        @Html.Hidden("PageSize", 5)
+        @Html.Hidden("PageIndex", 0)
+        @Html.Hidden("MaxPageCount", 0)
+        @Html.Hidden("IsRecordExist")
+        @Html.Hidden("AdminRoleId", adminRoleId)
+        <div class="taC">
+            <button id="btnPrevRecords" disabled="disabled" onclick="getPreviousRecords()" class="btn btn-second floatL">
+                <i id="btnPrevPageSpinner" style="display:none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i>
+                <i class="fa fa-angle-left arrow_btn fa-fw"></i> Prev 5 Campaigns
+            </button>
+            <span class="dataTables_wrapper paginateDesign">
+                <span class="dataTables_paginate">
+                    Page:
+                    <span class="paginate_button current" id="spnPageIndex" style="cursor: inherit;">
+                        1
+                    </span>
+                </span>
+            </span>
+
+            <button id="btnNextRecords" onclick="getNextRecords()" class="btn btn-primary floatR">
+                Next 5 Campaigns <i class="fa fa-angle-right arrow_btn fa-fw"></i>
+                <i id="btnNextPageSpinner" style="display:none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i>
+            </button>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<script type="text/javascript">
+    $(function () {
+        if ('@adminRoleId' == '@((int)AdminRoleType.Manager)' || '@adminRoleId' == '@((int)AdminRoleType.Administrator)') {
+            $("#campaignTab").load("/Campaign/_CampaignDashboard?PageIndex=" + $('#PageIndex').val() + "&PageSize=" + $('#PageSize').val());
+        }
+
+        if ('@adminRoleId' == '@((int)AdminRoleType.Administrator)') {
+            $("#requestTab").load("/Campaign/_CampaignUploadRequest");
+        }
+        if ('@adminRoleId' == '@((int)AdminRoleType.Team)') {
+            $("#supportTab").load("/Campaign/_SupportDashboard?id2=Active&PageIndex=" + $('#PageIndex').val() + "&PageSize=" + $('#PageSize').val());
+        }
+
+        if ($('#licampaignTab').length == 0) {
+            $('#lisupportTab').addClass('active');
+            $('#supportTab').addClass('active in');
+        }
+
+
+        if ('@showTabId' != null && '@showTabId' == "2") {
+            $("#campaignTab").hide();
+            $("#supportTab").hide();
+            $("#followupTab").hide();
+            $("#requestTab").show();
+            $("#requestTab").addClass("active in");
+            $("#lirequestTab").addClass("active");
+            $("#campaignTab").removeClass("active in");
+            $("#licampaignTab").removeClass("active");
+            $("#supportTab").removeClass("active in");
+            $("#lisupportTab").removeClass("active");
+            $("#followupTab").removeClass("active in");
+            $("#lifollowupTab").removeClass("active");
+        }
+        if ('@showTabId' != null && '@showTabId' == "3") {
+            $('#PageIndex').val(0)
+            $("#supportTab").load("/Campaign/_SupportDashboard?id2=Active&PageIndex=" + $('#PageIndex').val() + "&PageSize=" + $('#PageSize').val());
+            $("#campaignTab").hide();
+            $("#supportTab").show();
+            $("#followupTab").hide();
+            $("#requestTab").hide();
+            $("#supportTab").addClass("active in");
+            $("#lisupportTab").addClass("active");
+            $("#campaignTab").removeClass("active in");
+            $("#licampaignTab").removeClass("active");
+            $("#requestTab").removeClass("active in");
+            $("#lirequestTab").removeClass("active");
+            $("#followupTab").removeClass("active in");
+            $("#lifollowupTab").removeClass("active");
+            $("#divfollowfilter").hide();
+        }
+
+
+
+        setTimeout(function () { hidePaginationButtons(); }, 1000);
+    });
+
+    function campaignClick() {
+        $("#campaignTab").load("/Campaign/_CampaignDashboard");
+        $("#campaignTab").show();
+        $("#requestTab").hide();
+        $("#supportTab").hide();
+        $("#followupTab").hide();
+        $("#campaignTab").addClass("active in");
+        $("#licampaignTab").addClass("active");
+        $("#requestTab").removeClass("active in");
+        $("#lirequestTab").removeClass("active");
+        $("#supportTab").removeClass("active in");
+        $("#lisupportTab").removeClass("active");
+        $("#followupTab").removeClass("active in");
+        $("#lifollowupTab").removeClass("active");
+        $('#PageIndex').val(0);
+        $("#divfollowfilter").hide();
+        disablePaginationButtons();
+        hidePaginationButtons();
+    }
+
+    function campainUploadRequest() {
+        $("#requestTab").load("/Campaign/_CampaignUploadRequest");
+        $("#campaignTab").hide();
+        $("#supportTab").hide();
+        $("#followupTab").hide();
+        $("#requestTab").show();
+        $("#requestTab").addClass("active in");
+        $("#lirequestTab").addClass("active");
+        $("#campaignTab").removeClass("active in");
+        $("#licampaignTab").removeClass("active");
+        $("#supportTab").removeClass("active in");
+        $("#lisupportTab").removeClass("active");
+        $("#followupTab").removeClass("active in");
+        $("#lifollowupTab").removeClass("active");
+        $('#divPagination').hide();
+        $("#divfollowfilter").hide();
+    }
+
+    function SupportDashboard() {
+        $('#PageIndex').val(0)
+        //$("#supportTab").load("/Campaign/_SupportDashboard?PageIndex=" + $('#PageIndex').val() + "&PageSize=" + $('#PageSize').val());
+        $("#supportTab").load("/Campaign/_SupportDashboard?id2=Active&PageIndex=" + $('#PageIndex').val() + "&PageSize=" + $('#PageSize').val());
+        $("#campaignTab").hide();
+        $("#supportTab").show();
+        $("#followupTab").hide();
+        $("#requestTab").hide();
+        $("#supportTab").addClass("active in");
+        $("#lisupportTab").addClass("active");
+        $("#campaignTab").removeClass("active in");
+        $("#licampaignTab").removeClass("active");
+        $("#requestTab").removeClass("active in");
+        $("#lirequestTab").removeClass("active");
+        $("#followupTab").removeClass("active in");
+        $("#lifollowupTab").removeClass("active");
+        $("#divfollowfilter").hide();
+        disablePaginationButtons();
+        hidePaginationButtons();
+    }
+    function SupportLeads() {
+        $("#followupTab").load("/Campaign/ViewCampaignLeads/");
+
+        $("#campaignTab").hide();
+        $("#supportTab").hide();
+        $("#followupTab").show();
+        $("#requestTab").hide();
+        $("#followupTab").addClass("active in");
+        $("#lifollowupTab").addClass("active");
+        $("#campaignTab").removeClass("active in");
+        $("#licampaignTab").removeClass("active");
+        $("#requestTab").removeClass("active in");
+        $("#lirequestTab").removeClass("active");
+        $("#supportTab").removeClass("active in");
+        $("#lisupportTab").removeClass("active");
+    }
+    function SupportFollowUp() {
+        var Filter = $("#ddlfollowupfilter").val();
+        $("#followupTab").load("/Campaign/_FollowupDetails/?followupStatus=" + Filter)
+        $("#campaignTab").hide();
+        $("#supportTab").hide();
+        $("#followupTab").show();
+        $("#requestTab").hide();
+        $("#followupTab").addClass("active in");
+        $("#lifollowupTab").addClass("active");
+        $("#campaignTab").removeClass("active in");
+        $("#licampaignTab").removeClass("active");
+        $("#requestTab").removeClass("active in");
+        $("#lirequestTab").removeClass("active");
+        $("#supportTab").removeClass("active in");
+        $("#lisupportTab").removeClass("active");
+        $("#divfollowfilter").show();
+        $('#divPagination').hide();
+    }
+
+    function getPreviousRecords() {
+        var pageIndex = parseInt($('#PageIndex').val()) - 1;
+        var pageSize = parseInt($('#PageSize').val());
+        var adminRoleId = $('#AdminRoleId').val().toString();
+        if (pageIndex >= 0) {
+            $('#btnPrevPageSpinner').show();
+            $('#PageIndex').val(pageIndex);
+            if (adminRoleId == '@((int)AdminRoleType.Manager)' || adminRoleId == '@((int)AdminRoleType.Administrator)') {
+                $("#campaignTab").load("/Campaign/_CampaignDashboard?ProjectId=" + parseInt($('#AdminProjects option:selected').val()) + "&CampaignStatus=" + $('#CampaignStatus option:selected').val() + "&PageIndex=" + pageIndex + "&pageSize=" + pageSize, function () {
+                    $('#btnPrevPageSpinner').hide();
+                });
+            }
+
+            if (adminRoleId == '@((int)AdminRoleType.Team)') {
+                var projectId = $("#Product option:selected").val();
+                if (projectId == "") {
+                    projectId = 0;
+                }
+                var listStatus = $("#Status option:selected").val();
+                $("#supportTab").load("/Campaign/_SupportDashboard/" + projectId + "/" + listStatus + "?PageIndex=" + pageIndex + "&pageSize=" + pageSize, function () {
+                    $('#btnPrevPageSpinner').hide();
+                });
+            }
+        }
+        disablePaginationButtons();
+    }
+
+    function getNextRecords() {
+        var pageIndex = parseInt($('#PageIndex').val()) + 1;
+        var pageSize = parseInt($('#PageSize').val());
+        var adminRoleId = $('#AdminRoleId').val().toString();
+        if (parseInt($('#MaxPageCount').val()) > pageIndex) {
+            $('#btnNextPageSpinner').show();
+            $('#PageIndex').val(pageIndex);
+            if (adminRoleId == '@((int)AdminRoleType.Manager)' || adminRoleId == '@((int)AdminRoleType.Administrator)') {
+                $("#campaignTab").load("/Campaign/_CampaignDashboard?ProjectId=" + parseInt($('#AdminProjects option:selected').val()) + "&CampaignStatus=" + $('#CampaignStatus option:selected').val() + "&PageIndex=" + pageIndex + "&pageSize=" + pageSize, function () {
+                    $('#btnNextPageSpinner').hide();
+                });
+            }
+
+            if (adminRoleId == '@((int)AdminRoleType.Team)') {
+                var projectId = $("#Product option:selected").val();
+                if (projectId == "") {
+                    projectId = 0;
+                }
+                var listStatus = $("#Status option:selected").val();
+                $("#supportTab").load("/Campaign/_SupportDashboard/" + projectId + "/" + listStatus + "?PageIndex=" + pageIndex + "&pageSize=" + pageSize, function () {
+                    $('#btnNextPageSpinner').hide();
+                });
+            }
+
+        }
+        disablePaginationButtons();
+    }
+
+    function disablePaginationButtons() {
+        var pageIndex = parseInt($('#PageIndex').val());
+        if (parseInt($('#MaxPageCount').val()) == 0 || (pageIndex + 1) == parseInt($('#MaxPageCount').val())) {
+            $('#btnNextRecords').attr("disabled", "disabled");
+        }
+        else {
+            $('#btnNextRecords').removeAttr("disabled");
+        }
+
+        if (pageIndex == 0) {
+            $('#btnPrevRecords').attr("disabled", "disabled");
+        }
+        else {
+            $('#btnPrevRecords').removeAttr("disabled");
+        }
+        $('#spnPageIndex').text((pageIndex + 1).toString());
+    }
+
+    function SearchLead() {
+        $("#SearchLeadSpinner").show();
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/_SearchLead/",
+            data: {},
+            success: function (result) {
+                $("#ModelBody").html(result);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $("#SearchLeadSpinner").hide();
+                $('.modal-dialog').addClass('modal-dialog-md');
+            }
+        });
+    }
+    function hidePaginationButtons() {
+        if ($('#IsRecordExist').val() == true || $('#IsRecordExist').val() == "True") {
+            $('#divPagination').show();
+        }
+        else {
+            $('#divPagination').hide();
+        }
+    }
+</script>

@@ -1,0 +1,55 @@
+﻿@helper Video_Section()
+{
+    @*<a href="javascript:void(0);" id="helpIcon" onclick=""><img src="~/Content/Images/Video-icon.png" alt="Video" title="Video" class="pull-right video-icon" /></a>*@
+}
+
+@helper USPSValidDialog()
+{
+    <div>
+        <label class="green">You have entered a valid address</label>
+    </div>
+    <div class="clearfix spacer10"></div>
+    <div><label>@@IsUSPSAddress</label></div>
+}
+
+@helper USPSInValidDialog()
+{
+    <div>
+        <label class="red">You have entered an Invalid address</label>
+    </div>
+    <div class="clearfix spacer10"></div>
+    <div><label>@@IsUSPSAddress</label></div>
+}
+
+@helper USPSSuggestionDialog()
+{
+    <div>
+        <span class="font-600">The entered address does not match with the addresses USPS recommends.</span>
+        <div class="clearfix"></div>
+        <table class="responsive res suggestion bg-ta">
+            <tr><td class="spacer10"></td></tr>
+            <tr>
+                <td>
+                    <b>Address you entered:</b>
+                </td>
+            </tr>
+            <tr>
+                <td class="radio"  style="margin-top:0 !important;">
+                    <input type="radio" id="IsUSPSAddressNo" name="IsUSPSAddress" class="css-radiobox" value="false">
+                    <label class="css-labelradio" for="IsUSPSAddressNo"><span>@@IsUSPSAddressNo</span></label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>USPS verified address:</b>
+                </td>
+            </tr>
+            <tr>
+                <td class="radio" style="margin-top:0 !important;">
+                    <input type="radio" id="IsUSPSAddressYes" name="IsUSPSAddress" value="true" class="css-radiobox" checked="checked">
+                    <label class="css-labelradio" for="IsUSPSAddressYes"><span>@@IsUSPSAddressYes</span></label>
+                </td>
+            </tr>
+        </table>
+    </div>
+}

@@ -1,0 +1,220 @@
+ul.nav-wizard {
+  background-color: #f9f9f9;
+  border: 1px solid #d4d4d4;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  *zoom: 1;
+  position: relative;
+  overflow: hidden;
+  width:100%;
+}
+ul.nav-wizard:before {
+  display: block;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 46px;
+  height: 47px;
+  border-top: 1px solid #d4d4d4;
+  border-bottom: 1px solid #d4d4d4;
+  z-index: 11;
+  content: " ";
+}
+ul.nav-wizard:after {
+  display: block;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 138px;
+  height: 47px;
+  border-top: 1px solid #d4d4d4;
+  border-bottom: 1px solid #d4d4d4;
+  z-index: 11;
+  content: " ";
+}
+ul.nav-wizard li {
+  position: relative;
+  float: left;
+  height: 46px;
+  display: inline-block;
+  text-align: center;
+ width: 23.3%;
+  margin: 0;
+  font: 600 13px "open sans";
+ 
+}
+    ul.nav-wizard li.Est {
+        width: 30%;
+    }
+ul.nav-wizard li a, ul.nav-wizard li a:hover, ul.nav-wizard li a:active {
+  color: #00498e;
+ padding: 0px 20px;
+ text-decoration: none;
+ font:bold 14px "open sans";
+  line-height: 3.4;
+  outline:none !important;
+}
+.nav.nav-wizard > li > a:hover, .nav.nav-wizard > li > a:focus{
+    color: #1B6A9C;
+}
+ul.nav-wizard li a:hover {
+  background-color: transparent;
+}
+
+ul.nav-wizard li:before {
+  position: absolute;
+  display: block;
+  border: 24px solid transparent;
+  border-left: 16px solid #d4d4d4;
+  border-right: 0;
+  top: -1px;
+  z-index: 10;
+  content: '';
+  right: -16px;
+}
+ul.nav-wizard li:after {
+  position: absolute;
+  display: block;
+  border: 24px solid transparent;
+  border-left: 16px solid #f9f9f9;
+  border-right: 0;
+  top: -1px;
+  z-index: 10;
+  content: '';
+  right: -15px;
+}
+ul.nav-wizard li.active {
+  color: #fff;
+  background: #337AB7;
+  outline:none !important;
+}
+ul.nav-wizard li.active:after {
+  border-left: 16px solid #337AB7;
+}
+ul.nav-wizard li.active a,
+ul.nav-wizard li.active a:active,
+ul.nav-wizard li.active a:visited,
+ul.nav-wizard li.active a:focus, 
+ul.nav-wizard li.active a:hover {
+color: #fff;
+background: #337AB7;
+  outline: none;
+}
+ul.nav-wizard .active ~ li {
+  color: #999999;
+  background: #ededed;
+}
+ul.nav-wizard .active ~ li:after {
+  border-left: 16px solid #ededed;
+}
+ul.nav-wizard .active ~ li a,
+ul.nav-wizard .active ~ li a:active,
+ul.nav-wizard .active ~ li a:visited,
+ul.nav-wizard .active ~ li a:focus {
+  color: #999999;
+  background: #ededed;
+}
+ul.nav-wizard.nav-wizard-backnav li:hover {
+  color: #468847;
+  background: #f6fbfd;
+}
+ul.nav-wizard.nav-wizard-backnav li:hover:after {
+  border-left: 16px solid #f6fbfd;
+}
+ul.nav-wizard.nav-wizard-backnav li:hover a,
+ul.nav-wizard.nav-wizard-backnav li:hover a:active,
+ul.nav-wizard.nav-wizard-backnav li:hover a:visited,
+ul.nav-wizard.nav-wizard-backnav li:hover a:focus {
+  color: #468847;
+  background: #f6fbfd;
+}
+ul.nav-wizard.nav-wizard-backnav .active ~ li {
+  color: #999999;
+  background: #ededed;
+}
+ul.nav-wizard.nav-wizard-backnav .active ~ li:after {
+  border-left: 16px solid #ededed;
+}
+ul.nav-wizard.nav-wizard-backnav .active ~ li a,
+ul.nav-wizard.nav-wizard-backnav .active ~ li a:active,
+ul.nav-wizard.nav-wizard-backnav .active ~ li a:visited,
+ul.nav-wizard.nav-wizard-backnav .active ~ li a:focus {
+  color: #999999;
+  background: #ededed;
+}
+.BgNone{
+    background:none !important;
+}
+.tab-pane.Wizard{
+    padding:10px 20px !important;
+}
+    .Preminum .PreTitle{
+    font-size: 22px !important;
+margin-bottom: 2px !important;
+vertical-align: middle;
+}
+.Preminum .PreSub{
+    font:bold 13px "open sans";
+    float: left;
+    text-align: left;
+    padding: 5px 0;
+    line-height: 1.5;
+}
+.CusorNone{
+    /*pointer-events: none !important;*/
+    cursor:not-allowed !important;
+}
+/*==================================Arrow desig Starts===================================*/
+/*http://cssarrowplease.com*/
+
+.tab-content .tab-pane.Wizard {
+	position: relative;
+	background: #fff;
+	border: 1px solid #ccc;
+    overflow:visible !important;
+    margin-top:15px;
+}
+.Wizard:after, .Wizard:before {
+	bottom: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.Wizard:after {
+	border-color: rgba(255, 255, 255, 0);
+	border-bottom-color: #fff;
+	border-width: 8px;
+	margin-left: -8px;
+}
+.Wizard:before {
+	border-color: rgba(204, 204, 204, 0);
+	border-bottom-color: #ccc;
+	border-width: 9px;
+	margin-left: -9px;
+}
+.CalIcon{
+    float: left;
+vertical-align: middle !important;
+display: inline-block !important;
+padding-top: 8px;
+margin-right: 5px;
+}
+/*==================================Arrow desig Ends===================================*/
+#PageHelp-Content:after, #PageHelp-Content:before{
+    left: 13% !important;
+}
+#KnowledgeBase-Content:after, #KnowledgeBase-Content:before{
+        left: 37% !important;
+}
+#Summary-Content:after, #Summary-Content:before{
+        left: 88% !important;
+}
+#Payment-Content:after, #Payment-Content:before{
+    Left: 62% !important;
+}

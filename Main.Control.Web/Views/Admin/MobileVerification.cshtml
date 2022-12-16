@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewBag.Title = "Mobile Verification";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+
+@{
+    var productName = ViewData["ProductName"] != null ? ViewData["ProductName"].ToString() : "";
+}
+
+<div>
+    <div id="divSuccess" class="taC" style="display:none;"></div>
+</div>
+
+@Html.Hidden("hdnUniqueId", "")
+@Html.Hidden("hdnPreviousMoileNumber")
+@Html.Hidden("hdnSenderNumber", "")
+@Html.Hidden("MessageCount", 0)
+@Html.Hidden("hdnproductName", productName)
+@Html.Hidden("hdnPhoneNumber")
+
+<script type="text/javascript">
+    var addCount = 0;
+    var dbHitCount = 0;
+    var ResendCount = 0;
+
+    $(function () {
+
+        $.ajax({
+            type: 'GET',
+            url: '/Admin/_MobileVerification',
+            async: true,
+            success: function (data) {
+                $('#ModelBody').html(data);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $("close").hide();
+            }
+        });
+
+        //$.colorbox({ href: '/Admin/_MobileVerification/?t=' + Math.random(), width: "600px", height: "400px", overlayClose: false, escKey: false, onLoad: function () { $('#cboxClose').hide() }, onComplete: function () { $('#cboxClose').hide(); } });
+    });
+</script>

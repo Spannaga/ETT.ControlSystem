@@ -1,0 +1,287 @@
+﻿@using Main.Control.Core.Models;
+@using Main.Control.Web.Utilities;
+@model PaymentRefundLog
+@{ 
+    var spanProducts = ViewData["SpanProducts"] as List<SpanProducts>;
+    var spanPaymentProcessors = ViewData["SpanPaymentProcessors"] as List<PaymentProcessors>;
+    string appVoidRefundProducts = Utility.GetAppSettings("ApplicationRefundImpProductCodes");
+    var chargeBackTypes = new List<SelectListItem>();
+    chargeBackTypes.Add(new SelectListItem() {
+        Text = "Void",Value="VOID"
+    });
+    chargeBackTypes.Add(new SelectListItem()
+    {
+        Text = "Refund",
+        Value = "REFUND"
+    });
+    var isPaidDateValid = false;
+    if (Model.PaidDate!=DateTime.MinValue)
+    {
+        isPaidDateValid = true;
+    }
+    var isRefundDateValid = false;
+    if (Model.VoidRefundDate != DateTime.MinValue)
+    {
+        isRefundDateValid = true;
+    }
+
+}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"></button>
+    <h4 class="modal-title">Add Refund</h4>
+</div>
+<div class="modal-body" style="height:900px;">
+    <div class="codeIcon" style=" ">
+        @using (Html.BeginForm("VoidRefundRequest", "Admin", FormMethod.Post, new { @id = "frmVoidRefund" }))
+        {
+            <table class="responsive">
+                <tbody>
+                    <tr>
+                        <td class="labelName" style="width:200px;"><span class="red">*</span>Product</td>
+                        <td class="pos_rel" style="width:250px;">
+                            @Html.DropDownList("SpanProductId", new SelectList(spanProducts, "ProductId", "ProductName"), "Select", new { @onchange = "fnCheckProduct()" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="spacer15"></td>
+                    </tr>
+                    <tr>
+                        <td class="labelName" style="width:200px;"><span class="red">*</span>Payment Processor</td>
+                        <td class="pos_rel">
+                            @Html.DropDownList("PaymentProcessorId", new SelectList(spanPaymentProcessors, "PaymentProcessorId", "PaymentProcessorName"), "Select", new { @onchange="fnCheckProcessor()" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="spacer15"></td>
+                    </tr>
+                    <tr class="taC" id="wfchktr" style="display:none;">
+                        <td class="pos_rel" colspan="2">
+                            @Html.CheckBoxFor(x => x.IsApiRefund,new { @class= "css-checkbox" })
+                            <label class="css-labelbox" for="IsApiRefund"> Process through WellsFargo</label>
+                            <br/>
+                            <label><span class="red">(Checking this option, the refund will processed from the bank account. Do not check this option if you have already processed the refund)</span></label>
+
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="spacer15"></td>
+                    </tr>
+                    <tr>
+                        <td class="labelName" style="width:200px;"><span class="red">*</span>Type</td>
+                        <td class="pos_rel">
+                            @Html.DropDownList("ChargeBackType", chargeBackTypes)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="spacer15"></td>
+                    </tr>
+                    <tr>
+                        <td class="labelName" style="width:200px;"><span class="red">*</span>Client's Email</td>
+                        <td class="pos_rel">
+                            @Html.TextBoxFor(x => x.EmailAddress)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="spacer15"></td>
+                    </tr>
+                    @*//Bug #38246 - we disabled PaidAmount and PaidDate*@
+                    <tr>
+                        <td class="labelName" style="width:200px;"><span class="red">*</span>Original Amount Paid</td>
+                        <td class="pos_rel">
+                            @Html.TextBoxFor(x => x.PaidAmount, new { disabled = "disabled", @readonly = "readonly" })
+                            @Html.HiddenFor(x => x.PaidAmount)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="spacer15"></td>
+                    </tr>
+                    <tr>
+                        <td class="labelName" style="width:200px;"><span class="red">*</span>Original Date Paid</td>
+                        <td class="pos_rel">
+                            @Html.TextBoxFor(x => x.PaidDate,new { @value = Model.PaidDate!=DateTime.MinValue? Model.PaidDate.ToString("MM/dd/yyyy") :"", disabled = "disabled", @readonly = "readonly" })
+                            @Html.HiddenFor(x => x.PaidDate)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="spacer15"></td>
+                    </tr>
+                    <tr>
+                        <td class="labelName" style="width:200px;"><span class="red">*</span>Refund/Void Amount</td>
+                        <td class="pos_rel">
+                            @Html.TextBoxFor(x => x.RefundAmount)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="spacer15"></td>
+                    </tr>
+                    <tr>
+                        <td class="labelName" style="width:200px;"><span class="red">*</span>Refund/Void Date</td>
+                        <td class="pos_rel">
+                            @Html.TextBoxFor(x => x.VoidRefundDate, new { @class = "NFollowUpDateTime",@value= Model.VoidRefundDate!=null?Model.VoidRefundDate.ToString("MM/dd/yyyy"):"" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="spacer15"></td>
+                    </tr>
+                    <tr>
+                        <td class="labelName" style="width:200px;"><span class="red">*</span>Transaction Reference Id</td>
+                        <td class="pos_rel">
+                            @Html.TextBoxFor(x => x.TransactionReferenceId)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="spacer15"></td>
+                    </tr>
+                    <tr>
+                        <td class="labelName" style="width:200px;">Comments (Optional)</td>
+                        <td class="pos_rel">
+                            @Html.TextAreaFor(x => x.Comments)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="spacer15"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="button" id="btnCancel" value="Cancel" tabindex="1015" class="btn btn-cancel mTop3" onclick="$('#myModal').modal('hide');" style="padding: 5px 13px;font-size: 14px; margin-right: 10px !important;">
+                            <input type="button" id="btnSubmit" value="Save" tabindex="1014" class="btn btn-primary mRight10" onclick="fnSave();" style="font-size: 14px;padding: 6px 13px;">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+         
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $("#frmVoidRefund").validate({
+        rules: {
+            SpanProductId: {
+                required: true
+            },
+            PaymentProcessorId: {
+                required: true,
+            },
+            PaidAmount: {
+                required: true,
+                min:0.1
+            },
+            RefundAmount: {
+                required: true,
+                min: 0.1
+            },
+            EmailAddress:
+            {
+                required: true,
+                email:true
+            },
+            PaidDate: {
+                required: true,
+            },
+            VoidRefundDate: {
+                required: true,
+            },
+            TransactionReferenceId:{
+                required:true
+            }
+        },
+        messages:{
+            SpanProductId: {
+                required: "Product is required"
+            },
+            PaymentProcessorId: {
+                required: "Payment processor is required"
+            },
+            PaidAmount: {
+                min: "Paid amount should greater than $0",
+            },
+            RefundAmount: {
+                min: "Refund/Void amount should greater than $0",
+            },
+            EmailAddress:
+            {
+                required: "Email is required"
+            },
+            PaidDate: {
+                required: "Paid Date is required"
+            },
+            VoidRefundDate: {
+                required: "Refund/Void Date is required"
+            },
+            TransactionReferenceId:{
+                required: "Transaction reference id is required"
+            }
+        }
+    });
+
+    $(function () {
+        fnCheckProcessor();
+        if ('@isRefundDateValid' != 'True') {
+            $('#VoidRefundDate').val('');
+        }
+        if ('@isPaidDateValid' != 'True') {
+            $('#PaidDate').val('');
+        }
+
+
+        $("#PaidDate").datetimepicker({ format: 'MM/DD/YYYY' });
+        $("#VoidRefundDate").datetimepicker({ format: 'MM/DD/YYYY' });
+        //$('#PaidDate').datetimepicker({
+        //    onSelect: function (selected) {
+        //        $('#VoidRefundDate').datepicker("option", "minDate", selected)
+        //    }
+        //});
+
+        //$('#VoidRefundDate').datetimepicker({
+
+        //    onSelect: function (selected) {
+        //        $('#PaidDate').datepicker("option", "maxDate", selected)
+        //    }
+        //});
+        //$(".datepicker-dropdown").addClass("mytessttt");
+    });
+
+    function fnSave() {
+        if ($("#frmVoidRefund").valid()) {
+            $.ajax({
+                url: '/Admin/VoidRefundRequest',
+                type: 'POST',
+                data: $("#frmVoidRefund").serialize(),
+                cache: false,
+                async: false,
+                success: function (data) {
+                    if (data == 'SUCCESS') {
+                        $(location).attr('href', '/Admin/PaymentTransactionReport')
+
+                    } else {
+                        toastr.error(data);
+                    }
+                }
+            })
+        }
+    }
+    function fnCheckProcessor()
+    {
+        if ($("#PaymentProcessorId").val()=='5') {
+            $("#wfchktr").show();
+        } else {
+            $("#wfchktr").hide();
+        }
+    }
+
+    function fnCheckProduct() {
+        var productCodeArray = '@appVoidRefundProducts'.split(',');
+
+        if (productCodeArray.indexOf($("#SpanProductId option:selected").text()) >= 0) {
+            bootbox.alert({
+                message: "This product has the option to <b>Refund and Void inside Product SPAN Control</b>. Please use that option instead of this",
+                className: 'rubberBand animated'
+            });
+        }
+    }
+
+</script>

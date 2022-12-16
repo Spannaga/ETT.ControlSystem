@@ -1,0 +1,290 @@
+﻿@using Main.Control.Core.Models;
+@model List<TransactionReportDetails>
+@{
+
+    decimal refundAmount = ViewData["RefundAmount"] != null ? (decimal)ViewData["RefundAmount"] : 0;
+    decimal voidAmount = ViewData["VoidAmount"] != null ? (decimal)ViewData["VoidAmount"] : 0;
+    decimal orderAmount = Model.Where(x => x.ApiCallStatus == "Success").Sum(x => x.OrderAmount);
+}
+@*<script src="https://cdn.jsdelivr.net/clipboard.js/1.5.12/clipboard.min.js"></script>*@
+<div class="panel-body">
+    <div class="taC" id="dSuccessMsg">
+    </div>
+    <div id="adminList_wrapper" class="dataTables_wrapper no-footer">
+        <div class="clear"></div>
+        <table class="table table-bordered pack-table mBot10" id="TransactionTable">
+            <thead>
+                <tr>
+                    <td class="taL">
+                    </td>
+                    <td class="taL">
+                        Transaction Date
+                    </td>
+                    <td class="taL">
+                        Payment Status
+                    </td>
+                    <td>
+                        Approval Code
+                    </td>
+                    <td class="taR">
+                        Transaction Amount
+                    </td>
+                    <td class="taL">
+                        Email Address
+                    </td>
+                    <td class="taL">
+                        Reference Id
+                    </td>
+                    <td>
+                        Action
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count() > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        string statusCode = string.Empty;
+                        string errorMsg = string.Empty;
+                        <tr>
+                            <td class="taL noWrap logo_images">
+
+                                @if (item.PaymentProcessorType == 1)
+                                {
+                                    @Html.Raw("Authorize")
+                                }
+                                else if (item.PaymentProcessorType == 2)
+                                {
+                                    <img alt="Stripe" title="Stripe" src="~/Content/Images/stripe.png" />
+                                }
+                                else if (item.PaymentProcessorType == 4)
+                                {
+                                    @Html.Raw("ACI")
+                                }
+                                else if (item.PaymentProcessorType == 5)
+                                {
+                                    <img alt="Wells Fargo" title="Wells Fargo" src="~/Content/Images/wells-fargo-icon.png" />
+                                }
+                                else
+                                {
+                                    @Html.Raw("-")
+                                }
+                                @*8,1,12,4,14,11,3,16,15,2,17*@
+                                @*Start Fav icon*@
+                                @if (item.ProductId == 1)
+                                {
+                                    <img alt="ETT" title="ETT" src="~/Content/Images/Fav/ETT_Fav.ico" />
+                                }
+                                else if (item.ProductId == 2)
+                                {
+                                    <img alt="TL" title="TL" src="~/Content/Images/Fav/TL_Fav.ico" />
+                                }
+                                else if (item.ProductId == 3)
+                                {
+                                    <img alt="IFTA" title="IFTA" src="~/Content/Images/Fav/IFTA_Fav.ico" />
+                                }
+                                else if (item.ProductId == 4)
+                                {
+                                    <img alt="TSNA" title="TSNA" src="~/Content/Images/Fav/TSNA_Fav.ico" />
+                                }
+                                else if (item.ProductId == 8)
+                                {
+                                    <img alt="EEF" title="EEF" src="~/Content/Images/Fav/EEF_Fav.ico" />
+                                }
+                                else if (item.ProductId == 11)
+                                {
+                                    @*<img alt="ETE" title="ETE" src="~/Content/Images/Fav/ETE_Fav.ico" />*@
+                                    <img alt="TBS" title="TBS" src="~/Content/Images/Fav/TBS_Fav.ico" />
+                                }
+                                else if (item.ProductId == 12)
+                                {
+                                    <img alt="TBS" title="TBS" src="~/Content/Images/Fav/TBS_Fav.ico" />
+                                }
+                                else if (item.ProductId == 14)
+                                {
+                                    <img alt="123PayStub" title="123PayStub" src="~/Content/Images/Fav/123_Fav.ico" />
+                                }
+                                else if (item.ProductId == 15)
+                                {
+                                    <img alt="UW" title="UW" src="~/Content/Images/Fav/UW_Fav.ico" />
+                                }
+                                else if (item.ProductId == 16)
+                                {
+                                    <img alt="EE" title="EE" src="~/Content/Images/Fav/EE_Fav.ico" />
+                                }
+                                else if (item.ProductId == 17 && item.ProductCode == "AW")
+                                {
+                                    <img alt="AW" title="AW" src="~/Content/Images/Fav/AW_Fav.ico" />
+                                }
+                                else if (item.ProductCode == "ETTBP")
+                                {
+                                    <img alt="ETTBP" title="ETTBP" src="~/Content/Images/Fav/ETT_Fav.ico" />
+                                }
+                                else if (item.ProductCode == "TSNABP")
+                                {
+                                    <img alt="TSNABP" title="TSNABP" src="~/Content/Images/Fav/TSNA_Fav.ico" />
+                                }
+                                @*End Fav icon*@
+                            </td>
+                            <td class="taL">
+                                @item.PaymentDate
+                            </td>
+                            <td class="taL">
+                                @item.ApiCallStatus
+
+                                @if (item.GateWayErrorsList != null)
+                                {
+                                    int totErrorCount = item.GateWayErrorsList.Length;
+                                    bool isAsssigned = false;
+                                    int count = 1;
+                                    foreach (var gateWayError in item.GateWayErrorsList)
+                                    {
+                                        if (gateWayError != null)
+                                        {
+                                            statusCode = gateWayError.ErrorCode;
+                                            errorMsg = gateWayError.LongMessage;
+                                        }
+                                        if (!string.IsNullOrWhiteSpace(statusCode))
+                                        {
+                                            <span>
+                                                @if (count == 1 && !isAsssigned)
+                                                {
+                                                    isAsssigned = true;
+                                                    <text>Err: </text>
+                                                }
+                                                @if (item.GateWayErrorsList.Length > 1 && totErrorCount != count)
+                                                {
+                                                    <a href="javascript:void(0);" title="@(errorMsg)" id="statusErrMsg" name="statusErrMessage">
+                                                        @statusCode
+                                                    </a>
+                                                    <text>,</text>
+                                                    count++;
+                                                }
+                                                else
+                                                {
+                                                    <a href="javascript:void(0);" title="@(errorMsg)" id="statusErrMsg" name="statusErrMessage">
+                                                        <text>@statusCode</text>
+                                                    </a>
+                                                }
+                                            </span>
+                                        }
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(item.PaymentApprovalCode))
+                                {
+                                    @item.PaymentApprovalCode
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </td>
+                            <td class="taR">
+                                $@Main.Control.Web.Utilities.Utility.GetDecimal2Digits(item.OrderAmount)
+                            </td>
+                            <td class="taL">
+                                @if (!string.IsNullOrWhiteSpace(item.EmailAddress))
+                                {
+                                    @item.EmailAddress
+                                }
+                                else
+                                {
+                                    <p>-</p>
+                                }
+                            </td>
+                            <td class="taL">
+                                @if (!string.IsNullOrWhiteSpace(item.TransactionReferenceId))
+                                {
+                                    @item.TransactionReferenceId
+                                    @*@Html.Hidden("hdnTransactionId_"+ item.TransactionReferenceId, item.TransactionReferenceId)
+                                        <button class="btn btn-md btn-sm mLeft5"  onclick="CopyClipBoard('@item.TransactionReferenceId')"><span class="glyphicon glyphicon-copy"></span> Copy</button>*@
+                                }
+                                else
+                                {
+                                    <p>-</p>
+                                }
+                            </td>
+                            <td>
+                                @if (item.ApiCallStatus == "Refunded")
+                                {
+                                    <p>-</p>
+                                }
+                                else
+                                {
+                                    if (item.IsRefundOrVoid)
+                                    {
+                                        <p>-</p>
+                                    }
+                                    else
+                                    {
+                                        <a href="javascript:void(0)" class="viewBtn" onclick="ShowTransationRequest('@item.TransactionReferenceId',@item.PaymentProcessorType)">View</a>
+                                        if (item.ApiCallStatus == "Success" && item.PaymentProcessorType != 2 && item.PaymentProcessorType != 4)//Don't show Void/Refund for stripe payment
+                                        {
+                                            <a href="javascript:void(0)" class="viewBtn" onclick="VoidRefundRequest('@item.TransactionReferenceId')">Void/Refund</a>
+                                        }
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <label>Order Amount: <span class="viewBtn">@(orderAmount.ToString("C2"))</span></label>
+        <label>Void Amount: <span class="viewBtn">@(voidAmount.ToString("C2"))</span></label>
+        <label>Refund Amount: <span class="viewBtn">@(refundAmount.ToString("C2"))</span></label>
+        <label>Total Amount: <span class="viewBtn">@((orderAmount - (refundAmount)).ToString("C2"))</span></label>
+    </div>
+    <div class="spacer20">
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        $('a[name=statusErrMessage]').tipsy({ gravity: 'n' });
+        $("#TransactionTable").dataTable();
+    })
+    function ShowTransationRequest(id, id2) {
+        $.ajax({
+            type: 'GET',
+            url: '/Admin/_AmazonS3Request?id=' + id + '&id2=' + id2 + '&t=' + Math.random(),
+            async: true,
+            success: function (data) {
+                $('#ModelBody1').html(data);
+                $("#myModal1").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal1').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-lg');
+                $('.modal-dialog').attr('style', "max-height:85%;  margin-top: 50px;");
+            }
+        });
+    }
+
+    function VoidRefundRequest(transactionRefId) {
+        $.ajax({
+            type: 'GET',
+            url: '/Admin/_VoidRefundRequest?id=' + transactionRefId + '&t=' + Math.random(),
+            async: true,
+            success: function (data) {
+                $('#ModelBody').html(data);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-md');
+                $(".modal-body").attr('style', "height:740px;")
+            }
+        });
+    }
+
+    //function CopyClipBoard(transactionRefId) {
+    //    var copyText = document.getElementById("hdnTransactionId_" + transactionRefId);
+    //    copyText.select();
+    //    document.execCommand("copy");
+    //}
+</script>

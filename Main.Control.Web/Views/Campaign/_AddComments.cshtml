@@ -1,0 +1,411 @@
+﻿@model Main.Control.Core.Models.LeadCommunication
+@using Main.Control.Web.Utilities
+@using Main.Control.Core.Models
+<div>
+    @using (Html.BeginForm("_AddComments", "Campaign", FormMethod.Post, new { id = "AddComments", enctype = "multipart/form-data" }))
+    {
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"></button>
+            <h4 class="modal-title">Add Comments</h4>
+        </div>
+        <div class="modal-body">
+            <div class="codeIcon">
+                <div class="responsive ">
+                    <div class="tab-pane fade active in" id="CurrentActivityTab">
+                        <div class="clearfix"></div>
+                        <table class="responsive min_table">
+                            <tr>
+                                <td class="labelName"></td>
+                                <td class="fieldName" colspan="4">
+                                    @*<span>
+            @Html.RadioButton("Communicationtype", MethodOfContact.Phone, true, new { @id = "Phone", @onchange = "functionMethodofContract();", @class = "css-radiobox" })
+            <label for="Phone" class="css-labelradio">
+                Phone
+            </label>
+        </span>
+        <span class="pLeft15">
+            @Html.RadioButton("Communicationtype", MethodOfContact.Mail, new { @id = "Email", @onchange = "functionMethodofContract();", @class = "css-radiobox" })
+            <label for="Email" class="css-labelradio">
+                Email
+            </label>
+        </span>*@
+                                    <span>
+                                        @Html.RadioButton("Communicationtype", MethodOfContact.CallBack, true, new
+                                        {
+                                            @id = "CallBack",
+                                            @onchange = "functionMethodofContract();",
+                                            @class = "css-radiobox",
+                                        })
+                                        <label for="CallBack" class="css-labelradio">
+                                            Call Back
+                                        </label>
+                                    </span>
+                                    <span>
+                                        @Html.RadioButton("Communicationtype", MethodOfContact.LeftVM, new
+                                        {
+                                            @id = "LeftVm",
+                                            @onchange = "functionMethodofContract();",
+                                            @class = "css-radiobox"
+                                        })
+                                        <label for="LeftVm" class="css-labelradio">
+                                            Left VM
+                                        </label>
+                                    </span>
+                                    <span>
+                                        @Html.RadioButton("Communicationtype", MethodOfContact.InvoiceSent, new
+                                        {
+                                            @id = "InvoiceSent",
+                                            @onchange = "functionMethodofContract();",
+                                            @class = "css-radiobox"
+                                        })
+                                        <label for="InvoiceSent" class="css-labelradio">
+                                            Invoice Sent
+                                        </label>
+                                    </span>
+                                    <span>
+                                        @Html.RadioButton("Communicationtype", MethodOfContact.NotInterested, new
+                                   {
+                                       @id = "NotInterested",
+                                            @onchange = "functionMethodofContract();",
+                                            @class = "css-radiobox"
+                                        })
+                                        <label for="NotInterested" class="css-labelradio">
+                                            Not Interested
+                                        </label>
+                                    </span>
+                                    <span>
+                                        @Html.RadioButton("Communicationtype", MethodOfContact.DoNotContact, new
+                                   {
+                                       @id = "DoNotContact",
+                                            @onchange = "functionMethodofContract();",
+                                            @class = "css-radiobox"
+                                        })
+                                        <label for="DoNotContact" class="css-labelradio">
+                                            Do Not Contact
+                                        </label>
+                                    </span>
+
+                                    @Html.Hidden("hdnMethodofContract")
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="spacer15"></td>
+                            </tr>
+                        </table>
+                        <div class="box_shadow">
+                            <table class="responsive min_table ">
+                                <tr class="Phonehide ">
+                                    <td class="labelName"></td>
+                                    @*<td class="fieldName" colspan="4" style="padding: 10px 0 10px 0;">
+                                        <img class="up_arrow_img" src="~/Content/Images/up_arrow.png" />
+                                        <span>
+                                            @Html.RadioButton("IsSpokeorVoicemail", TypeofCall.Spoke, true, new { @id = "Spoke", @onchange = "functionTypeofcall();", @class = "css-radiobox" })
+                                            @Html.Hidden("hdnTypeofCall")
+                                            <label for="Spoke" class="css-labelradio">
+                                                Spoke
+                                            </label>
+                                        </span>
+                                        <span class="pLeft15">
+                                            @Html.RadioButton("IsSpokeorVoicemail", TypeofCall.VoiceMail, new { @id = "VoiceMail", @onchange = "functionTypeofcall();", @class = "css-radiobox" })
+                                            <label for="VoiceMail" class="css-labelradio">
+                                                Voice Mail
+                                            </label>
+                                        </span>
+                                    </td>*@
+                                </tr>
+
+
+                                <tr class="box3 spoketohide">
+                                    <td colspan="4" style="padding-bottom:10px;">
+                                        <table>
+                                            <tr>
+                                                <td colspan="4" class="spacer15"></td>
+                                            </tr>
+                                            <tr>
+
+                                                <td class="labelName">
+                                                    <label>
+                                                        <span class="red">*</span>Spoke To:
+                                                    </label>
+                                                </td>
+                                                <td class="fieldName">
+                                                    @Html.TextBoxFor(m => m.Spoketo)
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table class="responsive min_table">
+                                <tr>
+                                    <td colspan="4" class="spacer15"></td>
+                                </tr>
+
+                                <tr id="commentsOfMethodOfContactTR">
+                                    <td class="labelName"></td>
+                                    <td class="fieldName" colspan="4">
+                                        @Html.TextAreaFor(m => m.Comments, new { @Placeholder = "Add comments here", @style = "width: 595px;margin: 0px;height: 91px;", Tabindex = "1016" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="spacer15"></td>
+                                </tr>
+                                <tr>
+                                    <td class="labelName"></td>
+                                    <td class="fieldName">
+                                        @Html.CheckBox("DonotContactagain", new { id = "DonotContactagain", @class = "css-checkbox", @onchange = "Dontdisturb()", Tabindex = "1017" })
+                                        <label for="DonotContactagain" class="css-labelbox">
+                                            Do not Contact again
+                                        </label>
+                                        @Html.Hidden("hdnDonotContactagain")
+                                    </td>
+                                    <td class="hidereason labelName"><span class="red">*</span>Reason</td>
+                                    <td class="hidereason fieldName">
+                                        @Html.DropDownListFor(x => x.Reason, new List<SelectListItem>
+                          {
+                        new SelectListItem() {Text = "Select Reason", Value=""},
+                        new SelectListItem() {Text = "No longer files 2290", Value="No longer files 2290"},
+                        new SelectListItem() {Text = "Out of Business", Value="Out of Business"},
+                        new SelectListItem() {Text = "Leased Truck", Value="Leased Truck"},
+                        new SelectListItem() {Text = "Unsubscribed", Value="Unsubscribed"},
+                        new SelectListItem() {Text = "Paper Files", Value="Paper Files"},
+                        new SelectListItem() {Text = "Retired", Value="Retired"},
+                        new SelectListItem() {Text = "Filed Elsewhere", Value="Filed Elsewhere"},
+                        new SelectListItem() {Text = "Do Not Call", Value="Do Not Call"} ,
+                        new SelectListItem() {Text = "Deceased", Value="Deceased"},
+                        new SelectListItem() {Text = "Other", Value="Other"}
+                         }, new { @onchange = "OnchangeReason()", @style = "width:145px;", Tabindex = "1018" })
+
+                                        <span style="display:none" id="tdOtherReason">
+                                            @Html.TextBoxFor(m => m.OtherReason, new { @placeholder = "*Reason", @class = "mLeft5", @style = "width:145px;", Tabindex = "1019" })
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="spacer15"></td>
+                                </tr>
+                                <tr class="">
+                                    <td class="labelName"></td>
+                                    <td class="fieldName">
+                                        @Html.CheckBox("IsFollowRequired", new { id = "IsFollowRequired", @class = "css-checkbox", @onchange = "functionIsFollowRequired()", @style = "width:145px;", Tabindex = "1020" })
+                                        <label for="IsFollowRequired" class="css-labelbox">
+                                            Follow Up Required
+                                        </label>
+                                        @Html.Hidden("hdnIsFollowRequired", new { @style = "width:145px;" })
+                                    </td>
+                                    <td class="labelName hidedatetime">
+                                        <label>
+                                            <span class="red">*</span>Date/Time:
+                                        </label>
+                                    </td>
+                                    <td class="headField hidedatetime fieldName">
+                                        @Html.TextBoxFor(m => m.FollowupDate, new { @style = "width:145px;", Tabindex = "1021" })
+                                        @Html.TextBoxFor(m => m.FollowupTime, new { @style = "margin-left:5px;width:145px;", Tabindex = "1022" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="spacer15"></td>
+                                </tr>
+
+                            </table>
+                            <div class="spacer10">
+                            </div>
+                            <div class="taC">
+                                <button class="btn btn-cancel" type="reset" onclick="Cancel()" tabindex="123">
+                                    Cancel <i id="ClearLeadSpinner" style="display: none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i>
+                                </button>
+                                <a class="btn btn-primary mRight5" id="btnSaveComm" onclick="SaveComments()">Save <i id="savespinner" style="display:none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></a>
+                                @*@if (Model.CampaignAsignedLastcount > 0)
+                                    {
+                                                <a class="btn btn-primary mRight5" id="btnSaveAndNext" onclick="SaveComments()">Save & Next <i id="savenextspinner" style="display:none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></a>
+                                    }*@
+
+                            </div>
+                            <div class="spacer10">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @Html.HiddenFor(a => a.SupportUserId)
+        @Html.HiddenFor(a => a.CampaignDetailId)
+        @Html.HiddenFor(a => a.CampaignAssignDetailId)
+        @Html.HiddenFor(a => a.EmailAddress)
+        @Html.HiddenFor(a => a.CampaignLeadActivityId)
+        @Html.HiddenFor(a => a.ProductId)
+    }
+</div>
+<script lang="javascript" type="text/javascript">
+    $(function () {
+        $("#FollowupDate").datetimepicker({ format: 'MM/DD/YYYY', minDate: moment() });
+        $('#FollowupTime').datetimepicker({
+            format: 'hh:mm a'
+        });
+        Dontdisturb();
+        functionIsFollowRequired();
+        functionTypeofcall();
+        functionMethodofContract();
+
+        $('#AddComments').validate({
+            rules: {
+                Spoketo: {
+                    required: function () {
+                        if ($("#Spoke").is(":checked")) {
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+                },
+                Reason: {
+                    required: function () {
+                        if ($('#DonotContactagain').is(":checked")) {
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+                },
+                FollowupDate: {
+                    required: function () {
+                        if ($('#IsFollowRequired').is(":checked")) {
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+                },
+
+                FollowupTime: {
+                    required: function () {
+                        if ($('#IsFollowRequired').is(":checked")) {
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+                },
+                OtherReason: {
+                    required: function () {
+                        if ($('#Reason').val() == "Other") {
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+                }
+
+            },
+            messages: {
+                Spoketo: {
+                    required: "Please enter Spoke To"
+                },
+                Reason: {
+                    required: "Please select  Reason"
+                },
+                FollowupDate: {
+                    required: "select  Followup Date"
+                },
+                FollowupTime: {
+                    required: "Please select  Followup Time"
+                },
+                OtherReason: {
+                    required: "Please enter  Other Reason",
+                }
+            }
+        });
+    });
+    function Dontdisturb() {
+        if ($("#DonotContactagain").is(':checked')) {
+            $("#hdnDonotContactagain").val(true);
+            $(".hidereason").show();
+        }
+        else {
+            $("#hdnDonotContactagain").val(false);
+            $(".hidereason").hide();
+        }
+    }
+    function functionIsFollowRequired() {
+        if ($("#IsFollowRequired").is(':checked')) {
+            $("#hdnIsFollowRequired").val(true);
+            $(".hidedatetime").show();
+        }
+        else {
+            $("#hdnIsFollowRequired").val(false);
+            $(".hidedatetime").hide();
+        }
+
+    }
+
+    function SaveComments() {
+        $("#btnSaveComm").attr("disabled", "disabled");
+        if ($('#AddComments').valid()) {
+            $("#savespinner").show();
+            $.post("/Campaign/_AddComments", $("#AddComments").serialize(), function (data) {
+                if (data) {
+                    $("#btnSaveComm").attr("disabled", false);
+                    $("#savespinner").hide();
+                    if (data.CampaignLeadActivityId != 0) {
+                        $("#CampaignLeadActivityId").val(data.CampaignLeadActivityId)
+                    }
+                    if (data.Result) {
+                        toastr.success("Comments added successfully!");
+                        $('#myModal').modal('hide');
+                    }
+                }
+            });
+        }
+        else {
+            $("#btnSaveComm").attr("disabled", false);
+        }
+    }
+    function Cancel() {
+        $('#myModal').modal('hide');
+    }
+    function functionMethodofContract() {
+        var Communicationtype = $("input:radio[name='Communicationtype']:checked").val();
+        if (Communicationtype == "CallBack") {
+            $(".Phonehide").hide();
+            $(".spoketohide").show();
+            $("#hdnMethodofContract").val("CallBack");
+        }
+        else if (Communicationtype == "LeftVM") {
+            $(".Phonehide").hide();
+            $("#hdnMethodofContract").val("LeftVM");
+            $(".spoketohide").show();
+        }
+        else if (Communicationtype == "InvoiceSent") {
+            $(".Phonehide").hide();
+            $("#hdnMethodofContract").val("InvoiceSent");
+            $(".spoketohide").show();
+        }
+        else if (Communicationtype == "NotInterested") {
+            $(".Phonehide").hide();
+            $("#hdnMethodofContract").val("NotInterested");
+            $(".spoketohide").show();
+        }
+        else if (Communicationtype == "DoNotContact") {
+            $(".Phonehide").hide();
+            $("#hdnMethodofContract").val("DoNotContact");
+            $(".spoketohide").show();
+        }
+    }
+    function functionTypeofcall() {
+        var TypeofCall = $("input:radio[name='IsSpokeorVoicemail']:checked").val();
+        if (TypeofCall == "Spoke") {
+
+            $("#hdnTypeofCall").val("Spoke");
+            $(".spoketohide").show();
+        }
+        else {
+            $("#hdnTypeofCall").val("VoiceMail");
+            $(".spoketohide").hide();
+        }
+    }
+</script>

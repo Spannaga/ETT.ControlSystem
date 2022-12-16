@@ -1,0 +1,162 @@
+﻿@{
+    ViewBag.Title = "Admin Activity Log";
+    var adminUserDropDown = ViewBag.AdminUserDropDown != null ? ViewBag.AdminUserDropDown : new List<SelectListItem>();
+    var adminProjectDropDown = ViewBag.AdminProjectDropDown != null ? ViewBag.AdminProjectDropDown : new List<SelectListItem>();
+}
+<div class="page-header">
+    <div class="page-head">
+        <h2 class="floatL">
+            Activity Log
+        </h2>
+        <div class="floatR">
+            <a href="javascript:void(0)" onclick="BackToIndex()" class="btn btn-cancel backBtn mTop3"><i class="fa fa-chevron-left" aria-hidden="true"></i> Back</a>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-sm-offset-0 col-xs-12">
+            <div class="activityLogBg">
+                <table class="responsive dateSearch" style="width:100%;">
+                    <tr>
+                        <td class="fieldName">
+                            @Html.DropDownList("AdminList", adminUserDropDown as IEnumerable<SelectListItem>, "Others", new { id = "ddlAdminList" })
+                        </td>
+                        <td></td>
+                        <td class="labelName">Product:</td>
+                        <td class="fieldName">
+                            @Html.DropDownList("AdminProjectList", adminProjectDropDown as IEnumerable<SelectListItem>, "Select Product", new { id = "ddlAdminProjectList" })
+                        </td>
+                        <td class="labelName">
+                            <label>Start Date:</label>
+                        </td>
+                        <td class="fieldName">
+                            <input type="text" id="txtStartDate" class="dateField" />
+                        </td>
+                        <td class="labelName">
+                            <label>End Date:</label>
+                        </td>
+                        <td class="fieldName">
+                            <input type="text" id="txtEndDate" class="dateField" />
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td colspan="8" class="spacer15"></td>
+                    </tr>
+                    <tr>
+                        <td class="pLeft50 taC" colspan="8">
+                            <a id="asearch" class="btn btn-primary mRight15">Search</a>
+                            <a id="aClear" class="btn btn-cancel">Clear</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" name="displayCount" id="displayCount" />
+<input type="hidden" name="dayCount" id="dayCount" />
+<input type="hidden" name="SortColumn" id="SortColumn" />
+<input type="hidden" name="SortType" id="SortType" />
+<div class="clearfix"></div>
+<div class="spacer15"></div>
+<div class="panel-body">
+    <table class="listGrid" id="tblActivityLog">
+        <thead>
+            <tr>
+                <th>
+                    IP Address
+                </th>
+                <th>
+                    Activity
+                </th>
+                <th>Memo</th>
+                <th style="width:250px !important;">Project</th>
+                <th>Activity On</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+</div>
+@Html.Hidden("AdminUserId")
+@Html.Hidden("hdnFilterId")
+
+<script type="text/javascript">
+    $(function () {
+        $("#txtStartDate").datepicker({ maxDate: new Date(), changeYear: true, changeMonth: true, autoclose: true });
+        $("#txtEndDate").datepicker({ maxDate: new Date(), changeYear: true, changeMonth: true, autoclose: true });
+
+        var _SortColumn = 0;//for default sort by serial number
+        $('#SortColumn').val(_SortColumn);
+        var _displayCount = 50;
+        var _sortTypeTrip = "desc";
+        var businessName = "";
+        $('#displayCount').val(_displayCount);
+
+        DocsList = $('#tblActivityLog').dataTable({
+
+            "bStateSave": false,
+            "fnStateSave": function (oSettings, oData) {
+                $('#displayCount').val(oData.iLength);
+                $('#SortType').val(oData.aaSorting[0][1]);
+                $('#SortColumn').val(oData.aaSorting[0][0]);
+            },
+            "aaSorting": [[_SortColumn, _sortTypeTrip]],
+            "iDisplayLength": _displayCount,
+            "bServerSide": true,
+            "sPaginationType": "full_numbers",
+            "bRetrieve": true,
+            "sAjaxSource": "/Admin/GetAdminActivityLogByJson/",
+            "bProcessing": false,
+            "bSort": false,
+            "bLengthChange": true,
+            "fnServerParams": function (aoData) {
+                aoData.push({ "name": "AdminUserId", "value": $('#ddlAdminList').val() });
+                aoData.push({ "name": "FromDate", "value": $('#txtStartDate').val() });
+                aoData.push({ "name": "ToDate", "value": $('#txtEndDate').val() });
+                aoData.push({ "name": "ProjectId", "value": $('#ddlAdminProjectList').val() });
+            },
+            "aoColumns": [
+                {
+                    "IP Address": "t.IPAddress",
+                    "mRender": function (data, type, row) {
+                        var ipAddress = "<a href=\"https://www.whatismyipaddress.com/ip/" + data + "\" target=\"_new\">" + data + "</a>";
+                        return ipAddress;
+                    },
+                },
+                {
+                    "Activity": "t.Activity",
+                },
+                {
+                    "Memo": "t.Memo",
+                },
+                {
+                    "Project": "t.Project",
+                },
+              {
+                  "Created Time": "t.CreateTimeStamp",
+              },
+            ],
+            "oLanguage": {
+                "sEmptyTable": "<p class=\"taC\">No entries found</p>",
+                //"sProcessing": '<img src="/Images/ajax-loader.gif" />'
+            },
+        });
+
+        $("#asearch").click(function () {
+            DocsList.fnDraw();
+        });
+        $("#aClear").click(function () {
+            $("#txtStartDate").val('');
+            $("#txtEndDate").val('');
+            $('#ddlAdminList').val('');
+            $('#ddlAdminProjectList').val('');
+        });
+    });
+    function BackToIndex() {
+        location.href = '/Admin/Index?t=' + Math.random();
+    }
+</script>

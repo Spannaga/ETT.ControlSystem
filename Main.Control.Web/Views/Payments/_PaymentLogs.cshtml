@@ -1,0 +1,54 @@
+﻿@using Main.Control.Core.Models;
+@model List<UserPaymentLog>
+
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"></button>
+    <h4 class="modal-title">Activity Logs</h4>
+</div>
+<div class="modal-body" style="height:350px;">
+    @using (Html.BeginForm("SavePaymentDetails", "Payments", FormMethod.Post, new { @id = "frmaddpayment" }))
+    {
+    <table class="table table-bordered pack-table mBot10 dataTable no-footer">
+        <thead>
+            <tr>
+                <th>
+                    Activity Time
+                </th>
+                <th>
+                    Actity Message
+                </th>
+                <th>
+                    Admin User Name
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.ActivityTimeStamp
+                        </td>
+                        <td>
+                            @item.AcitivityMsg
+                        </td>
+                        <td>
+                            @item.AdminUserName
+                        </td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+}
+</div>
+<div class="modal-footer edit-modal-footer footBtn mTopNo">
+    
+</div>
+
+<script type="text/javascript">
+  
+</script>

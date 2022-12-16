@@ -1,0 +1,1434 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{96634BAE-19A2-4561-B424-80FAFF5E3B9D}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Main.Control.Web</RootNamespace>
+    <AssemblyName>Main.Control.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>44319</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.Core.3.7.102.4\lib\net45\AWSSDK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="AWSSDK.S3, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.S3.3.7.101.36\lib\net45\AWSSDK.S3.dll</HintPath>
+    </Reference>
+    <Reference Include="AWSSDK.SimpleEmail, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.SimpleEmail.3.7.100.36\lib\net45\AWSSDK.SimpleEmail.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.4.0.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Windsor.4.0.0\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML, Version=0.95.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.95.4\lib\net46\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.0.10.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelNumberFormat.1.0.10\lib\net20\ExcelNumberFormat.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Authenticator, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Bin\Google.Authenticator.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QRCoder, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QRCoder.1.4.1\lib\net40\QRCoder.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.0.1\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Packaging, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Packaging.4.0.0\lib\net46\System.IO.Packaging.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.9\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.9\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.9\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.9\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.9\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\AuthConfig.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CampaignController.cs" />
+    <Compile Include="Controllers\NoAccessController.cs" />
+    <Compile Include="Controllers\PaymentsController.cs" />
+    <Compile Include="Controllers\TextController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AdminUserRoleUI.cs" />
+    <Compile Include="Models\GoogleResponseJson.cs" />
+    <Compile Include="Models\microsoftResponseJson.cs" />
+    <Compile Include="Models\SignInUI.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\ActionNames.cs" />
+    <Compile Include="Utilities\ControllerNames.cs" />
+    <Compile Include="Utilities\ControllersInstaller.cs" />
+    <Compile Include="Utilities\GoogleAccessTokenJson.cs" />
+    <Compile Include="Utilities\GraphApiClient.cs" />
+    <Compile Include="Utilities\Impersonate.cs" />
+    <Compile Include="Utilities\IPBlackList.cs" />
+    <Compile Include="Utilities\oAuthGoogle.cs" />
+    <Compile Include="Utilities\oAuthMicrosoft.cs" />
+    <Compile Include="Utilities\PUAuthorizeAttribute.cs" />
+    <Compile Include="Utilities\RemoteRequireHttpsAttribute.cs" />
+    <Compile Include="Utilities\SalesHttpClient.cs" />
+    <Compile Include="Utilities\SessionAliveAttribute.cs" />
+    <Compile Include="Utilities\TraceFilterAttribute.cs" />
+    <Compile Include="Utilities\Utility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Readme\Elmah.txt" />
+    <Content Include="Content\Accordion.css" />
+    <Content Include="Content\Animate.css" />
+    <Content Include="Content\Authentication.png" />
+    <Content Include="Content\bootstrap-datepicker.css" />
+    <Content Include="Content\bootstrap-datepicker.min.css" />
+    <Content Include="Content\bootstrap-datetimepicker.css" />
+    <Content Include="Content\bootstrap-multiselect.css" />
+    <Content Include="Content\bootstrap-nav-wizard.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\ButtonStyle.css" />
+    <Content Include="Content\ckeditor\adapters\jquery.js" />
+    <Content Include="Content\ckeditor\build-config.js" />
+    <Content Include="Content\ckeditor\ckeditor.js" />
+    <Content Include="Content\ckeditor\config.js" />
+    <Content Include="Content\ckeditor\contents.css" />
+    <Content Include="Content\ckeditor\lang\af.js" />
+    <Content Include="Content\ckeditor\lang\ar.js" />
+    <Content Include="Content\ckeditor\lang\bg.js" />
+    <Content Include="Content\ckeditor\lang\bn.js" />
+    <Content Include="Content\ckeditor\lang\bs.js" />
+    <Content Include="Content\ckeditor\lang\ca.js" />
+    <Content Include="Content\ckeditor\lang\cs.js" />
+    <Content Include="Content\ckeditor\lang\cy.js" />
+    <Content Include="Content\ckeditor\lang\da.js" />
+    <Content Include="Content\ckeditor\lang\de.js" />
+    <Content Include="Content\ckeditor\lang\el.js" />
+    <Content Include="Content\ckeditor\lang\en-au.js" />
+    <Content Include="Content\ckeditor\lang\en-ca.js" />
+    <Content Include="Content\ckeditor\lang\en-gb.js" />
+    <Content Include="Content\ckeditor\lang\en.js" />
+    <Content Include="Content\ckeditor\lang\eo.js" />
+    <Content Include="Content\ckeditor\lang\es.js" />
+    <Content Include="Content\ckeditor\lang\et.js" />
+    <Content Include="Content\ckeditor\lang\eu.js" />
+    <Content Include="Content\ckeditor\lang\fa.js" />
+    <Content Include="Content\ckeditor\lang\fi.js" />
+    <Content Include="Content\ckeditor\lang\fo.js" />
+    <Content Include="Content\ckeditor\lang\fr-ca.js" />
+    <Content Include="Content\ckeditor\lang\fr.js" />
+    <Content Include="Content\ckeditor\lang\gl.js" />
+    <Content Include="Content\ckeditor\lang\gu.js" />
+    <Content Include="Content\ckeditor\lang\he.js" />
+    <Content Include="Content\ckeditor\lang\hi.js" />
+    <Content Include="Content\ckeditor\lang\hr.js" />
+    <Content Include="Content\ckeditor\lang\hu.js" />
+    <Content Include="Content\ckeditor\lang\id.js" />
+    <Content Include="Content\ckeditor\lang\is.js" />
+    <Content Include="Content\ckeditor\lang\it.js" />
+    <Content Include="Content\ckeditor\lang\ja.js" />
+    <Content Include="Content\ckeditor\lang\ka.js" />
+    <Content Include="Content\ckeditor\lang\km.js" />
+    <Content Include="Content\ckeditor\lang\ko.js" />
+    <Content Include="Content\ckeditor\lang\ku.js" />
+    <Content Include="Content\ckeditor\lang\lt.js" />
+    <Content Include="Content\ckeditor\lang\lv.js" />
+    <Content Include="Content\ckeditor\lang\mk.js" />
+    <Content Include="Content\ckeditor\lang\mn.js" />
+    <Content Include="Content\ckeditor\lang\ms.js" />
+    <Content Include="Content\ckeditor\lang\nb.js" />
+    <Content Include="Content\ckeditor\lang\nl.js" />
+    <Content Include="Content\ckeditor\lang\no.js" />
+    <Content Include="Content\ckeditor\lang\pl.js" />
+    <Content Include="Content\ckeditor\lang\pt-br.js" />
+    <Content Include="Content\ckeditor\lang\pt.js" />
+    <Content Include="Content\ckeditor\lang\ro.js" />
+    <Content Include="Content\ckeditor\lang\ru.js" />
+    <Content Include="Content\ckeditor\lang\si.js" />
+    <Content Include="Content\ckeditor\lang\sk.js" />
+    <Content Include="Content\ckeditor\lang\sl.js" />
+    <Content Include="Content\ckeditor\lang\sq.js" />
+    <Content Include="Content\ckeditor\lang\sr-latn.js" />
+    <Content Include="Content\ckeditor\lang\sr.js" />
+    <Content Include="Content\ckeditor\lang\sv.js" />
+    <Content Include="Content\ckeditor\lang\th.js" />
+    <Content Include="Content\ckeditor\lang\tr.js" />
+    <Content Include="Content\ckeditor\lang\tt.js" />
+    <Content Include="Content\ckeditor\lang\ug.js" />
+    <Content Include="Content\ckeditor\lang\uk.js" />
+    <Content Include="Content\ckeditor\lang\vi.js" />
+    <Content Include="Content\ckeditor\lang\zh-cn.js" />
+    <Content Include="Content\ckeditor\lang\zh.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\a11yhelp.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\af.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\ar.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\bg.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\ca.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\cs.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\cy.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\da.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\de.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\el.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\en-gb.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\en.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\eo.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\es.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\et.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\fa.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\fi.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\fo.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\fr-ca.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\fr.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\gl.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\gu.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\he.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\hi.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\hr.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\hu.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\id.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\it.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\ja.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\km.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\ko.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\ku.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\lt.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\lv.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\mk.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\mn.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\nb.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\nl.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\no.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\pl.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\pt-br.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\pt.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\ro.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\ru.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\si.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\sk.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\sl.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\sq.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\sr-latn.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\sr.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\sv.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\th.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\tr.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\tt.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\ug.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\uk.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\vi.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\zh-cn.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\zh.js" />
+    <Content Include="Content\ckeditor\plugins\a11yhelp\dialogs\lang\_translationstatus.txt" />
+    <Content Include="Content\ckeditor\plugins\about\dialogs\about.js" />
+    <Content Include="Content\ckeditor\plugins\about\dialogs\hidpi\logo_ckeditor.png" />
+    <Content Include="Content\ckeditor\plugins\about\dialogs\logo_ckeditor.png" />
+    <Content Include="Content\ckeditor\plugins\clipboard\dialogs\paste.js" />
+    <Content Include="Content\ckeditor\plugins\colordialog\dialogs\colordialog.js" />
+    <Content Include="Content\ckeditor\plugins\dialog\dialogDefinition.js" />
+    <Content Include="Content\ckeditor\plugins\div\dialogs\div.js" />
+    <Content Include="Content\ckeditor\plugins\find\dialogs\find.js" />
+    <Content Include="Content\ckeditor\plugins\flash\dialogs\flash.js" />
+    <Content Include="Content\ckeditor\plugins\flash\images\placeholder.png" />
+    <Content Include="Content\ckeditor\plugins\forms\dialogs\button.js" />
+    <Content Include="Content\ckeditor\plugins\forms\dialogs\checkbox.js" />
+    <Content Include="Content\ckeditor\plugins\forms\dialogs\form.js" />
+    <Content Include="Content\ckeditor\plugins\forms\dialogs\hiddenfield.js" />
+    <Content Include="Content\ckeditor\plugins\forms\dialogs\radio.js" />
+    <Content Include="Content\ckeditor\plugins\forms\dialogs\select.js" />
+    <Content Include="Content\ckeditor\plugins\forms\dialogs\textarea.js" />
+    <Content Include="Content\ckeditor\plugins\forms\dialogs\textfield.js" />
+    <Content Include="Content\ckeditor\plugins\forms\images\hiddenfield.gif" />
+    <Content Include="Content\ckeditor\plugins\icons.png" />
+    <Content Include="Content\ckeditor\plugins\icons_hidpi.png" />
+    <Content Include="Content\ckeditor\plugins\iframe\dialogs\iframe.js" />
+    <Content Include="Content\ckeditor\plugins\iframe\images\placeholder.png" />
+    <Content Include="Content\ckeditor\plugins\image\dialogs\image.js" />
+    <Content Include="Content\ckeditor\plugins\image\images\noimage.png" />
+    <Content Include="Content\ckeditor\plugins\link\dialogs\anchor.js" />
+    <Content Include="Content\ckeditor\plugins\link\dialogs\link.js" />
+    <Content Include="Content\ckeditor\plugins\link\images\anchor.png" />
+    <Content Include="Content\ckeditor\plugins\link\images\hidpi\anchor.png" />
+    <Content Include="Content\ckeditor\plugins\liststyle\dialogs\liststyle.js" />
+    <Content Include="Content\ckeditor\plugins\magicline\images\hidpi\icon-rtl.png" />
+    <Content Include="Content\ckeditor\plugins\magicline\images\hidpi\icon.png" />
+    <Content Include="Content\ckeditor\plugins\magicline\images\icon-rtl.png" />
+    <Content Include="Content\ckeditor\plugins\magicline\images\icon.png" />
+    <Content Include="Content\ckeditor\plugins\pagebreak\images\pagebreak.gif" />
+    <Content Include="Content\ckeditor\plugins\pastefromword\filter\default.js" />
+    <Content Include="Content\ckeditor\plugins\preview\preview.html" />
+    <Content Include="Content\ckeditor\plugins\scayt\dialogs\options.js" />
+    <Content Include="Content\ckeditor\plugins\scayt\dialogs\toolbar.css" />
+    <Content Include="Content\ckeditor\plugins\showblocks\images\block_address.png" />
+    <Content Include="Content\ckeditor\plugins\showblocks\images\block_blockquote.png" />
+    <Content Include="Content\ckeditor\plugins\showblocks\images\block_div.png" />
+    <Content Include="Content\ckeditor\plugins\showblocks\images\block_h1.png" />
+    <Content Include="Content\ckeditor\plugins\showblocks\images\block_h2.png" />
+    <Content Include="Content\ckeditor\plugins\showblocks\images\block_h3.png" />
+    <Content Include="Content\ckeditor\plugins\showblocks\images\block_h4.png" />
+    <Content Include="Content\ckeditor\plugins\showblocks\images\block_h5.png" />
+    <Content Include="Content\ckeditor\plugins\showblocks\images\block_h6.png" />
+    <Content Include="Content\ckeditor\plugins\showblocks\images\block_p.png" />
+    <Content Include="Content\ckeditor\plugins\showblocks\images\block_pre.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\dialogs\smiley.js" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\angel_smile.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\angel_smile.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\angry_smile.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\angry_smile.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\broken_heart.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\broken_heart.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\confused_smile.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\confused_smile.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\cry_smile.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\cry_smile.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\devil_smile.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\devil_smile.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\embaressed_smile.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\embarrassed_smile.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\embarrassed_smile.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\envelope.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\envelope.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\heart.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\heart.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\kiss.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\kiss.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\lightbulb.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\lightbulb.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\omg_smile.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\omg_smile.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\regular_smile.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\regular_smile.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\sad_smile.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\sad_smile.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\shades_smile.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\shades_smile.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\teeth_smile.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\teeth_smile.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\thumbs_down.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\thumbs_down.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\thumbs_up.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\thumbs_up.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\tongue_smile.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\tongue_smile.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\tounge_smile.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\whatchutalkingabout_smile.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\whatchutalkingabout_smile.png" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\wink_smile.gif" />
+    <Content Include="Content\ckeditor\plugins\smiley\images\wink_smile.png" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\af.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\ar.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\bg.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\ca.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\cs.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\cy.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\da.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\de.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\el.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\en-gb.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\en.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\eo.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\es.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\et.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\fa.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\fi.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\fr-ca.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\fr.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\gl.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\he.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\hr.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\hu.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\id.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\it.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\ja.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\km.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\ko.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\ku.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\lt.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\lv.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\nb.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\nl.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\no.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\pl.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\pt-br.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\pt.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\ru.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\si.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\sk.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\sl.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\sq.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\sv.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\th.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\tr.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\tt.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\ug.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\uk.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\vi.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\zh-cn.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\zh.js" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\lang\_translationstatus.txt" />
+    <Content Include="Content\ckeditor\plugins\specialchar\dialogs\specialchar.js" />
+    <Content Include="Content\ckeditor\plugins\tabletools\dialogs\tableCell.js" />
+    <Content Include="Content\ckeditor\plugins\table\dialogs\table.js" />
+    <Content Include="Content\ckeditor\plugins\templates\dialogs\templates.css" />
+    <Content Include="Content\ckeditor\plugins\templates\dialogs\templates.js" />
+    <Content Include="Content\ckeditor\plugins\templates\templates\default.js" />
+    <Content Include="Content\ckeditor\plugins\templates\templates\images\template1.gif" />
+    <Content Include="Content\ckeditor\plugins\templates\templates\images\template2.gif" />
+    <Content Include="Content\ckeditor\plugins\templates\templates\images\template3.gif" />
+    <Content Include="Content\ckeditor\plugins\wsc\dialogs\ciframe.html" />
+    <Content Include="Content\ckeditor\plugins\wsc\dialogs\tmpFrameset.html" />
+    <Content Include="Content\ckeditor\plugins\wsc\dialogs\wsc.css" />
+    <Content Include="Content\ckeditor\plugins\wsc\dialogs\wsc.js" />
+    <Content Include="Content\ckeditor\plugins\wsc\dialogs\wsc_ie.js" />
+    <Content Include="Content\ckeditor\samples\css\samples.css" />
+    <Content Include="Content\ckeditor\samples\img\github-top.png" />
+    <Content Include="Content\ckeditor\samples\img\header-bg.png" />
+    <Content Include="Content\ckeditor\samples\img\header-separator.png" />
+    <Content Include="Content\ckeditor\samples\img\logo.png" />
+    <Content Include="Content\ckeditor\samples\img\navigation-tip.png" />
+    <Content Include="Content\ckeditor\samples\index.html" />
+    <Content Include="Content\ckeditor\samples\js\sample.js" />
+    <Content Include="Content\ckeditor\samples\js\sf.js" />
+    <Content Include="Content\ckeditor\samples\old\ajax.html" />
+    <Content Include="Content\ckeditor\samples\old\api.html" />
+    <Content Include="Content\ckeditor\samples\old\appendto.html" />
+    <Content Include="Content\ckeditor\samples\old\assets\inlineall\logo.png" />
+    <Content Include="Content\ckeditor\samples\old\assets\outputxhtml\outputxhtml.css" />
+    <Content Include="Content\ckeditor\samples\old\assets\posteddata.php" />
+    <Content Include="Content\ckeditor\samples\old\assets\sample.jpg" />
+    <Content Include="Content\ckeditor\samples\old\assets\uilanguages\languages.js" />
+    <Content Include="Content\ckeditor\samples\old\datafiltering.html" />
+    <Content Include="Content\ckeditor\samples\old\dialog\assets\my_dialog.js" />
+    <Content Include="Content\ckeditor\samples\old\dialog\dialog.html" />
+    <Content Include="Content\ckeditor\samples\old\divreplace.html" />
+    <Content Include="Content\ckeditor\samples\old\enterkey\enterkey.html" />
+    <Content Include="Content\ckeditor\samples\old\htmlwriter\assets\outputforflash\outputforflash.swf" />
+    <Content Include="Content\ckeditor\samples\old\htmlwriter\assets\outputforflash\swfobject.js" />
+    <Content Include="Content\ckeditor\samples\old\htmlwriter\outputforflash.html" />
+    <Content Include="Content\ckeditor\samples\old\htmlwriter\outputhtml.html" />
+    <Content Include="Content\ckeditor\samples\old\index.html" />
+    <Content Include="Content\ckeditor\samples\old\inlineall.html" />
+    <Content Include="Content\ckeditor\samples\old\inlinebycode.html" />
+    <Content Include="Content\ckeditor\samples\old\inlinetextarea.html" />
+    <Content Include="Content\ckeditor\samples\old\jquery.html" />
+    <Content Include="Content\ckeditor\samples\old\magicline\magicline.html" />
+    <Content Include="Content\ckeditor\samples\old\readonly.html" />
+    <Content Include="Content\ckeditor\samples\old\replacebyclass.html" />
+    <Content Include="Content\ckeditor\samples\old\replacebycode.html" />
+    <Content Include="Content\ckeditor\samples\old\sample.css" />
+    <Content Include="Content\ckeditor\samples\old\sample.js" />
+    <Content Include="Content\ckeditor\samples\old\sample_posteddata.php" />
+    <Content Include="Content\ckeditor\samples\old\tabindex.html" />
+    <Content Include="Content\ckeditor\samples\old\toolbar\toolbar.html" />
+    <Content Include="Content\ckeditor\samples\old\uicolor.html" />
+    <Content Include="Content\ckeditor\samples\old\uilanguages.html" />
+    <Content Include="Content\ckeditor\samples\old\wysiwygarea\fullpage.html" />
+    <Content Include="Content\ckeditor\samples\old\xhtmlstyle.html" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\css\fontello.css" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\font\fontello.svg" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\font\LICENSE.txt" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\index.html" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\js\abstracttoolbarmodifier.js" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\js\fulltoolbareditor.js" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\js\toolbarmodifier.js" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\js\toolbartextmodifier.js" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\lib\codemirror\codemirror.css" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\lib\codemirror\codemirror.js" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\lib\codemirror\javascript.js" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\lib\codemirror\neo.css" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\lib\codemirror\show-hint.css" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\lib\codemirror\show-hint.js" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\.temp\css\dialog.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\.temp\css\dialog_ie.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\.temp\css\dialog_ie7.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\.temp\css\dialog_ie8.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\.temp\css\dialog_iequirks.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\.temp\css\dialog_opera.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\.temp\css\editor.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\.temp\css\editor_gecko.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\.temp\css\editor_ie.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\.temp\css\editor_ie7.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\.temp\css\editor_ie8.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\.temp\css\editor_iequirks.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\dev\icons16.svg" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\dev\icons32.svg" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\dialog.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\dialog_ie.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\dialog_ie7.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\dialog_ie8.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\dialog_iequirks.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\dialog_opera.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\editor.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\editor_gecko.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\editor_ie.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\editor_ie7.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\editor_ie8.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\editor_iequirks.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\icons.png" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\icons_hidpi.png" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\images\arrow.png" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\images\close.png" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\images\hidpi\close.png" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\images\hidpi\lock-open.png" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\images\hidpi\lock.png" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\images\hidpi\refresh.png" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\images\lock-open.png" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\images\lock.png" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\images\refresh.png" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\sample\bootstrapck-sample.html" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\sample\css\bootstrapck-sample.css" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\sample\js\analytics.js" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\sample\js\jquery-1.11.0.min.js" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\skin.js" />
+    <Content Include="Content\ckeditor\skins\office2013\dialog.css" />
+    <Content Include="Content\ckeditor\skins\office2013\editor.css" />
+    <Content Include="Content\ckeditor\skins\office2013\icons.png" />
+    <Content Include="Content\ckeditor\skins\office2013\icons_hidpi.png" />
+    <Content Include="Content\ckeditor\skins\office2013\images\arrow.png" />
+    <Content Include="Content\ckeditor\skins\office2013\images\close.png" />
+    <Content Include="Content\ckeditor\skins\office2013\images\hidpi\close.png" />
+    <Content Include="Content\ckeditor\skins\office2013\images\hidpi\lock-open.png" />
+    <Content Include="Content\ckeditor\skins\office2013\images\hidpi\lock.png" />
+    <Content Include="Content\ckeditor\skins\office2013\images\hidpi\refresh.png" />
+    <Content Include="Content\ckeditor\skins\office2013\images\lock-open.png" />
+    <Content Include="Content\ckeditor\skins\office2013\images\lock.png" />
+    <Content Include="Content\ckeditor\skins\office2013\images\refresh.png" />
+    <Content Include="Content\ckeditor\skins\office2013\skin.js" />
+    <Content Include="Content\ckeditor\styles.js" />
+    <Content Include="Content\colorbox.css" />
+    <Content Include="Content\Common.css" />
+    <Content Include="Content\CommonImages\checkActive.png" />
+    <Content Include="Content\CommonImages\checkActiveDis.png" />
+    <Content Include="Content\CommonImages\checkNormal.png" />
+    <Content Include="Content\CommonImages\checkNormalDis.png" />
+    <Content Include="Content\CommonImages\date.png" />
+    <Content Include="Content\CommonImages\dateIcon.png" />
+    <Content Include="Content\CommonImages\dollarIcon.png" />
+    <Content Include="Content\CommonImages\emailicon.png" />
+    <Content Include="Content\CommonImages\org.png" />
+    <Content Include="Content\CommonImages\passIcon.png" />
+    <Content Include="Content\CommonImages\perIcon.png" />
+    <Content Include="Content\CommonImages\radioActive.png" />
+    <Content Include="Content\CommonImages\radioActiveDis.png" />
+    <Content Include="Content\CommonImages\radioNormal.png" />
+    <Content Include="Content\CommonImages\radioNormalDis.png" />
+    <Content Include="Content\CommonImages\timeIcon.png" />
+    <Content Include="Content\daterangepicker-bs2.css" />
+    <Content Include="Content\daterangepicker-bs3.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\fonts\aleo-bold-webfont-webfont.svg" />
+    <Content Include="Content\fonts\aleo-bolditalic-webfont-webfont.svg" />
+    <Content Include="Content\fonts\aleo-italic-webfont-webfont.svg" />
+    <Content Include="Content\fonts\aleo-light-webfont-webfont.svg" />
+    <Content Include="Content\fonts\aleo-lightitalic-webfont-webfont.svg" />
+    <Content Include="Content\fonts\aleo-regular-webfont-webfont.svg" />
+    <Content Include="Content\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\fonts\fontawesome-webfonte0a5.svg" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\fonts\lato-black-webfont.svg" />
+    <Content Include="Content\fonts\lato-blackitalic-webfont.svg" />
+    <Content Include="Content\fonts\lato-bold-webfont.svg" />
+    <Content Include="Content\fonts\lato-heavy-webfont.svg" />
+    <Content Include="Content\fonts\lato-light-webfont.svg" />
+    <Content Include="Content\fonts\lato-regular-webfont.svg" />
+    <Content Include="Content\fonts\Material-Design-Iconic-Fontf700.svg" />
+    <Content Include="Content\Images\123-paystubs-support.png" />
+    <Content Include="Content\Images\123-paystubs.png" />
+    <Content Include="Content\Images\ACAefile.jpg" />
+    <Content Include="Content\Images\ACAw.png" />
+    <Content Include="Content\Images\ACAwiseEfile.jpg" />
+    <Content Include="Content\Images\accent.png" />
+    <Content Include="Content\Images\accordion-arrow-down.png" />
+    <Content Include="Content\Images\accordion-arrow-right.png" />
+    <Content Include="Content\Images\add-icon.png" />
+    <Content Include="Content\Images\addanother-btn.png" />
+    <Content Include="Content\Images\Address.png" />
+    <Content Include="Content\Images\ajax-loader.gif" />
+    <Content Include="Content\Images\alarm_clock.png" />
+    <Content Include="Content\Images\american_img.gif" />
+    <Content Include="Content\Images\awtools.png" />
+    <Content Include="Content\Images\background44.jpg" />
+    <Content Include="Content\Images\back_disabled.png" />
+    <Content Include="Content\Images\back_enabled.png" />
+    <Content Include="Content\Images\bgLogo.gif" />
+    <Content Include="Content\Images\blue-dollarimg-normal.png" />
+    <Content Include="Content\Images\blue-dollarimg.png" />
+    <Content Include="Content\Images\blue.png" />
+    <Content Include="Content\Images\bodyBg.jpg" />
+    <Content Include="Content\Images\border.png" />
+    <Content Include="Content\Images\bullet.png" />
+    <Content Include="Content\Images\calendar.png" />
+    <Content Include="Content\Images\campaign_200.jpg" />
+    <Content Include="Content\Images\campaign_menu.png" />
+    <Content Include="Content\Images\cancel-cross.png" />
+    <Content Include="Content\Images\CArdName.png" />
+    <Content Include="Content\Images\CardNumber.png" />
+    <Content Include="Content\Images\cards.gif" />
+    <Content Include="Content\Images\checkBox.png" />
+    <Content Include="Content\Images\checkBoxA.png" />
+    <Content Include="Content\Images\checkHover.png" />
+    <Content Include="Content\Images\checkHoverDis.png" />
+    <Content Include="Content\Images\checkNormal.png" />
+    <Content Include="Content\Images\checkNormalDis.png" />
+    <Content Include="Content\Images\City.png" />
+    <Content Include="Content\Images\close.png" />
+    <Content Include="Content\Images\closeIcon.png" />
+    <Content Include="Content\Images\close_btn.png" />
+    <Content Include="Content\Images\codeIcon.png" />
+    <Content Include="Content\Images\colapseArrow.png" />
+    <Content Include="Content\Images\controls.png" />
+    <Content Include="Content\Images\CreditCArd.png" />
+    <Content Include="Content\Images\cvvnumbers.png" />
+    <Content Include="Content\Images\dashboard_loader.gif" />
+    <Content Include="Content\Images\date.png" />
+    <Content Include="Content\Images\delete-blue.png" />
+    <Content Include="Content\Images\delete-das.png" />
+    <Content Include="Content\Images\delete-das2.png" />
+    <Content Include="Content\Images\delete-i.png" />
+    <Content Include="Content\Images\delete-orange.png" />
+    <Content Include="Content\Images\delete.png" />
+    <Content Include="Content\Images\delete1.png" />
+    <Content Include="Content\Images\delete2.png" />
+    <Content Include="Content\Images\details_close.png" />
+    <Content Include="Content\Images\details_open.png" />
+    <Content Include="Content\Images\discover_img.gif" />
+    <Content Include="Content\Images\dollarimg-blue-foo.png" />
+    <Content Include="Content\Images\dollarimg-white.png" />
+    <Content Include="Content\Images\dollarimg.png" />
+    <Content Include="Content\Images\dollarimg_large.png" />
+    <Content Include="Content\Images\e-file.png" />
+    <Content Include="Content\Images\E990.jpg" />
+    <Content Include="Content\Images\E990.png" />
+    <Content Include="Content\Images\E990efile.jpg" />
+    <Content Include="Content\Images\edit-das.png" />
+    <Content Include="Content\Images\edit-gray.png" />
+    <Content Include="Content\Images\edit-hover.png" />
+    <Content Include="Content\Images\edit-orange.png" />
+    <Content Include="Content\Images\edit.black.png" />
+    <Content Include="Content\Images\Edit.gif" />
+    <Content Include="Content\Images\edit.png" />
+    <Content Include="Content\Images\EEF-admin-image.jpg" />
+    <Content Include="Content\Images\EEF.png" />
+    <Content Include="Content\Images\EEFEfile.png" />
+    <Content Include="Content\Images\EET.png" />
+    <Content Include="Content\Images\EETadmin.jpg" />
+    <Content Include="Content\Images\EETefile.jpg" />
+    <Content Include="Content\Images\efile.png" />
+    <Content Include="Content\Images\eirs.png" />
+    <Content Include="Content\Images\email-header-campaign.jpg" />
+    <Content Include="Content\Images\EP.png" />
+    <Content Include="Content\Images\EPS-support.png" />
+    <Content Include="Content\Images\EP_logo.png" />
+    <Content Include="Content\Images\ETF.png" />
+    <Content Include="Content\Images\ETFefile-2021.jpg" />
+    <Content Include="Content\Images\ETFefile.jpg" />
+    <Content Include="Content\Images\ETFefile2016.jpg" />
+    <Content Include="Content\Images\ETL.png" />
+    <Content Include="Content\Images\ETT.png" />
+    <Content Include="Content\Images\ETTefile.jpg" />
+    <Content Include="Content\Images\ETTefileTest.jpg" />
+    <Content Include="Content\Images\ETTSupportAdmin.png" />
+    <Content Include="Content\Images\Express-support-logo-192X192.png" />
+    <Content Include="Content\Images\Express-Support-Logo.png" />
+    <Content Include="Content\Images\favicon.ico" />
+    <Content Include="Content\Images\Fav\123_Fav.ico" />
+    <Content Include="Content\Images\Fav\AW_Fav.ico" />
+    <Content Include="Content\Images\Fav\EEF_Fav.ico" />
+    <Content Include="Content\Images\Fav\EE_Fav.ico" />
+    <Content Include="Content\Images\Fav\ETE_Fav.ico" />
+    <Content Include="Content\Images\Fav\ETT_Fav.ico" />
+    <Content Include="Content\Images\Fav\IFTA_Fav.ico" />
+    <Content Include="Content\Images\Fav\TBS_Fav.ico" />
+    <Content Include="Content\Images\Fav\TL_Fav.ico" />
+    <Content Include="Content\Images\Fav\TSNA_Fav.ico" />
+    <Content Include="Content\Images\Fav\UW_Fav.ico" />
+    <Content Include="Content\Images\flag_blue.gif" />
+    <Content Include="Content\Images\flag_green.gif" />
+    <Content Include="Content\Images\flag_orange.gif" />
+    <Content Include="Content\Images\flag_red.gif" />
+    <Content Include="Content\Images\flag_white.gif" />
+    <Content Include="Content\Images\forward_disabled.png" />
+    <Content Include="Content\Images\forward_enabled.png" />
+    <Content Include="Content\Images\green-tick1.png" />
+    <Content Include="Content\Images\green.png" />
+    <Content Include="Content\Images\guy.jpg" />
+    <Content Include="Content\Images\helpIcon-blue.gif" />
+    <Content Include="Content\Images\helpIcon.gif" />
+    <Content Include="Content\Images\helpIcon_es.gif" />
+    <Content Include="Content\Images\HelpImg.jpg" />
+    <Content Include="Content\Images\HelpImg.png" />
+    <Content Include="Content\Images\heroAccent.png" />
+    <Content Include="Content\Images\icon1.png" />
+    <Content Include="Content\Images\icon2.png" />
+    <Content Include="Content\Images\icon3.png" />
+    <Content Include="Content\Images\iconHelp.png" />
+    <Content Include="Content\Images\iconUser.png" />
+    <Content Include="Content\Images\IFTA.png" />
+    <Content Include="Content\Images\indicator.gif" />
+    <Content Include="Content\Images\inws.png" />
+    <Content Include="Content\Images\liability-hover.png" />
+    <Content Include="Content\Images\liability.png" />
+    <Content Include="Content\Images\loading.gif" />
+    <Content Include="Content\Images\loading_apple.gif" />
+    <Content Include="Content\Images\loading_background.png" />
+    <Content Include="Content\Images\logIcon.png" />
+    <Content Include="Content\Images\logo-lg.png" />
+    <Content Include="Content\Images\logo-new.gif" />
+    <Content Include="Content\Images\logo.jpg" />
+    <Content Include="Content\Images\logo.png" />
+    <Content Include="Content\Images\logo1.png" />
+    <Content Include="Content\Images\logoBg.gif" />
+    <Content Include="Content\Images\master_img.gif" />
+    <Content Include="Content\Images\maxi.gif" />
+    <Content Include="Content\Images\minIcon.png" />
+    <Content Include="Content\Images\Month.png" />
+    <Content Include="Content\Images\NewApplication\Add-plus.png" />
+    <Content Include="Content\Images\NewApplication\addanother-btn.png" />
+    <Content Include="Content\Images\NewApplication\cancel-cross.png" />
+    <Content Include="Content\Images\NewApplication\chatIcon.png" />
+    <Content Include="Content\Images\NewApplication\checkHover-sm.png" />
+    <Content Include="Content\Images\NewApplication\checkHover.png" />
+    <Content Include="Content\Images\NewApplication\checkHover1.png" />
+    <Content Include="Content\Images\NewApplication\checkHoverDis.png" />
+    <Content Include="Content\Images\NewApplication\checkHoverFocus.png" />
+    <Content Include="Content\Images\NewApplication\checkNorma.png" />
+    <Content Include="Content\Images\NewApplication\checkNormal-sm.png" />
+    <Content Include="Content\Images\NewApplication\checkNormal.png" />
+    <Content Include="Content\Images\NewApplication\checkNormal1.png" />
+    <Content Include="Content\Images\NewApplication\checkNormalDis.png" />
+    <Content Include="Content\Images\NewApplication\checkNormalFocus.png" />
+    <Content Include="Content\Images\NewApplication\chooseIcon.png" />
+    <Content Include="Content\Images\NewApplication\currentBg.png" />
+    <Content Include="Content\Images\NewApplication\Discount.png" />
+    <Content Include="Content\Images\NewApplication\emailIcon.png" />
+    <Content Include="Content\Images\NewApplication\logBg.png" />
+    <Content Include="Content\Images\NewApplication\logBgActive.png" />
+    <Content Include="Content\Images\NewApplication\LogoutIcon.png" />
+    <Content Include="Content\Images\NewApplication\Ourfee.png" />
+    <Content Include="Content\Images\NewApplication\PayIcon.png" />
+    <Content Include="Content\Images\NewApplication\phoneIcon.png" />
+    <Content Include="Content\Images\NewApplication\plusIcon.png" />
+    <Content Include="Content\Images\NewApplication\premiumsupport.png" />
+    <Content Include="Content\Images\NewApplication\radioDisable.png" />
+    <Content Include="Content\Images\NewApplication\radioHover.png" />
+    <Content Include="Content\Images\NewApplication\radioHoverDis.png" />
+    <Content Include="Content\Images\NewApplication\radioNormal.png" />
+    <Content Include="Content\Images\NewApplication\radioNormalDis.png" />
+    <Content Include="Content\Images\NewApplication\refreshImg.png" />
+    <Content Include="Content\Images\NewApplication\refreshImgwt.png" />
+    <Content Include="Content\Images\NewApplication\save.png" />
+    <Content Include="Content\Images\NewApplication\tick-blue.png" />
+    <Content Include="Content\Images\NewApplication\tick-bold.png" />
+    <Content Include="Content\Images\NewApplication\tick-gray.png" />
+    <Content Include="Content\Images\NewApplication\tick.png" />
+    <Content Include="Content\Images\NewApplication\Total.png" />
+    <Content Include="Content\Images\NewApplication\whiteArrow.png" />
+    <Content Include="Content\Images\NewApplication\whiteArrowBack.png" />
+    <Content Include="Content\Images\NewApplication\whiteArrowBackGray.png" />
+    <Content Include="Content\Images\NewApp\currentBg.gif" />
+    <Content Include="Content\Images\NewApp\currentStep.png" />
+    <Content Include="Content\Images\NewApp\defaultStep.png" />
+    <Content Include="Content\Images\NewApp\lastArrow.gif" />
+    <Content Include="Content\Images\NewApp\lastArrow1.png" />
+    <Content Include="Content\Images\NewApp\printer.png" />
+    <Content Include="Content\Images\NewApp\printerNew.png" />
+    <Content Include="Content\Images\NewApp\startcorrectionicon.png" />
+    <Content Include="Content\Images\NewApp\startnewicon.png" />
+    <Content Include="Content\Images\NewImages\AccesIcon.png" />
+    <Content Include="Content\Images\NewImages\activeIcon.png" />
+    <Content Include="Content\Images\NewImages\activity-log.png" />
+    <Content Include="Content\Images\NewImages\administrator_icon.png" />
+    <Content Include="Content\Images\NewImages\admin_icon.gif" />
+    <Content Include="Content\Images\NewImages\biz.png" />
+    <Content Include="Content\Images\NewImages\bodyBg.png" />
+    <Content Include="Content\Images\NewImages\bodyBgA.png" />
+    <Content Include="Content\Images\NewImages\buttonBg.png" />
+    <Content Include="Content\Images\NewImages\cancelBg.png" />
+    <Content Include="Content\Images\NewImages\chatIcon.png" />
+    <Content Include="Content\Images\NewImages\close.png" />
+    <Content Include="Content\Images\NewImages\commIcon.png" />
+    <Content Include="Content\Images\NewImages\contentBg.png" />
+    <Content Include="Content\Images\NewImages\deleteIcon.png" />
+    <Content Include="Content\Images\NewImages\editIcon.png" />
+    <Content Include="Content\Images\NewImages\errorBg.png" />
+    <Content Include="Content\Images\NewImages\goBrosIcon.png" />
+    <Content Include="Content\Images\NewImages\google.png" />
+    <Content Include="Content\Images\NewImages\icon.png" />
+    <Content Include="Content\Images\NewImages\inactiveIcon.png" />
+    <Content Include="Content\Images\NewImages\large_ActivityLog.png" />
+    <Content Include="Content\Images\NewImages\linkBg.png" />
+    <Content Include="Content\Images\NewImages\logo.png" />
+    <Content Include="Content\Images\NewImages\manageBackIcon.png" />
+    <Content Include="Content\Images\NewImages\manageIcon.png" />
+    <Content Include="Content\Images\NewImages\microsoft-signin.png" />
+    <Content Include="Content\Images\NewImages\msgIcon.png" />
+    <Content Include="Content\Images\NewImages\noteIcon.png" />
+    <Content Include="Content\Images\NewImages\publishIcon.png" />
+    <Content Include="Content\Images\NewImages\sales.png" />
+    <Content Include="Content\Images\NewImages\searchBg.png" />
+    <Content Include="Content\Images\NewImages\SP\activeBg.gif" />
+    <Content Include="Content\Images\NewImages\SP\admin_aero.png" />
+    <Content Include="Content\Images\NewImages\SP\contentFull.gif" />
+    <Content Include="Content\Images\NewImages\SP\head-bg.gif" />
+    <Content Include="Content\Images\NewImages\SP\headerBg.gif" />
+    <Content Include="Content\Images\NewImages\SP\leftArrow.png" />
+    <Content Include="Content\Images\NewImages\SP\leftArrowA.png" />
+    <Content Include="Content\Images\NewImages\SP\logo.png" />
+    <Content Include="Content\Images\NewImages\SP\nextBg.png" />
+    <Content Include="Content\Images\NewImages\SP\splogo.png" />
+    <Content Include="Content\Images\NewImages\SP\tabA.png" />
+    <Content Include="Content\Images\NewImages\SP\tabN.png" />
+    <Content Include="Content\Images\NewImages\SP\userIcon.png" />
+    <Content Include="Content\Images\NewImages\SP\user_aero.png" />
+    <Content Include="Content\Images\NewImages\switchIcon.png" />
+    <Content Include="Content\Images\NewImages\tax.png" />
+    <Content Include="Content\Images\NewImages\textField.png" />
+    <Content Include="Content\Images\NewImages\upArrow.gif" />
+    <Content Include="Content\Images\NewImages\userIcon.png" />
+    <Content Include="Content\Images\NewImages\user_icon.gif" />
+    <Content Include="Content\Images\noAccess.png" />
+    <Content Include="Content\Images\notify-logo-192X192.png" />
+    <Content Include="Content\Images\notify-logo.png" />
+    <Content Include="Content\Images\oldspLogo.gif" />
+    <Content Include="Content\Images\orderedList0.png" />
+    <Content Include="Content\Images\orderedList1.png" />
+    <Content Include="Content\Images\orderedList2.png" />
+    <Content Include="Content\Images\orderedList3.png" />
+    <Content Include="Content\Images\orderedList4.png" />
+    <Content Include="Content\Images\orderedList5.png" />
+    <Content Include="Content\Images\orderedList6.png" />
+    <Content Include="Content\Images\orderedList7.png" />
+    <Content Include="Content\Images\orderedList8.png" />
+    <Content Include="Content\Images\orderedList9.png" />
+    <Content Include="Content\Images\org.png" />
+    <Content Include="Content\Images\overlay.png" />
+    <Content Include="Content\Images\payslip-admin.png" />
+    <Content Include="Content\Images\paystub.png" />
+    <Content Include="Content\Images\PayWow.jpg" />
+    <Content Include="Content\Images\PayWowCompliance-sym.png" />
+    <Content Include="Content\Images\PayWowCompliance.jpg" />
+    <Content Include="Content\Images\PayWowT&amp;A.png" />
+    <Content Include="Content\Images\percentage-black.png" />
+    <Content Include="Content\Images\percentage-blue.png" />
+    <Content Include="Content\Images\percentage-disable.png" />
+    <Content Include="Content\Images\percentage.png" />
+    <Content Include="Content\Images\phoneIcon.png" />
+    <Content Include="Content\Images\popout.gif" />
+    <Content Include="Content\Images\prof.png" />
+    <Content Include="Content\Images\pswd.png" />
+    <Content Include="Content\Images\pwtools.jpg" />
+    <Content Include="Content\Images\radioHover.png" />
+    <Content Include="Content\Images\radioHoverDis.png" />
+    <Content Include="Content\Images\radioNormal.png" />
+    <Content Include="Content\Images\radioNormalDis.png" />
+    <Content Include="Content\Images\red-mark1.png" />
+    <Content Include="Content\Images\removebtn.png" />
+    <Content Include="Content\Images\sample.gif" />
+    <Content Include="Content\Images\SendIcon.png" />
+    <Content Include="Content\Images\ServiceControlCenter.png" />
+    <Content Include="Content\Images\sort_asc.png" />
+    <Content Include="Content\Images\sort_both.png" />
+    <Content Include="Content\Images\sort_desc.png" />
+    <Content Include="Content\Images\spLogo.gif" />
+    <Content Include="Content\Images\square_error_warning_button_clip_art.jpg" />
+    <Content Include="Content\Images\STE.jpg" />
+    <Content Include="Content\Images\stripe.png" />
+    <Content Include="Content\Images\tbs.png" />
+    <Content Include="Content\Images\TBS_Efile_New.png" />
+    <Content Include="Content\Images\TBS_Efile_Old.png" />
+    <Content Include="Content\Images\tick-arrow.png" />
+    <Content Include="Content\Images\tipsy.gif" />
+    <Content Include="Content\Images\tlspeo.png" />
+    <Content Include="Content\Images\transmitImg.jpg" />
+    <Content Include="Content\Images\TSNA.png" />
+    <Content Include="Content\Images\uhLogo.gif" />
+    <Content Include="Content\Images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <Content Include="Content\Images\ui-bg_diagonals-thick_20_666666_40x40.png" />
+    <Content Include="Content\Images\ui-bg_flat_10_000000_40x100.png" />
+    <Content Include="Content\Images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <Content Include="Content\Images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <Content Include="Content\Images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\Images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
+    <Content Include="Content\Images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <Content Include="Content\Images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <Content Include="Content\Images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\Images\ui-icons_228ef1_256x240.png" />
+    <Content Include="Content\Images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\Images\ui-icons_ef8c08_256x240.png" />
+    <Content Include="Content\Images\ui-icons_ffd27a_256x240.png" />
+    <Content Include="Content\Images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\Images\up_arrow.png" />
+    <Content Include="Content\Images\user.png" />
+    <Content Include="Content\Images\UserIcon.png" />
+    <Content Include="Content\Images\userImg.png" />
+    <Content Include="Content\Images\uwLogo.gif" />
+    <Content Include="Content\Images\uwws.png" />
+    <Content Include="Content\Images\Video-icon-lg.png" />
+    <Content Include="Content\Images\Video-icon.png" />
+    <Content Include="Content\Images\videoIcon.gif" />
+    <Content Include="Content\Images\visa_img.gif" />
+    <Content Include="Content\Images\WebsiteNew\activeA.gif" />
+    <Content Include="Content\Images\WebsiteNew\amexcreditanotherformat.png" />
+    <Content Include="Content\Images\WebsiteNew\containerBg.png" />
+    <Content Include="Content\Images\WebsiteNew\contentBg.gif" />
+    <Content Include="Content\Images\WebsiteNew\creditcardtype.png" />
+    <Content Include="Content\Images\WebsiteNew\cvvnumber.png" />
+    <Content Include="Content\Images\WebsiteNew\divider.png" />
+    <Content Include="Content\Images\WebsiteNew\edit-gray.png" />
+    <Content Include="Content\Images\WebsiteNew\facebook.gif" />
+    <Content Include="Content\Images\WebsiteNew\faceBook.png" />
+    <Content Include="Content\Images\WebsiteNew\footerArrow.gif" />
+    <Content Include="Content\Images\WebsiteNew\footerBg.gif" />
+    <Content Include="Content\Images\WebsiteNew\footerBg.png" />
+    <Content Include="Content\Images\WebsiteNew\google.gif" />
+    <Content Include="Content\Images\WebsiteNew\google.png" />
+    <Content Include="Content\Images\WebsiteNew\indicator.gif" />
+    <Content Include="Content\Images\WebsiteNew\indicator_small.gif" />
+    <Content Include="Content\Images\WebsiteNew\lineHori.gif" />
+    <Content Include="Content\Images\WebsiteNew\lineVert.gif" />
+    <Content Include="Content\Images\WebsiteNew\loginBanner.jpg" />
+    <Content Include="Content\Images\WebsiteNew\logo.png" />
+    <Content Include="Content\Images\WebsiteNew\newUser.png" />
+    <Content Include="Content\Images\WebsiteNew\redPointer.gif" />
+    <Content Include="Content\Images\WebsiteNew\returnUser.png" />
+    <Content Include="Content\Images\WebsiteNew\sepLine.gif" />
+    <Content Include="Content\Images\WebsiteNew\statusIcon.png" />
+    <Content Include="Content\Images\WebsiteNew\textfield.gif" />
+    <Content Include="Content\Images\WebsiteNew\textfieldE.gif" />
+    <Content Include="Content\Images\WebsiteNew\tick.png" />
+    <Content Include="Content\Images\WebsiteNew\twitterTick.png" />
+    <Content Include="Content\Images\WebsiteNew\txtBg.gif" />
+    <Content Include="Content\Images\WebsiteNew\verLine.gif" />
+    <Content Include="Content\Images\WebsiteNew\visa_card.jpg" />
+    <Content Include="Content\Images\WebsiteNew\whiteA.png" />
+    <Content Include="Content\Images\wells-fargo-icon.png" />
+    <Content Include="Content\Images\whiteArrow-edit.png" />
+    <Content Include="Content\Images\Year.png" />
+    <Content Include="Content\Images\Zipcode.png" />
+    <Content Include="Content\jjsonviewer.css" />
+    <Content Include="Content\jquery-ui.css" />
+    <Content Include="Content\jquery-ui.min.css" />
+    <Content Include="Content\jquery.dataTables.css" />
+    <Content Include="Content\jquery.qtip.min.css" />
+    <Content Include="Content\Login_Site.css" />
+    <Content Include="Content\material-design-iconic-font.css" />
+    <Content Include="Content\Responsive.css" />
+    <Content Include="Content\social-icons.css" />
+    <Content Include="Content\summernote.css" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\loading.gif" />
+    <Content Include="Content\themes\base\images\loading_background.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\tipsy.css" />
+    <Content Include="Content\toastr.css" />
+    <Content Include="Content\uploadifive.css" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\Accordian.js" />
+    <Content Include="Scripts\bootbox.js" />
+    <Content Include="Scripts\bootbox.min.js" />
+    <Content Include="Scripts\bootstrap-datepicker.js" />
+    <Content Include="Scripts\bootstrap-datepicker.min.js" />
+    <Content Include="Scripts\bootstrap-datetimepicker.js" />
+    <Content Include="Scripts\bootstrap-multiselect.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Content\ckeditor\CHANGES.md" />
+    <Content Include="Content\ckeditor\LICENSE.md" />
+    <Content Include="Content\ckeditor\plugins\scayt\LICENSE.md" />
+    <Content Include="Content\ckeditor\plugins\scayt\README.md" />
+    <Content Include="Content\ckeditor\plugins\wsc\LICENSE.md" />
+    <Content Include="Content\ckeditor\plugins\wsc\README.md" />
+    <Content Include="Content\ckeditor\README.md" />
+    <Content Include="Content\ckeditor\samples\old\htmlwriter\assets\outputforflash\outputforflash.fla" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\font\config.json" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\font\fontello.eot" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\font\fontello.ttf" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\font\fontello.woff" />
+    <Content Include="Content\ckeditor\samples\toolbarconfigurator\lib\codemirror\LICENSE" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\dev\locations.json" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\readme.md" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\browser-specific\gecko\editor_gecko.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\browser-specific\ie7\dialog_ie7.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\browser-specific\ie7\editor_ie7.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\browser-specific\ie8\dialog_ie8.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\browser-specific\ie8\editor_ie8.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\browser-specific\iequirks\dialog_iequirks.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\browser-specific\iequirks\editor_iequirks.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\browser-specific\ie\dialog_ie.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\browser-specific\ie\editor_ie.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\browser-specific\opera\dialog_opera.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\components\editor.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\components\_colorpanel.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\components\_elementspath.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\components\_mainui.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\components\_menu.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\components\_panel.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\components\_presets.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\components\_reset.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\components\_richcombo.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\components\_toolbar.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\config\_colors.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\config\_config.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\config\_defaults.scss" />
+    <Content Include="Content\ckeditor\skins\bootstrapck\scss\dialog\dialog.scss" />
+    <Content Include="Content\fonts\aleo-bold-webfont-webfont.eot" />
+    <Content Include="Content\fonts\aleo-bold-webfont-webfont.ttf" />
+    <Content Include="Content\fonts\aleo-bold-webfont-webfont.woff" />
+    <Content Include="Content\fonts\aleo-bold-webfont-webfont.woff2" />
+    <Content Include="Content\fonts\aleo-bolditalic-webfont-webfont.eot" />
+    <Content Include="Content\fonts\aleo-bolditalic-webfont-webfont.ttf" />
+    <Content Include="Content\fonts\aleo-bolditalic-webfont-webfont.woff" />
+    <Content Include="Content\fonts\aleo-bolditalic-webfont-webfont.woff2" />
+    <Content Include="Content\fonts\aleo-italic-webfont-webfont.eot" />
+    <Content Include="Content\fonts\aleo-italic-webfont-webfont.ttf" />
+    <Content Include="Content\fonts\aleo-italic-webfont-webfont.woff" />
+    <Content Include="Content\fonts\aleo-italic-webfont-webfont.woff2" />
+    <Content Include="Content\fonts\aleo-light-webfont-webfont.eot" />
+    <Content Include="Content\fonts\aleo-light-webfont-webfont.ttf" />
+    <Content Include="Content\fonts\aleo-light-webfont-webfont.woff" />
+    <Content Include="Content\fonts\aleo-light-webfont-webfont.woff2" />
+    <Content Include="Content\fonts\aleo-lightitalic-webfont-webfont.eot" />
+    <Content Include="Content\fonts\aleo-lightitalic-webfont-webfont.ttf" />
+    <Content Include="Content\fonts\aleo-lightitalic-webfont-webfont.woff" />
+    <Content Include="Content\fonts\aleo-lightitalic-webfont-webfont.woff2" />
+    <Content Include="Content\fonts\aleo-regular-webfont-webfont.eot" />
+    <Content Include="Content\fonts\aleo-regular-webfont-webfont.ttf" />
+    <Content Include="Content\fonts\aleo-regular-webfont-webfont.woff" />
+    <Content Include="Content\fonts\aleo-regular-webfont-webfont.woff2" />
+    <Content Include="Content\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\fonts\fontawesome-webfontd41d.eot" />
+    <Content Include="Content\fonts\fontawesome-webfonte0a5.eot" />
+    <Content Include="Content\fonts\fontawesome-webfonte0a5.ttf" />
+    <Content Include="Content\fonts\fontawesome-webfonte0a5.woff" />
+    <Content Include="Content\fonts\fontawesome-webfonte0a5.woff2" />
+    <Content Include="Content\fonts\FontAwesome.otf" />
+    <Content Include="Content\fonts\fontello.woff" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\fonts\glyphicons-halflings-regulard41d.eot" />
+    <Content Include="Content\fonts\lato-black-webfont.eot" />
+    <Content Include="Content\fonts\lato-black-webfont.ttf" />
+    <Content Include="Content\fonts\lato-black-webfont.woff" />
+    <Content Include="Content\fonts\lato-black-webfont.woff2" />
+    <Content Include="Content\fonts\lato-blackitalic-webfont.eot" />
+    <Content Include="Content\fonts\lato-blackitalic-webfont.ttf" />
+    <Content Include="Content\fonts\lato-blackitalic-webfont.woff" />
+    <Content Include="Content\fonts\lato-blackitalic-webfont.woff2" />
+    <Content Include="Content\fonts\lato-bold-webfont.eot" />
+    <Content Include="Content\fonts\lato-bold-webfont.ttf" />
+    <Content Include="Content\fonts\lato-bold-webfont.woff" />
+    <Content Include="Content\fonts\lato-bold-webfont.woff2" />
+    <Content Include="Content\fonts\lato-heavy-webfont.eot" />
+    <Content Include="Content\fonts\lato-heavy-webfont.ttf" />
+    <Content Include="Content\fonts\lato-heavy-webfont.woff" />
+    <Content Include="Content\fonts\lato-heavy-webfont.woff2" />
+    <Content Include="Content\fonts\lato-light-webfont.eot" />
+    <Content Include="Content\fonts\lato-light-webfont.ttf" />
+    <Content Include="Content\fonts\lato-light-webfont.woff" />
+    <Content Include="Content\fonts\lato-light-webfont.woff2" />
+    <Content Include="Content\fonts\lato-regular-webfont.eot" />
+    <Content Include="Content\fonts\lato-regular-webfont.ttf" />
+    <Content Include="Content\fonts\lato-regular-webfont.woff" />
+    <Content Include="Content\fonts\lato-regular-webfont.woff2" />
+    <Content Include="Content\fonts\Material-Design-Iconic-Fontd41d.eot" />
+    <Content Include="Content\fonts\Material-Design-Iconic-Fontf700.eot" />
+    <Content Include="Content\fonts\Material-Design-Iconic-Fontf700.ttf" />
+    <Content Include="Content\fonts\Material-Design-Iconic-Fontf700.woff" />
+    <Content Include="Content\Templates\Campaign Templates\CampaignTemplate.xlsx" />
+    <Content Include="Content\Templates\EAF_EmployeeTemplate.xls" />
+    <Content Include="Content\Templates\EAF_EmployeeTemplate_Error.xls" />
+    <Content Include="Content\Templates\EAF_EmployerTemplate.xls" />
+    <Content Include="Content\Templates\EAF_EmployerTemplate_Error.xls" />
+    <Content Include="Scripts\jquery-2.1.4.min.map" />
+    <Content Include="App_Code\HelpMe.cshtml" />
+    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\confirm-bootstrap.js" />
+    <Content Include="Scripts\daterangepicker.js" />
+    <Content Include="Scripts\ExpressACAForms.common.js" />
+    <Content Include="Scripts\ExpressACAForms.CreditCard.js" />
+    <Content Include="Scripts\ExpressACAForms.HelpHead.js" />
+    <Content Include="Scripts\ExpressACAForms.qtip.js" />
+    <Content Include="Scripts\html2canvas.js" />
+    <Content Include="Scripts\jjsonviewer.js" />
+    <Content Include="Scripts\jjsonviewer.min.js" />
+    <None Include="Scripts\jquery-2.1.4.intellisense.js" />
+    <Content Include="Scripts\jquery-2.1.4.js" />
+    <Content Include="Scripts\jquery-2.1.4.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.min.js" />
+    <Content Include="Scripts\jquery.balloon.js" />
+    <Content Include="Scripts\jquery.colorbox-min.js" />
+    <Content Include="Scripts\jquery.colorbox.js" />
+    <Content Include="Scripts\jquery.cookie.js" />
+    <Content Include="Scripts\jquery.creditCardValidator.js" />
+    <Content Include="Scripts\jquery.dataTables.js" />
+    <Content Include="Scripts\jquery.dirtyforms.js" />
+    <Content Include="Scripts\jquery.inputmask.date.extensions.js" />
+    <Content Include="Scripts\jquery.inputmask.extensions.js" />
+    <Content Include="Scripts\jquery.inputmask.js" />
+    <Content Include="Scripts\jquery.inputmask.numeric.extensions.js" />
+    <Content Include="Scripts\jquery.inputmask.phone.extensions.js" />
+    <Content Include="Scripts\jquery.inputmask.regex.extensions.js" />
+    <Content Include="Scripts\jquery.maskedinput.js" />
+    <Content Include="Scripts\jquery.meiomask.js" />
+    <Content Include="Scripts\jquery.qtip.min.js" />
+    <Content Include="Scripts\jquery.resourcebundle.js" />
+    <Content Include="Scripts\jquery.scrollTo.js" />
+    <Content Include="Scripts\jquery.scrollTo.min.js" />
+    <Content Include="Scripts\jquery.shorten.js" />
+    <Content Include="Scripts\jquery.tipsy.js" />
+    <Content Include="Scripts\jquery.tmpl.js" />
+    <Content Include="Scripts\jquery.uploadifive.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jvectormap.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\jquery.validate.min.js.map" />
+    <None Include="Scripts\_references.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\plugins.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\scripts.js" />
+    <Content Include="Scripts\spin.min.js" />
+    <Content Include="Scripts\summernote.js" />
+    <Content Include="Scripts\toastr.js" />
+    <Content Include="Scripts\zoom.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Template\PaymentBatchDetailReport %284%29.csv" />
+    <Content Include="Views\Admin\ActivityLog.cshtml" />
+    <Content Include="Views\Admin\AdminActivityLog.cshtml" />
+    <Content Include="Views\Admin\CreateProjectRole.cshtml" />
+    <Content Include="Views\Admin\CreateUser.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\MainMenu.cshtml" />
+    <Content Include="Views\Admin\MobileVerification.cshtml" />
+    <Content Include="Views\Admin\NoAccess.cshtml" />
+    <Content Include="Views\Admin\PaymentReconcilationReport.cshtml" />
+    <Content Include="Views\Admin\PaymentRefunds.cshtml" />
+    <Content Include="Views\Admin\PaymentTransactionReport.cshtml" />
+    <Content Include="Views\Admin\SignIn.cshtml" />
+    <Content Include="Views\Admin\SignOut.cshtml" />
+    <Content Include="Views\Admin\TwoFactorAuthentication.cshtml" />
+    <Content Include="Views\Admin\_AdminLogs.cshtml" />
+    <Content Include="Views\Admin\_AmazonS3Request.cshtml" />
+    <Content Include="Views\Admin\_MobileVerification.cshtml" />
+    <Content Include="Views\Admin\_PaymentReconcilationReport.cshtml" />
+    <Content Include="Views\Admin\_PaymentRefunds.cshtml" />
+    <Content Include="Views\Admin\_Projects.cshtml" />
+    <Content Include="Views\Admin\_ShowProduct.cshtml" />
+    <Content Include="Views\Admin\_TransactionReport.cshtml" />
+    <Content Include="Views\Admin\_ViewActivityLog.cshtml" />
+    <Content Include="Views\Admin\_ViewAdminProjectRoles.cshtml" />
+    <Content Include="Views\Admin\_VoidRefundRequest.cshtml" />
+    <Content Include="Views\Campaign\CampaignSummary.cshtml" />
+    <Content Include="Views\Campaign\CreateCampaign.cshtml" />
+    <Content Include="Views\Campaign\FileUploadTechTeam.cshtml" />
+    <Content Include="Views\Campaign\Index.cshtml" />
+    <Content Include="Views\Campaign\RequestTechTeamCampaign.cshtml" />
+    <Content Include="Views\Campaign\UploadStatus.cshtml" />
+    <Content Include="Views\Campaign\ViewCampaignLeads.cshtml" />
+    <Content Include="Views\Campaign\_AddAdditionalContacts.cshtml" />
+    <Content Include="Views\Campaign\_AddComments.cshtml" />
+    <Content Include="Views\Campaign\_AdditionalContactList.cshtml" />
+    <Content Include="Views\Campaign\_CampaignAccessProduct.cshtml" />
+    <Content Include="Views\Campaign\_CampaignDashboard.cshtml" />
+    <Content Include="Views\Campaign\_CampaignUploadRequest.cshtml" />
+    <Content Include="Views\Campaign\_Communication.cshtml" />
+    <Content Include="Views\Campaign\_DiscardedRequest.cshtml" />
+    <Content Include="Views\Campaign\_ExtendPeroid.cshtml" />
+    <Content Include="Views\Campaign\_FollowupDetails.cshtml" />
+    <Content Include="Views\Campaign\_LeadsDetails.cshtml" />
+    <Content Include="Views\Campaign\_PreviousActivitydetails.cshtml" />
+    <Content Include="Views\Campaign\_RecentReturns.cshtml" />
+    <Content Include="Views\Campaign\_SearchLead.cshtml" />
+    <Content Include="Views\Campaign\_SpancontrolActivitydetails.cshtml" />
+    <Content Include="Views\Campaign\_SpancontrolContactGroup.cshtml" />
+    <Content Include="Views\Campaign\_StartWithFilter.cshtml" />
+    <Content Include="Views\Campaign\_SupportDashboard.cshtml" />
+    <Content Include="Views\Campaign\_SuspendCampaign.cshtml" />
+    <Content Include="Views\Campaign\_ViewGoalsByCampaignDetailsId.cshtml" />
+    <Content Include="Views\Campaign\_ViewLeadList.cshtml" />
+    <Content Include="Views\Campaign\_ViewLeadReportForSupport.cshtml" />
+    <Content Include="Views\Campaign\_ViewSupportUserReport.cshtml" />
+    <Content Include="Views\NoAccess\SignIn.cshtml" />
+    <Content Include="Views\Payments\UserPayments.cshtml" />
+    <Content Include="Views\Payments\_AddUserPayment.cshtml" />
+    <Content Include="Views\Payments\_PaymentLogs.cshtml" />
+    <Content Include="Views\Payments\_PreparePaymentEmail.cshtml" />
+    <Content Include="Views\Shared\_LoginLayout.cshtml" />
+    <Content Include="Views\Shared\_LogonUserControl.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="packages.config" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Main.Control.Core\Main.Control.Core.csproj">
+      <Project>{794e22e7-01fe-487e-8e28-b1cc4cf880c5}</Project>
+      <Name>Main.Control.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Main.Control.Services\Main.Control.Services.csproj">
+      <Project>{98dfcdf6-304a-4322-a83a-686dbf800140}</Project>
+      <Name>Main.Control.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Main.Control.Utilities\Main.Control.Utilities.csproj">
+      <Project>{ec0d4820-58a3-4963-95c9-e088d2d06983}</Project>
+      <Name>Main.Control.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ProcessBulkUpload\ProcessBulkUpload.csproj">
+      <Project>{ce702df2-e2b1-4c78-b422-a74888504441}</Project>
+      <Name>ProcessBulkUpload</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\AWSSDK.S3.3.7.101.36\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
+    <Analyzer Include="..\packages\AWSSDK.SimpleEmail.3.7.100.36\analyzers\dotnet\cs\AWSSDK.SimpleEmail.CodeAnalysis.dll" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>58526</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44319/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

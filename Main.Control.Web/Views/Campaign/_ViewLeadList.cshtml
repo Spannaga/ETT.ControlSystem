@@ -1,0 +1,64 @@
+﻿@model List<Main.Control.Core.Models.LeadDetails>
+@using Main.Control.Service.Utilities
+@{
+    Layout = null;
+}
+               <hr />
+               <div class="lead_scroll">
+                   <table style="width: 100%" class="table table-bordered table_design top_table" id="tblAllLeadList">
+                       <thead>
+                           <tr>
+                               <th class="dash_table_head taC">
+                                   Name
+                               </th>
+                               <th class="dash_table_head taC">
+                                   Business
+                               </th>
+                               <th class="dash_table_head taC">
+                                   Campaign
+                               </th>
+                               <th class="dash_table_head taC">
+                                   Email
+                               </th>
+                               <th class="dash_table_head taC">
+                                   Phone
+                               </th>
+                               <th class="dash_table_head taC">
+                                   Action
+                               </th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                           @if (Model != null && Model.Count > 0)
+            {
+                foreach (var item in Model)
+                {
+                   <tr class="">
+                       <td class="taC">@(!string.IsNullOrWhiteSpace(item.Name) ? item.Name : "-")</td>
+                       <td class="taC">@(!string.IsNullOrWhiteSpace(item.Name) ? item.BusinessName : "-")</td>
+                       <td class="taC">@(!string.IsNullOrWhiteSpace(item.Name) ? item.CampaignName : "-")</td>
+                       <td class="taC">@(!string.IsNullOrWhiteSpace(item.Name) ? item.Email : "-")</td>
+                       <td class="taC">@(!string.IsNullOrWhiteSpace(item.Name) ? item.Phone : "-")</td>
+                       <td class="taC"><a class="btn btn_sm btn-third" href="/Campaign/_Gotolead/@item.CampaignDetailsId/@item.SupportUserId/@item.CampaignAssignedDetailsId">Go to lead</a></td>
+                   </tr>
+                }
+            }
+                       </tbody>
+                   </table>
+               </div>
+<script type="text/javascript">
+
+    $(function () {
+        $("#ShowLeadSpinner").hide();
+        $('#tblAllLeadList').dataTable({
+            "iDisplayLength": 10,
+            "language": {
+                "emptyTable": "No Leads found"
+            },
+            "bSort": false,
+            "bStateSave": false,
+            "bInfo": false,
+        });
+    });
+</script>
+

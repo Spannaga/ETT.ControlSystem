@@ -1,0 +1,129 @@
+﻿
+@using Main.Control.Core.Models;
+@using Main.Control.Service.Utilities;
+@model List<PaymentReconReport>
+    @{ 
+        var count = 1;
+    }
+  
+
+<div class="panel-body">
+    <div class="taC" id="dSuccessMsg">
+    </div>
+    <div id="adminList_wrapper" class="dataTables_wrapper no-footer">
+        <div class="clear"></div>
+        <table class="table table-bordered pack-table mBot10" id="TransactionTable">
+            <thead>
+                <tr>
+                    <td class="taL">
+                        Sl.No
+                    </td>
+                    <td class="taL">
+                        Date
+                    </td>
+                    <td class="taL">
+                        Transaction Id
+                    </td>
+                    <td class="taR">
+                        Amount
+                    </td>
+                    <td class="taL">
+                        Email
+                    </td>
+                    <td>
+                        Product
+                    </td>
+                    <td>
+                        API
+                    </td>
+                    <td>
+                        CyberSource
+                    </td>
+                    <td>
+                        Stripe
+                    </td>
+                    <td class="taL">
+                        Voided/Refunded
+                    </td>
+                </tr>
+            </thead>
+            <tbdoy>
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="taL">
+                                @Html.Raw(count)
+                            </td>
+                            <td class="taL">
+                                @item.Date
+                            </td>
+                            <td class="taL">
+                                @item.TransactionId
+                            </td>
+                            <td class="taR">
+                                $@item.Amount
+                            </td>
+                            <td class="taL">
+                                @item.Email
+                            </td>
+                            <td>
+                                @if (item.IsProduct == true)
+                                {
+                                    @Html.Raw("Yes")
+                                }
+                                else
+                                {
+                                    @Html.Raw("No")
+                                }
+                            </td>
+                            <td>
+                                @if (item.IsApi == true)
+                                {
+                                    @Html.Raw("Yes")
+                                }
+                                else
+                                {
+                                    @Html.Raw("No")
+                                }
+                                
+                            </td>
+                            <td>
+                                @if (item.IsCybersource == true)
+                                {
+                                    @Html.Raw("Yes")
+                                }
+                                else
+                                {
+                                    @Html.Raw("No")
+                                }
+                                
+                            </td>
+                            <td>
+                              @item.IsStripe
+                            </td>
+                            <td class="taL">
+                                @if (item.ApiCallStatus == Constants.Voided || item.ApiCallStatus == Constants.Refunded || item.ApiCallStatus == Constants.REFUND)
+                                {
+                                    @item.ApiCallStatus
+                                }
+                                else
+                                {
+                                    @Html.Raw("-")
+                                }
+
+                            </td>
+                        </tr>
+                        count++;
+                    }
+                }
+            </tbdoy>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#TransactionTable").dataTable();
+    });
+</script>

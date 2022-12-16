@@ -1,0 +1,247 @@
+﻿@using Main.Control.Core.Models
+@model Main.Control.Core.Models.LeadCommunication
+@using Main.Control.Web.Utilities
+@if (Model != null)
+{
+    <div class="selectionBg">
+        @if (Model != null && Model.LeadCommunicationLst != null)
+        {
+            <div class="table-responsive">
+                <table style="width: 100%" class="table table-bordered table_design" id="Followuplist">
+                    <thead>
+                        <tr>
+                            <th class="dash_table_head">
+                                Info
+                            </th>
+                            <th class="dash_table_head">
+                                User Name
+                            </th>
+                            <th class="dash_table_head">
+                                Campaign
+                            </th>
+                            <th class="dash_table_head">
+                                Email
+                            </th>
+                            <th class="dash_table_head">
+                                Phone
+                            </th>
+                            <th class="dash_table_head">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var PreviousActivity in Model.LeadCommunicationLst)
+                        {
+                            <tr id="tr_@PreviousActivity.CampaignLeadActivityId">
+                                <td>
+                                    @if (Model.LeadCommunicationLst != null && Model.LeadCommunicationLst.Any())
+                                    {
+                                        <a style="cursor:pointer" class="business_drop" onclick="showComments(@PreviousActivity.CampaignLeadActivityId)">
+                                            <i id="icon_@PreviousActivity.CampaignLeadActivityId" onclick="" class="fa BaseDrop fa-chevron-circle-up"></i>
+                                        </a>
+                                    }
+                                </td>
+
+                                <td> @(!string.IsNullOrWhiteSpace(PreviousActivity.LeadName) ? PreviousActivity.LeadName : "-")</td>
+                                <td> @(!string.IsNullOrWhiteSpace(PreviousActivity.CampaignName) ? PreviousActivity.CampaignName : "-")</td>
+                                <td> @(!string.IsNullOrWhiteSpace(PreviousActivity.EmailAddress) ? PreviousActivity.EmailAddress : "-")</td>
+                                <td> @(!string.IsNullOrWhiteSpace(PreviousActivity.Phone) ? PreviousActivity.Phone : "-")</td>
+                                <td>
+                                    <a class="btn btn_sm btn-third" href="/Campaign/_Gotolead/@PreviousActivity.CampaignDetailId/@PreviousActivity.SupportUserId/@PreviousActivity.CampaignAssignDetailId">Go to lead</a>
+                                    <a class="btn btn_sm btn-third" href="javascript:void(0)" onclick="ChangeToResolved('@PreviousActivity.CampaignLeadActivityId')">Mark as Resolved</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            if (Model != null && Model.LeadCommunicationLst != null && Model.LeadCommunicationLst.Count > 0)
+            {
+                foreach (var FollowupDetails in Model.LeadCommunicationLst)
+                {
+                    string LogDate = (FollowupDetails.CreatedDate != DateTime.MinValue && FollowupDetails.CreatedDate != null ? FollowupDetails.CreatedDate.ToString() : "-");
+                    string FollowDate = (FollowupDetails.FollowupDate != DateTime.MinValue && FollowupDetails.FollowupDate != null ? Utility.GetDateTime(FollowupDetails.FollowupDate).ToShortDateString() : "-");
+                    string Followtime = (FollowupDetails.FollowupTime != null ? Utility.GetDateTime(FollowupDetails.FollowupTime).ToShortTimeString() : "");
+                    string FollowDatetime = FollowDate + " " + Followtime;
+                    <div id="div_@FollowupDetails.CampaignLeadActivityId" style="display:none" class="collapseborder">
+                        <table class="collapseborder" id="tbl_">
+                            <tr>
+                                <td>
+                                    <div class="row">
+
+                                        @if (!string.IsNullOrWhiteSpace(FollowupDetails.Comments))
+                                        {
+                                            <div class="col-md-12">
+                                                <div class="labelText pBot5">Comments: </div>
+                                                <div class="cmt_text">
+                                                    @(!string.IsNullOrWhiteSpace(FollowupDetails.Comments) ? FollowupDetails.Comments : "-")
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        }
+                                        <div class="spacer15"></div>
+                                        <div class="col-md-3">
+
+                                            <span class="labelText">
+                                                @*@if (assigned.MethodOfContact == MethodOfContact.Phone)
+                                                    {
+                                                        <span>Spoke To: <span class="labelvalue"><i class="fa fa-user"></i> @assigned.Spoketo</span></span>
+                                                    }*@
+
+                                                @if (FollowupDetails.MethodOfContact == MethodOfContact.Phone)
+                                                {
+                                                    if (FollowupDetails.TypeOfCall == TypeofCall.Spoke.ToString())
+                                                    {
+                                                        <span class="labelvalue"><i class="fa fa-phone"></i> @FollowupDetails.MethodOfContact.ToString()</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="labelvalue"><i class="fa fa-phone"></i> @FollowupDetails.MethodOfContact.ToString()</span><span class="labelvalue">(Voice Mail)</span>
+                                                    }
+
+                                                }
+                                                else if (FollowupDetails.MethodOfContact == MethodOfContact.Mail)
+                                                {
+                                                    <span class="labelvalue"><i class="fa fa-envelope" aria-hidden="true"></i> Email</span>
+                                                }
+
+                                            </span>
+                                        </div>
+                                        <div class="col-md-3">
+
+                                            <span class="labelText">
+                                                @if (FollowupDetails.MethodOfContact == MethodOfContact.Phone)
+                                                {
+                                                    if (FollowupDetails.TypeOfCall == TypeofCall.Spoke.ToString())
+                                                    {
+                                                        <span>Spoke To: <span class="labelvalue"><i class="fa fa-user"></i> @FollowupDetails.Spoketo.ToString()</span></span>
+                                                    }
+                                                }
+                                            </span>
+                                        </div>
+
+
+                                            <div class="col-md-3">
+                                                <span class="labelText">
+                                                    Log Date/Time:
+                                                    <span class="labelvalue">@LogDate</span>
+                                                </span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <span class="labelText">
+                                                    Follow Up Date/Time:
+                                                    <span class="labelvalue">@FollowDatetime</span>
+                                                </span>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="spacer5"></div>
+                                        </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                }
+            }
+        }
+        else
+        {
+            <div class="alert alert-info fade in alert-dismissable" style="text-align:center;">
+                <strong>No Follow Up Found!</strong>
+            </div>
+
+        }
+    </div>
+    <script lang="javascript" type="text/javascript">
+        var table;
+        $(function () {
+            table = $('#Followuplist').DataTable(
+               {
+                   "language": {
+                       "emptyTable": "No follow up found"
+                   }
+               });
+        });
+        function showComments(id) {
+            var trId = "#tr_" + id
+            var tr = $(trId);
+            var row = table.row(tr);
+            var iconTag = "#icon_" + id;
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+                $(iconTag).removeClass('fa-chevron-circle-down').addClass('fa-chevron-circle-up')
+            }
+            else {
+                // Open this row
+                var id = "#div_" + id.toString()
+                if ($(id).html() != null && $(id).html() != undefined) {
+                    row.child($(id).html()).show();
+                    tr.addClass('shown');
+                    $(iconTag).removeClass('fa-chevron-circle-up').addClass('fa-chevron-circle-down')
+                    $(".collapseborder").parents('td').css("padding", "0px 2px 0 0");
+                }
+            }
+        }
+        function GetFollowupRecords() {
+            var Filter = $("#ddlfollowupfilter").val();
+            $("#followupTab").load("/Campaign/_FollowupDetails/?followupStatus=" + Filter)
+        }
+
+
+        function ChangeToResolved(CampaignLeadActivityId) {
+            bootbox.dialog({
+                message: "Are you sure want to change the status of this Follow Up Status Marked As Resolved?",
+                title: "Mark as Resolved",
+                buttons: {
+                    cancel: {
+                        label: "No",
+                        className: "btn-cancel floatL",
+                        callback: function () {
+                            $("#SKUForm").submit();
+                        }
+                    },
+                    delete: {
+                        label: "Yes",
+                        className: "btn-danger",
+                        callback: function () {
+                            changeLeadStatus(CampaignLeadActivityId);
+                        }
+                    }
+                },
+                onEscape: function() {
+                    bootbox.hideAll();
+                },
+            }).find(".modal-dialog").removeClass("edit-modal-dialog");
+        }
+
+
+        function changeLeadStatus(campaignLeadActivityId) {
+            var leadStatus = 'Resolved';
+            $.ajax({
+                type: "Post",
+                url: "/Campaign/_LeadStatus",
+                data: { id: campaignLeadActivityId, id2: leadStatus },
+                success: function (result) {
+                    if (result) {
+                        if (leadStatus == "Resolved") {
+                            toastr.success("Follow Up Status Marked As Resolved!");
+                            SupportFollowUp();
+                        }
+                    }
+                }
+            });
+        }
+
+
+        function SupportFollowUp() {
+            var Filter = $("#ddlfollowupfilter").val();
+            $("#followupTab").load("/Campaign/_FollowupDetails/?followupStatus=" + Filter)
+        }
+
+
+    </script>
+}
+

@@ -1,0 +1,91 @@
+﻿@model IEnumerable<Main.Control.Core.Models.AdminActivityLog>
+
+
+@{
+    ViewBag.Title = "ActivityLog";
+}
+<h2 class="floatL">Activity Log</h2>
+
+<div class="clear">
+</div>
+<div class="spacer10">
+</div>
+<div class="floatR">
+    <a href="/Admin/MainMenu/" title="Back" style="color: white; margin-left: -540px; position: absolute" class="backManage floatL">Back</a>
+    <a href="javascript:void(0);" onclick="CreateAdminUser();" class="newUser" title="Create User">Create User</a>
+    <a href="/Admin/ActivityLog" class="activitylogs" title="Activity Log">Activity Log</a>
+</div>
+
+<div class="clear">
+</div>
+<div style="width:800px;height:525px;overflow:auto;">
+    <table id="activityList" class="listGrid">
+        <thead>
+            <tr>
+                <th>User Name
+                </th>
+                <th>IP Address
+                </th>
+                <th>Visited URL
+                </th>
+                <th>Project Name
+                </th>
+                <th>Action</th>
+                <th>Created Time
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Count() > 0)
+            {
+                foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        @Html.Raw(item.AdminUserName)
+
+                    </td>
+                    <td>
+                        <a href="https://www.whatismyipaddress.com/ip/@Html.Encode(item.IpAddress)" style="color:white" target="_new">@Html.Encode(item.IpAddress)</a>
+                    </td>
+                    <td>
+                        @Html.Raw(item.VistedURL)
+
+                    </td>
+                    <td>
+                        @Html.Raw(item.ProjectName)
+                    </td>
+                    <td>
+                        @Html.Raw(item.Action)
+
+                    </td>
+                    <td>
+                        @Html.Raw(item.UserCreatedOn + "(EST)")
+
+                    </td>
+                </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6">No data Available
+                    </td>
+                </tr>
+                       
+            }
+        </tbody>
+    </table>
+    <div class="spacer20">
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function CreateAdminUser() {
+        location.href = "/Admin/CreateUser";
+    }
+</script>
+@section ScriptStyleContent {
+    <link href="@Url.Content("~/Content/mainSite.css")" rel="stylesheet" type="text/css" />
+}

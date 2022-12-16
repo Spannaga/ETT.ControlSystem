@@ -1,0 +1,796 @@
+﻿@using Main.Control.Web.Utilities
+@using Main.Control.Core.Models
+@model Main.Control.Core.Models.LeadDetails
+@{
+    Layout = null;
+}
+@{ Guid userId = ViewData["userId"] != null ? (Guid)ViewData["userId"] : Guid.Empty;}
+@using (Html.BeginForm("_LeadsDetails", "Campaign", FormMethod.Post, new { id = "LeadsDetailsForm" }))
+{
+    if (Model != null)
+    {
+
+        if (Model.Email != null)
+        {
+            Model.Email = Model.Email.Replace("\n", "");
+        }
+
+
+        if (Model.BusinessName != null)
+        {
+            Model.BusinessName = Model.BusinessName.Replace("\n", "");
+        }
+
+        if (Model.Name != null)
+        {
+            Model.Name = Model.Name.Replace("\n", "");
+        }
+
+        if (Model.Phone != null)
+        {
+            Model.Phone = Model.Phone.Replace("\n", "");
+        }
+
+        if (Model.Address != null)
+        {
+            Model.Address = Model.Address.Replace("\n", "");
+        }
+
+
+        if (!string.IsNullOrWhiteSpace(Model.Phone))
+        {
+            Model.Phone = Model.Phone.Replace(" ", "").Trim();
+
+            Model.Phone = Model.Phone.Replace("(", "").Trim();
+
+            Model.Phone = Model.Phone.Replace(")", "").Trim();
+
+            Model.Phone = Model.Phone.Replace("-", "").Trim();
+
+            if (Model.Phone.Length == 10)
+            {
+                string getsub1 = Model.Phone.Substring(0, 3);
+                string getsub2 = Model.Phone.Substring(3, 3);
+                string getsub3 = Model.Phone.Substring(6, 4);
+                Model.Phone = "(" + getsub1 + ") " + getsub2 + "-" + getsub3;
+            }
+        }
+    @Html.HiddenFor(m => m.CampaignAssignedDetailsId)
+    <div class="ui-widgets">
+        <div class="ui-widget-title">
+            <h4 class="floatL">
+                Contact Details
+            </h4>
+            <div class="clear"></div>
+        </div>
+        <div class="ui-widget-contents">
+            <table class="responsive min_table table_details table_res">
+                <!--<tr>-->
+                    @*<td class="labelName" style="width: 140px;">
+                        Business Name:
+                    </td>*@
+
+                    <!--<td class="fieldText" id="lblBusinessNametd">
+                        <label id="lblBusinessName">@(!string.IsNullOrWhiteSpace(Model.BusinessName) ? Model.BusinessName : "-")</label>
+                    </td>
+
+                    <td class="fieldText pos_rel" id="txtBusinessNametd" style="display:none;">
+                        @Html.TextBoxFor(model => model.BusinessName, new { @id = "txtBusinessName", @style = "width:300px;", @maxlength = "100" })
+                    </td>
+
+                    <td class="taC" style="white-space: nowrap;"><a href="javascript:void(0)" onclick="EditBusinessName()"><i class="fa fa-1x fa-pencil fa_icon blue_icon floatR"></i></a></td>
+
+                </tr>-->
+                <tr>
+                    <td class="labelName">
+                        Name:
+                    </td>
+
+                    <td class="fieldText" id="lblNametd">
+                        <label id="lblName">@(!string.IsNullOrWhiteSpace(Model.Name) ? Model.Name : "-")</label>
+                    </td>
+
+                    <td class="fieldText pos_rel" id="txtNametd" style="display:none;">
+                        @Html.TextBoxFor(model => model.Name, new { @id = "txtName", @style = "width:300px;", @maxlength = "100" })
+                    </td>
+
+                    <td class="taC" style="white-space: nowrap;"><a href="javascript:void(0)" onclick="EditName()"><i class="fa fa-1x fa-pencil fa_icon blue_icon floatR"></i></a></td>
+                </tr>
+                <tr>
+                    <td class="labelName">
+                        Phone:
+                    </td>
+
+                    <td class="fieldText" id="lblPhonetd">
+                        <label id="lblPhone">@(!string.IsNullOrWhiteSpace(Model.Phone) ? Model.Phone : "-")</label>
+                    </td>
+
+                    <td class="fieldText pos_rel" id="txtPhonetd" style="display:none;">
+                        @Html.TextBoxFor(model => model.Phone, new { @id = "txtPhone", @style = "width:140px;", @maxlength = "10", @onkeypress = "return event.charCode >= 48 && event.charCode <= 57" })
+                    </td>
+
+                    <td class="taC" style="white-space: nowrap;"><a href="javascript:void(0)" onclick="EditPhone()"><i class="fa fa-1x fa-pencil fa_icon blue_icon floatR"></i></a></td>
+                </tr>
+                <tr>
+                    <td class="labelName">
+                        Return Number:
+                    </td>
+
+                    <td class="fieldText" id="lblReturntd">
+                        <label id="lblReturn">@(Model.ReturnNumber > 0 ? Model.ReturnNumber.ToString() : "-")</label>
+                    </td>
+
+                    <td class="fieldText pos_rel" id="txtReturntd" style="display:none;">
+                        @Html.TextBoxFor(model => model.ReturnNumber, new { @id = "txtReturnNumber", @style = "width:140px;", @maxlength = "10", @onkeypress = "return event.charCode >= 48 && event.charCode <= 57" })
+                    </td>
+
+                    <td class="taC" style="white-space: nowrap;"><a href="javascript:void(0)" onclick="EditReturnNumber()"><i class="fa fa-1x fa-pencil fa_icon blue_icon floatR"></i></a></td>
+                </tr>
+                @*<tr>
+                    <td class="labelName">
+                        Email:
+                    </td>
+
+                    <td class="fieldText email" id="lblEmailtd">
+                        <label id="lblEmail">@(!string.IsNullOrWhiteSpace(Model.Email) ? Model.Email : "-")</label>
+
+                    </td>
+
+                    <td class="fieldText pos_rel" id="txtEmailtd" style="display:none;">
+                        @Html.TextBoxFor(model => model.Email, new { @id = "txtEmail", @style = "width:300px;", @maxlength = "100" })
+                    </td>
+
+                    <td class="taC" style="white-space: nowrap;"><a href="javascript:void(0)" onclick="EditEmail()"><i class="fa fa-1x fa-pencil fa_icon blue_icon floatR"></i></a></td>
+                </tr>*@
+                <!--<tr>
+        <td class="labelName">
+            EIN:
+        </td>-->
+                @*<td class="fieldText EIN" id="lblEINtd">
+            <label id="lblEIN">
+                @if (!string.IsNullOrWhiteSpace(Model.EIN))
+                    {
+                        var invalidEIN = string.Join("", Model.EIN.ToCharArray().Where(Char.IsDigit));
+
+                        if (!string.IsNullOrWhiteSpace(invalidEIN))
+                        {
+                            if (Model.EIN.Length == 9)
+                            {
+                                string getsub1 = Model.EIN.Substring(0, 2);
+                                string getsub2 = Model.EIN.Substring(3, 6);
+                                string originalEIN = getsub1 + "-" + getsub2;
+                    @Html.Raw(originalEIN)
+                            }
+                            else
+                            {
+                    @Html.Raw(Model.EIN)
+                            }
+                        }
+                        else
+                        {
+                    @Html.Raw("-")
+                        }
+
+
+                    }
+                    else
+                    {
+                    @Html.Raw("-")
+                    }
+            </label>
+
+        </td>*@
+
+                <!--<td class="fieldText pos_rel" id="txtEINtd" style="display:none;">
+            @Html.TextBoxFor(model => model.EIN, new { @id = "txtEIN", @style = "width:140px;", @maxlength = "100" })
+        </td>
+
+        <td class="taC" style="white-space: nowrap;"><a href="javascript:void(0)" onclick="EditEIN()"><i class="fa fa-1x fa-pencil fa_icon blue_icon floatR"></i></a></td>
+    </tr>-->
+                @*<tr>
+            <td class="labelName">
+                Address:
+            </td>
+
+            <td class="fieldText" id="lblAddresstd">
+                <label id="lblAddress">@(!string.IsNullOrWhiteSpace(Model.Address) ? Model.Address : "-")</label>
+            </td>
+
+            <td class="fieldText pos_rel" id="txtAddresstd" style="display:none;">
+                @Html.TextBoxFor(model => model.Address, new { @id = "txtAddress", @style = "width:300px;", @maxlength = "500" })
+            </td>
+
+            <td class="taC" style="white-space: nowrap;"><a href="javascript:void(0)" onclick="EditAddress()"><i class="fa fa-1x fa-pencil fa_icon blue_icon floatR"></i></a></td>
+        </tr>*@
+            </table>
+        </div>
+    </div>
+
+        if (Model != null && Model.ChampaignExcelValueDetailsList != null && Model.ChampaignExcelValueDetailsList.Any())
+        {
+    <div class="ui-widgets">
+        <div class="ui-widget-title">
+            <h4 class="floatL">
+                Other Details
+            </h4>
+            <div class="clear"></div>
+        </div>
+        <div class="scroll_div">
+
+            @foreach (var item in Model.ChampaignExcelValueDetailsList)
+                    {
+
+                <div class="ui-widget-contents col-lg-6 col-md-6 acc_details_main">
+
+                    <div class=" acc_details">
+                        <div class="labelName">
+                            @item.ExcelHeaderName:
+                        </div>
+                        <div class="fieldText">
+
+                            @item.ExcelHeaderValue
+                        </div>
+
+                    </div>
+                    <table class="responsive min_table">
+                        <tr></tr>
+                        <tr>
+                            <td colspan="4" class="spacer5"></td>
+                        </tr>
+                    </table>
+                </div>
+                    }
+        </div>
+    </div>
+        }
+        if (userId != Guid.Empty)
+            {
+        <div id="divRecentReturns">
+            @{Html.RenderAction("_RecentReturns", "Campaign", new { userId = userId });}
+        </div>
+                }
+        <div id="divAdditionalContacts">
+            @{Html.RenderAction("_AdditionalContactList", "Campaign", new { id = Model.CampaignAssignedDetailsId });}
+        </div>
+                    }
+                }
+<script>
+    var campaignAssignedDetailsId = @(Model!=null && Model.CampaignAssignedDetailsId > 0 ? Model.CampaignAssignedDetailsId : 0);
+    var businessName= '@(Model != null && !string.IsNullOrWhiteSpace(Model.BusinessName) ? Model.BusinessName : string.Empty)';
+    var name= '@(Model != null && !string.IsNullOrWhiteSpace(Model.Name) ? Model.Name : string.Empty)';
+    var phone= '@(Model != null && !string.IsNullOrWhiteSpace(Model.Phone) ? Model.Phone : string.Empty)';
+    var email= '@(Model != null && !string.IsNullOrWhiteSpace(Model.Email) ? Model.Email : string.Empty)';
+    var address= '@(Model != null && !string.IsNullOrWhiteSpace(Model.Address) ? Model.Address.Replace("\n","") : string.Empty)';
+    var noofTrucks= '@(Model != null && Utility.GetLong(Model.NoofTrucks) > 0 ? Model.NoofTrucks : 0)';
+    var ein = '@(Model != null && !string.IsNullOrWhiteSpace(Model.EIN) ? Model.EIN : string.Empty)';
+    var returnNumber= '@(Model != null && Utility.GetLong(Model.NoofTrucks) > 0 ? Model.ReturnNumber.ToString() : string.Empty)';
+    $("#timeZoneLabel").hide();
+
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode({'address': address}, function(results, status,timezone) {
+        if (status === 'OK') {
+            var latitude=results[0].geometry.location.lat();
+            var longtude=results[0].geometry.location.lng();
+            var commaSperatedLottitude=latitude+","+longtude;
+            $.ajax({
+                url:"https://maps.googleapis.com/maps/api/timezone/json?location="+commaSperatedLottitude+"&timestamp="+(Math.round((new Date().getTime())/1000)).toString()+"&sensor=false",
+            }).done(function(response){
+                if(response.timeZoneId != null){
+                    $("#timeZoneLabel").show();
+                    $("#timeZoneSpan").text(response.timeZoneName);
+                }
+            });
+
+        }
+    });
+
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+        $(".dashboardTable").niceScroll();
+        $("#contactnameText").text('@Model.Name');
+        $("#businessnameText").text($("#lblBusinessName").text());
+        $("#contactNametxt").text('@Model.Phone');
+        $("#currentUsing").text('@Model.CurrentViewedLeads');
+        $("#totalUsing").text('@Model.TotalAssignedLeads');
+
+        if ('@Model.CurrentViewedLeads'==0) {
+            window.location.href="/Campaign/Index/3";
+        }
+
+        //$("#LeadsDetailsForm").validate({
+        //    rules:{
+        //        Phone:{required: true,
+        //            minlength: 10}
+        //    },
+        //    messages:{
+        //        Phone:{required: "Enter phone number",
+        //            minlength:"Enter valid phone number"}
+
+        //    }
+        //})
+
+        var CampaignDetailsId=$("#CampaignDetailsId").val();
+        var SupportUserId = $("#SupportUserId").val();
+        var StateCode=$("#StateCode").val();
+        if(StateCode==null || StateCode==undefined)
+        {
+            StateCode="";
+        }
+        var Timezone=$("#Timezone").val();
+        if(Timezone==null || Timezone==undefined)
+        {
+            Timezone="";
+        }
+
+        LoadCommunication();
+        function  LoadCommunication(leadActivityId){
+            $.ajax({
+                type: "GET",
+                url: "/Campaign/_Communication",
+                data:{
+                    id:CampaignDetailsId,
+                    id2:SupportUserId,
+                    id3:StateCode,
+                    timeZone:Timezone,
+                    id4:'@Model.CampaignAssignedDetailsId',
+                    id5: $("#isSkipped").val(),
+                    id6:leadActivityId
+                },
+                success: function (result) {
+                    $("#divCommunication").html(result);
+                }
+            });
+        }
+
+        LoadFollowUpDetails();
+    });
+    function createCampaign() {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/_CampaignAccessProduct",
+            success: function (result) {
+                $("#ModelBody").html(result);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-800');
+            }
+        });
+    }
+
+    function ExtendPeroid(id) {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/_ExtendPeroid",
+            data: { id: id },
+            success: function (result) {
+                $("#ModelBody").html(result);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-md');
+            }
+        });
+    }
+
+    function UpdateCampaignPauseStatus(id, isPaused) {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/UpdateCampaignPauseStatus",
+            data: { id: id, id2: isPaused },
+            success: function (data) {
+                if (data && isPaused) {
+                    toastr.success("Campaign Paused successfully!");
+                    $("#campaignList").load("/Campaign/_CampaignDashboard");
+                }
+                else if (data && !isPaused) {
+                    toastr.success("Campaign Started successfully!");
+                    $("#campaignList").load("/Campaign/_CampaignDashboard");
+                }
+            }
+        });
+    }
+
+    function UpdateCampaignSuspendStatus(id, isSuspend) {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/UpdateCampaignSuspendStatus",
+            data: { id: id, id2: isSuspend },
+            success: function (data) {
+                if (data) {
+                    toastr.success("Campaign Suspend successfully!");
+                    $("#campaignList").load("/Campaign/_CampaignDashboard");
+                }
+            }
+        });
+    }
+
+    function DisCardedCampaign(CampaignDetailsId) {
+
+        bootbox.dialog({
+            message: "Are you sure Discard Campaign?",
+            title: "Discard Campaign!",
+            buttons: {
+                Cancel: {
+                    label: "No",
+                    className: "btn-cancel"
+                },
+                Discarded: {
+                    label: "Yes",
+                    className: "btn-danger",
+                    callback: function () {
+                        DeleteCampaign(CampaignDetailsId);
+                    }
+                },
+
+            }
+        });
+
+    }
+
+    function DeleteCampaign(CampaignDetailsId) {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/DisCardedCampaign",
+            data: { id: CampaignDetailsId },
+            success: function (data) {
+                if (data) {
+                    toastr.success("Campaign Discarded successfully!");
+                    $("#campaignList").load("/Campaign/_CampaignDashboard");
+                }
+            },
+            error: function (err) {
+            }
+        });
+    }
+
+    function CreateTechTeamCampaign(productId, campaignDetailsId) {
+        window.location.href = "/Campaign/CreateCampaign?id=" + productId + "&id3=" + campaignDetailsId;
+    }
+
+
+
+    function EditBusinessName() {
+        $("#txtBusinessNametd").show();
+        $("#lblBusinessNametd").hide();
+        $("#txtBusinessName").select();
+    }
+
+    $("#txtBusinessName").focusout(function () {
+        var id = campaignAssignedDetailsId
+        var id2 = $("#txtBusinessName").val();
+
+        //if($("#LeadsDetailsForm").valid()){
+        if(businessName.trim() != id2.trim() && id2 != "")
+        {
+            $.getJSON("/Campaign/_EditBusinessName/?t=" + new Date(), { id: id, id2: id2 }, function (data) {
+                if(data != undefined && data != "" && data != null && data == true)
+                {
+                    toastr.success("Business Name updated successfully!");
+                    $("#lblBusinessName").html(id2);
+                    $("#txtBusinessName").val(id2);
+                    businessName =id2;
+                }
+            });
+        }
+            //}
+        else{
+            $("#txtBusinessName").val(businessName);
+        }
+
+        $("#txtBusinessNametd").hide();
+        $("#lblBusinessNametd").show();
+    })
+
+
+    function EditName() {
+        $("#txtNametd").show();
+        $("#lblNametd").hide();
+        $("#txtName").select();
+    }
+
+    $("#txtName").focusout(function () {
+        var id = campaignAssignedDetailsId
+        var id2 = $("#txtName").val();
+
+        //if($("#LeadsDetailsForm").valid()){
+        if(name.trim() != id2.trim() && id2 != "")
+        {
+            $.getJSON("/Campaign/_EditLeadName/?t=" + new Date(), { id: id, id2: id2 }, function (data) {
+                if(data != undefined && data != "" && data != null && data == true)
+                {
+                    toastr.success("Lead Name updated successfully!");
+                    $("#lblName").html(id2);
+                    $("#txtName").val(id2);
+                    name =id2;
+                }
+            });
+        }
+            //}
+        else{
+            $("#txtName").val(name);
+        }
+
+        $("#txtNametd").hide();
+        $("#lblNametd").show();
+    })
+
+    function EditPhone() {
+        $("#txtPhonetd").show();
+        $("#lblPhonetd").hide();
+        $("#txtPhone").select();
+    }
+
+    function EditReturnNumber() {
+        $("#txtReturntd").show();
+        $("#lblReturntd").hide();
+        $("#txtReturnNumber").select();
+    }
+
+    $("#txtReturnNumber").focusout(function () {
+        var id = campaignAssignedDetailsId
+        var id2 = $("#txtReturnNumber").val();
+
+        //if($("#LeadsDetailsForm").valid()){
+        if (returnNumber.trim() != id2.trim() && id2 != "") {
+
+            $.getJSON("/Campaign/_EditLeadReturnNumber/?t=" + new Date(), { id: id, id2: id2 }, function (data) {
+                if (data != undefined && data != "" && data != null && data == true) {
+                    toastr.success("Lead Return Number updated successfully!");
+                    $("#lblReturn").html(id2);
+                    $("#txtReturnNumber").val(id2);
+                    returnNumber = id2;
+                }
+            });
+        }
+        //}
+        else {
+            $("#txtReturnNumber").val(returnNumber);
+        }
+        $("#txtReturntd").hide();
+        $("#lblReturntd").show();
+    })
+
+    $("#txtPhone").focusout(function () {
+        var id = campaignAssignedDetailsId
+        var id2 = $("#txtPhone").val();
+
+        //if($("#LeadsDetailsForm").valid()){
+        if(phone.trim() != id2.trim() && id2 != "")
+        {
+            $.getJSON("/Campaign/_EditLeadPhone/?t=" + new Date(), { id: id, id2: id2 }, function (data) {
+                if(data != undefined && data != "" && data != null && data == true)
+                {
+                    toastr.success("Lead Phone updated successfully!");
+                    $("#lblPhone").html(id2);
+                    $("#txtPhone").val(id2);
+                    phone =id2;
+                }
+            });
+        }
+            //}
+        else{
+            $("#txtPhone").val(phone);
+        }
+        $("#txtPhonetd").hide();
+        $("#lblPhonetd").show();
+    })
+
+    function EditEmail() {
+        $("#txtEmailtd").show();
+        $("#lblEmailtd").hide();
+        $("#txtEmail").select();
+    }
+
+    $("#txtEmail").focusout(function () {
+        var id = campaignAssignedDetailsId
+        var id2 = $("#txtEmail").val();
+
+        //if($("#LeadsDetailsForm").valid()){
+        if(email.trim() != id2.trim() && id2 != "")
+        {
+
+            $.getJSON("/Campaign/_EditLeadEmail/?t=" + new Date(), { id: id, id2: id2 }, function (data) {
+                if(data != undefined && data != "" && data != null && data == true)
+                {
+                    toastr.success("Lead Email updated successfully!");
+                    $("#lblEmail").html(id2);
+                    $("#txtEmail").val(id2);
+                    email =id2;
+                    $("#EmailAddress").val(email);//Assign to hidden When the Email is edited
+                }
+            });
+        }
+            //}
+        else{
+            $("#txtEmail").val(email);
+        }
+        $("#txtEmailtd").hide();
+        $("#lblEmailtd").show();
+    })
+
+    function EditAddress() {
+        $("#txtAddresstd").show();
+        $("#lblAddresstd").hide();
+        $("#txtAddress").select();
+    }
+
+    function EditEIN(){
+        $("#txtEINtd").show();
+        $("#lblEINtd").hide();
+        $("#txtEIN").select();
+        $("#txtEIN").mask("99-9999999");
+    }
+
+    function EditEIN(){
+        $("#txtEINtd").show();
+        $("#lblEINtd").hide();
+        $("#txtEIN").select();
+        $("#txtEIN").mask("99-9999999");
+    }
+
+
+    $("#txtEIN").focusout(function(){
+        var id = campaignAssignedDetailsId
+        var id2 = $("#txtEIN").val();
+        if(ein.trim() != id2.trim() && id2 != "")
+        {
+            var einnumber=id2.match(/[\d\.]+/g);
+            if (einnumber!=null) {
+                einnumber=einnumber.join("");
+            }
+            if (einnumber.length==9) {
+                $.getJSON("/Campaign/_EditLeadEIN/?t=" + new Date(), { id: id, id2: id2 }, function (data) {
+                    if(data != undefined && data != "" && data != null && data == true)
+                    {
+                        toastr.success("Lead EIN updated successfully!");
+                        $("#lblEIN").html(id2);
+                        $("#txtEIN").val(id2);
+                        ein =id2;
+                    }
+                });
+
+            }
+        }
+            //}
+        else{
+            $("#txtEIN").val(ein);
+        }
+        $("#txtEINtd").hide();
+        $("#lblEINtd").show();
+    });
+
+    $("#txtAddress").focusout(function () {
+        var id = campaignAssignedDetailsId
+        var id2 = $("#txtAddress").val();
+
+        //if($("#LeadsDetailsForm").valid()){
+        if(address.trim() != id2.trim() && id2 != "")
+        {
+            $.getJSON("/Campaign/_EditLeadAddress/?t=" + new Date(), { id: id, id2: id2 }, function (data) {
+                if(data != undefined && data != "" && data != null && data == true)
+                {
+                    toastr.success("Lead Address updated successfully!");
+                    $("#lblAddress").html(id2);
+                    $("#txtAddress").val(id2);
+                    address =id2;
+                }
+            });
+        }
+            //}
+        else{
+            $("#txtAddress").val(address);
+        }
+        $("#txtAddresstd").hide();
+        $("#lblAddresstd").show();
+    })
+
+    function EditNoofTrucks() {
+        $("#txtNoofTruckstd").show();
+        $("#lblNoofTruckstd").hide();
+        $("#txtNoofTrucks").select();
+    }
+
+    $("#txtNoofTrucks").focusout(function () {
+        var id = campaignAssignedDetailsId
+        var id2 = $("#txtNoofTrucks").val();
+
+        //if($("#LeadsDetailsForm").valid()){
+        if(noofTrucks.trim() != id2.trim() && id2 != "")
+        {
+            $.getJSON("/Campaign/_EditLeadNoofTrucks/?t=" + new Date(), { id: id, id2: id2 }, function (data) {
+                if(data != undefined && data != "" && data != null && data == true)
+                {
+                    toastr.success("No of Trucks updated successfully!");
+                    $("#lblNoofTrucks").html(id2);
+                    $("#txtNoofTrucks").val(id2);
+                    noofTrucks =id2;
+                }
+            });
+        }
+            //}
+        else{
+            $("#txtNoofTrucks").val(noofTrucks);
+        }
+        $("#txtNoofTruckstd").hide();
+        $("#lblNoofTruckstd").show();
+    })
+
+    function AddAdditionalContacts(campaignAssignedDetailsId, additionalContactsDetailsId){
+        if(parseInt(additionalContactsDetailsId) == 0 || additionalContactsDetailsId == undefined || additionalContactsDetailsId == "")
+        {
+            $("#AddContactSpinner").show();
+        }
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/_AddAdditionalContacts",
+            data: { id: campaignAssignedDetailsId, id2: additionalContactsDetailsId},
+            success: function(data){
+                $("#ModelBody").html(data);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $("#AddContactSpinner").hide();
+                $('.modal-dialog').addClass('modal-dialog-700');
+            }
+
+        })
+    }
+
+    function DeleteAdditionalContacts(additionalContactsDetailsId) {
+        bootbox.dialog({
+            message: "Are you sure you want to delete this contact?",
+            title: "Delete Contact",
+            buttons: {
+                Cancel: {
+                    label: "No",
+                    className: "btn-cancel floatL"
+                },
+                Discarded: {
+                    label: "Yes",
+                    className: "btn-danger floatLR",
+                    callback: function () {
+                        $.ajax({
+                            type: "GET",
+                            url: "/Campaign/DeleteAdditionalContact",
+                            data: { id: additionalContactsDetailsId },
+                            success: function (data) {
+                                if (data) {
+                                    toastr.success("Additional Contact deleted successfully!");
+                                    $("#divAdditionalContacts").load("/Campaign/_AdditionalContactList/" + campaignAssignedDetailsId)
+                                }
+                            },
+                            error: function (err) {
+                            }
+                        });
+                    }
+                },
+            },
+            onEscape: function () {
+                $('.bootbox.modal').modal('hide');
+            }
+        });
+    }
+
+    function LoadFollowUpDetails()
+    {
+        var _buttonHtmlNew = '';
+        if(parseInt(campaignAssignedDetailsId) > 0)
+        {
+            $.getJSON("/Campaign/GetFollowUpDetails/?t=" + new Date(), { Id: campaignAssignedDetailsId },
+                function(data)
+                {
+                    if (data != null && data.AdminUserName!=null && data.AdminUserName!= undefined) {
+                        _buttonHtmlNew='<table><tr><td class="taL vaT" style="min-width: 245px;"><div><b>Manager Follow-Up added by:</b></div><p class="mBot0">'+data.AdminUserName+'</p></td><td class="taL vaT"><p class="mBot0"> <b> Comments:</b> <span style="color:#757575">'+data.Comments+'</span></p></td></tr></table>';
+                        $("#FollowUpDetials").html(_buttonHtmlNew);
+                        $("#FollowUpDetials").show();
+                    }
+                    else {
+                        _buttonHtmlNew = '';
+                        $("#FollowUpDetials").hide();
+                    }
+                });
+        }
+    }
+
+
+</script>
+

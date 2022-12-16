@@ -1,0 +1,838 @@
+﻿@model Main.Control.Core.Models.LeadCommunication
+@using Main.Control.Web.Utilities
+@using Main.Control.Core.Models
+@{
+    ViewBag.Title = "Create Campaign";
+    List<AdminUser> adminSupportUsersList = new List<AdminUser>();
+    if (ViewBag.SupportUsersList != null)
+    {
+        adminSupportUsersList = (List<AdminUser>)ViewBag.SupportUsersList;
+    }
+    bool inValidErrorMessage = false;
+    if (ViewBag.inValidErrorMessage != null)
+    {
+        inValidErrorMessage = (bool)ViewBag.inValidErrorMessage;
+    }
+    string followDateModel = string.Empty;
+    var UserId = ViewData["userId"] != null ? (Guid)ViewData["userId"] : Guid.Empty;
+}
+<div>
+    @using (Html.BeginForm("_Communication", "Campaign", FormMethod.Post, new { id = "CreateCommunication", enctype = "multipart/form-data" }))
+    {
+        followDateModel = (Model.FollowupDate != DateTime.MinValue && Model.FollowupDate != null ? Utility.GetDateTime(Model.FollowupDate).ToShortDateString() : "");
+        @Html.Hidden("IsSkip")
+        <h3 class="h4_head">Communication</h3>
+
+        if (Model.CampaignType == CampaignType.CLIENTS.ToString())
+        {
+            <h2>
+                <span>Activity</span>
+
+            </h2>
+        }
+        <div>
+
+            <ul class="nav nav-tabs">
+                <li id="CurrentActivityTabid" class="active"><a data-toggle="tab" href="#CurrentActivityTab">Current Activity</a></li>
+                @*<li id="PreviousActivityTabid"><a data-toggle="tab" href="#PreviousActivityTab">Previous Activity</a></li>
+                    <li id="SpancontrolActivityTabid"><a data-toggle="tab" href="#SpancontrolActivityTab">Span Control Notes</a></li>*@
+                <li id="SpancontrolContactGroup"><a data-toggle="tab" href="#SpancontrolContactgrouptab"> SC Contact Group</a></li>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade active in" id="CurrentActivityTab">
+                    @*<div class="floatR">
+                            <a href="javascript:void(0)" class="prev_1 BackbtntopButtom" onclick="Back()"><i class="fa fa-1x fa-angle-left"></i></a>
+                            <a href="javascript:void(0)" class="next_1 Nextbtntopbuttom" onclick="Skip();"><i class="fa fa-1x fa-angle-right"></i></a>
+                            <a href="javascript:void(0)" class="Skiplinktopbuttom" onclick="Skip();">skip </a>
+                        </div>*@
+                    <div class="clearfix"></div>
+                    <table class="responsive min_table">
+                        <tr>
+                            <td class="fieldName" colspan="5">
+                                <div class="mBot10">
+                                    @Html.RadioButton("communication", "Phone", true, new
+                               {
+                                   @id = "Phone"
+                                        /*@onchange = "functionMethodofContract();"*/,
+                                   @class = "css-radiobox"
+                               })
+                                    <label for="Phone" class="css-labelradio">
+                                        Phone
+                                    </label>
+                                </div>
+                                @*<span>
+                                             @Html.RadioButton("Communicationtype",MethodOfContact.Mail,true, new
+                                             {
+                                                 @id = "LeftVm",@onchange = "functionMethodofContract();",@class = "css-radiobox"
+                                             })
+                                             <label for="LeftVm" class="css-labelradio">
+                                                 Left VM
+                                             </label>
+                                         </span>
+                                         <span>
+                                             @Html.RadioButton("Communicationtype",MethodOfContact.InvoiceSent,true, new
+                                             {
+                                                 @id = "Invoicesent",@onchange = "functionMethodofContract();",@class = "css-radiobox"
+                                             })
+                                             <label for="Invoicesent" class="css-labelradio">
+                                                 Invoice Sent
+                                             </label>
+                                         </span>
+                                         <span>
+                                             @Html.RadioButton("Communicationtype", MethodOfContact.NotInterested, true, new
+                                        {
+                                            @id = "NotInterested",@onchange = "functionMethodofContract();",@class = "css-radiobox"})
+                                             <label for="NotInterested" class="css-labelradio">
+                                                 Not Interested
+                                             </label>
+                                         </span>
+                                         <span>
+                                         @Html.RadioButton("Communicationtype", MethodOfContact.DoNotContact, new
+                                    {
+                                        @id = "DoNotContact",@onchange = "functionMethodofContract();",@class = "css-radiobox"})
+                                         <label for="DoNotContact" class="css-labelradio">
+                                             Do Not Contact
+                                         </label>
+                                         </span>*@
+                                @*<span class="pLeft15">
+                                        @Html.RadioButton("Communicationtype", MethodOfContact.Mail, new { @id = "Email", @onchange = "functionMethodofContract();", @class = "css-radiobox" })
+                                        <label for="Email" class="css-labelradio">
+                                            Email
+                                        </label>
+                                    </span>*@
+                                @Html.Hidden("hdnMethodofContract")
+                                @Html.Hidden("hdnuserId")
+                                <div class="subRadioDiv">
+                                    <span>
+                                        @Html.RadioButton("Communicationtype", MethodOfContact.CallBack, true, new
+                                        {
+                                            @id = "CallBack",
+                                            @onchange = "functionMethodofContract();",
+                                            @class = "css-radiobox"
+                                        })
+                                        <label for="CallBack" class="css-labelradio">
+                                            Call Back
+                                        </label>
+                                    </span>
+                                    <span>
+                                        @Html.RadioButton("Communicationtype", MethodOfContact.LeftVM, new
+                                        {
+                                            @id = "LeftVm",
+                                            @onchange = "functionMethodofContract();",
+                                            @class = "css-radiobox"
+                                        })
+                                        <label for="LeftVm" class="css-labelradio">
+                                            Left VM
+                                        </label>
+                                    </span>
+                                    <span>
+                                        @Html.RadioButton("Communicationtype", MethodOfContact.InvoiceSent, new
+                                        {
+                                            @id = "InvoiceSent",
+                                            @onchange = "functionMethodofContract();",
+                                            @class = "css-radiobox"
+                                        })
+                                        <label for="InvoiceSent" class="css-labelradio">
+                                            Invoice Sent
+                                        </label>
+                                    </span>
+                                    <span>
+                                        @Html.RadioButton("Communicationtype", MethodOfContact.NotInterested, new
+                                   {
+                                       @id = "NotInterested",
+                                            @onchange = "functionMethodofContract();",
+                                            @class = "css-radiobox"
+                                        })
+                                        <label for="NotInterested" class="css-labelradio">
+                                            Not Interested
+                                        </label>
+                                    </span>
+                                    <span>
+                                        @Html.RadioButton("Communicationtype", MethodOfContact.DoNotContact, new
+                                   {
+                                       @id = "DoNotContact",
+                                            @onchange = "functionMethodofContract();",
+                                            @class = "css-radiobox"
+                                        })
+                                        <label for="DoNotContact" class="css-labelradio">
+                                            Do Not Contact
+                                        </label>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="spacer15"></td>
+                        </tr>
+                    </table>
+                    <div class="box_shadow">
+                        <table class="responsive min_table ">
+                            <tr class="Phonehide ">
+                                @*<td class="labelName"></td>
+                                    <td class="fieldName" colspan="4" style="padding: 10px 0 10px 0;">
+                                        <img class="up_arrow_img" src="~/Content/Images/up_arrow.png" />*@
+                                @*<span>
+                                        @Html.RadioButton("IsSpokeorVoicemail", TypeofCall.Spoke, true, new { @id = "Spoke", @onchange = "functionTypeofcall();", @class = "css-radiobox" })
+                                        @Html.Hidden("hdnTypeofCall")
+                                        <label for="Spoke" class="css-labelradio">
+                                            Spoke
+                                        </label>
+                                    </span>
+                                    <span class="pLeft15">
+                                        @Html.RadioButton("IsSpokeorVoicemail", TypeofCall.VoiceMail, new { @id = "VoiceMail", @onchange = "functionTypeofcall();", @class = "css-radiobox" })
+                                        <label for="VoiceMail" class="css-labelradio">
+                                            Voice Mail
+                                        </label>
+                                    </span>*@
+
+
+                                @*</td>*@
+                            </tr>
+
+
+                            <tr class="box3 spoketohide">
+                                <td colspan="4" style="padding-bottom:10px;">
+                                    <table>
+                                        <tr>
+                                            <td colspan="4" class="spacer15"></td>
+                                        </tr>
+                                        <tr>
+
+                                            <td class="labelName">
+                                                <label>
+                                                    <span class="red">*</span>Spoke To:
+                                                </label>
+                                            </td>
+                                            <td class="fieldName">
+                                                @Html.TextBoxFor(m => m.Spoketo)
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table class="responsive min_table">
+                            <tr>
+                                <td colspan="4" class="spacer15"></td>
+                            </tr>
+
+                            <tr id="commentsOfMethodOfContactTR">
+                                <td class="labelName"></td>
+                                <td class="fieldName" colspan="4">
+                                    @Html.TextAreaFor(m => m.Comments, new { @Placeholder = "Add comments here", @style = "width:100%;", Tabindex = "1016" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="spacer15"></td>
+                            </tr>
+                            <tr>
+                                <td class="labelName"></td>
+                                <td class="fieldName">
+                                    @Html.CheckBox("DonotContactagain", new { id = "DonotContactagain", @class = "css-checkbox", @onchange = "Dontdisturb()", Tabindex = "1017" })
+                                    <label for="DonotContactagain" class="css-labelbox">
+                                        Do not Contact again
+                                    </label>
+                                    @Html.Hidden("hdnDonotContactagain")
+                                </td>
+                                <td class="hidereason labelName"><span class="red">*</span>Reason</td>
+                                <td class="hidereason fieldName">
+                                    @Html.DropDownListFor(x => x.Reason, new List<SelectListItem>
+                          {
+                        new SelectListItem() {Text = "Select Reason", Value=""},
+                        new SelectListItem() {Text = "No longer files 2290", Value="No longer files 2290"},
+                        new SelectListItem() {Text = "Out of Business", Value="Out of Business"},
+                        new SelectListItem() {Text = "Leased Truck", Value="Leased Truck"},
+                        new SelectListItem() {Text = "Unsubscribed", Value="Unsubscribed"},
+                        new SelectListItem() {Text = "Paper Files", Value="Paper Files"},
+                        new SelectListItem() {Text = "Retired", Value="Retired"},
+                        new SelectListItem() {Text = "Filed Elsewhere", Value="Filed Elsewhere"},
+                        new SelectListItem() {Text = "Do Not Call", Value="Do Not Call"} ,
+                        new SelectListItem() {Text = "Deceased", Value="Deceased"},
+                        new SelectListItem() {Text = "Other", Value="Other"}
+                         }, new { @onchange = "OnchangeReason()", @style = "width:145px;", Tabindex = "1018" })
+
+                                    <span style="display:none" id="tdOtherReason">
+                                        @Html.TextBoxFor(m => m.OtherReason, new { @placeholder = "*Reason", @class = "mLeft5", @style = "width:145px;", Tabindex = "1019" })
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="spacer15"></td>
+                            </tr>
+                            <tr class="">
+                                <td class="labelName"></td>
+                                <td class="fieldName">
+                                    @Html.CheckBox("IsFollowRequired", new { id = "IsFollowRequired", @class = "css-checkbox", @onchange = "functionIsFollowRequired()", @style = "width:145px;", Tabindex = "1020" })
+                                    <label for="IsFollowRequired" class="css-labelbox">
+                                        Follow Up Required
+                                    </label>
+                                    @Html.Hidden("hdnIsFollowRequired", new { @style = "width:145px;" })
+                                </td>
+                                <td class="labelName hidedatetime">
+                                    <label>
+                                        <span class="red">*</span>Date/Time:
+                                    </label>
+                                </td>
+                                <td class="headField hidedatetime fieldName">
+                                    @Html.TextBoxFor(m => m.FollowupDate, new { @style = "width:145px;", Tabindex = "1021" })
+                                    @Html.TextBoxFor(m => m.FollowupTime, new { @style = "margin-left:5px;width:145px;", Tabindex = "1022" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="spacer15"></td>
+                            </tr>
+
+                        </table>
+                        <div class="spacer10">
+
+                        </div>
+                        <div class="taC">
+                            <a class="btn btn-primary mRight5" id="btnSaveComm" onclick="SaveCommunication()">Save <i id="savespinner" style="display:none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></a>
+                            @if (Model.CampaignAsignedLastcount > 0)
+                            {
+                                <a class="btn btn-primary mRight5" id="btnSaveAndNext" onclick="SaveNextCommunication()">Save & Next <i id="savenextspinner" style="display:none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></a>
+                            }
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="spacer10">
+
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="floatR mTop10">
+                        @*  <a href="javascript:void(0)" class="prev_1" id="Backbtnbottom" onclick="Back()"><i class="fa fa-1x fa-angle-left"></i></a>*@
+                        @*<a href="javascript:void(0)" class="prev_1 BackbtntopButtom" onclick="Back()"><i class="fa fa-1x fa-angle-left"></i></a>
+                            <a href="javascript:void(0)" class="next_1 Nextbtntopbuttom" onclick="Skip();"><i class="fa fa-1x fa-angle-right"></i></a>
+                            <a href="javascript:void(0)" class="Skiplinktopbuttom" onclick="Skip();">skip </a>*@
+                    </div>
+                    <div class="clearfix"></div>
+                    <hr />
+                    <div class="clearfix"></div>
+                    <h4 class="mTop0">
+                        Recent Activity
+                    </h4>
+                    <div class="clearfix"></div>
+                    @if (Model != null)
+                    {
+                        <div class="table-responsive">
+                            <table style="width: 100%" class="table table-bordered table_design" id="Recentactivitylist">
+                                <thead class="table_head">
+                                    <tr>
+                                        <th class="dash_table_head">
+                                            Date/Time
+                                        </th>
+                                        <th class="dash_table_head">
+                                            Mode
+                                        </th>
+                                        <th class="dash_table_head">
+                                            Follow Up Date/Time
+                                        </th>
+                                        <th class="dash_table_head">
+                                            Comments
+                                        </th>
+                                        <th class="dash_table_head taC">
+                                            Action
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table_body">
+
+                                    @foreach (var PreviousActivity in Model.LeadCommunicationLst)
+                                    {
+                                        string[] _comments;
+                                        string currentDate = (PreviousActivity.CreatedDate != DateTime.MinValue && PreviousActivity.CreatedDate != null ? PreviousActivity.CreatedDate.ToString() : "-");
+                                        string followDate = (PreviousActivity.FollowupDate != DateTime.MinValue && PreviousActivity.FollowupDate != null ? Utility.GetDateTime(PreviousActivity.FollowupDate).ToShortDateString() : "-");
+                                        string followtime = (PreviousActivity.FollowupTime != null ? Utility.GetDateTime(PreviousActivity.FollowupTime).ToShortTimeString() : "");
+                                        string followDatetime = followDate + " " + followtime;
+                                        <tr>
+                                            <td>@currentDate</td>
+                                            <td>
+                                                @if (!string.IsNullOrWhiteSpace(PreviousActivity.MethodOfContact.ToString()))
+                                                {
+
+                                                    <span>Phone</span>
+                                                }
+                                                @*else if (PreviousActivity.MethodOfContact == MethodOfContact.Phone)
+                                                    {
+                                                        <span>Call Back</span>
+                                                    }*@
+                                                else
+                                                {
+                                                    <span>-</span>
+                                                }
+                                            </td>
+                                            <td>@followDatetime</td>
+
+                                            @if (PreviousActivity != null && !string.IsNullOrWhiteSpace(PreviousActivity.Comments) && PreviousActivity.Comments.Contains('-'))
+                                            {
+                                                _comments = PreviousActivity.Comments.Split('-');
+                                                <td>
+                                                    @_comments[0] - <label><b><i>@_comments[1]</i></b></label>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>@Html.Raw(PreviousActivity.Comments != null ? (PreviousActivity.Comments) : "-")</td>
+                                            }
+
+
+                                            <td class="taC"><a href="javascript:void(0)" onclick="LoadCommunication(@PreviousActivity.CampaignLeadActivityId)"><i class="fa fa-1x fa-pencil fa_icon blue_icon taC"></i></a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+                @*<div class="tab-pane fade" id="PreviousActivityTab">
+                        @{Html.RenderAction("_PreviousActivitydetails", "Campaign", new { id = Model.CampaignAssignDetailId });}
+                    </div>
+                    <div class="tab-pane fade" id="SpancontrolActivityTab">
+                        @{Html.RenderAction("_SpancontrolActivitydetails", "Campaign", new { emailAddress = Model.EmailAddress });}
+                    </div>*@
+                <div class="tab-pane fade" id="SpancontrolContactgrouptab">
+                    @{ Html.RenderAction("_SpancontrolContactGroup", "Campaign", new { EmailAddress = Model.EmailAddress});}
+                </div>
+            </div>
+            @Html.HiddenFor(a => a.SupportUserId)
+            @Html.HiddenFor(a => a.CampaignDetailId)
+            @Html.HiddenFor(a => a.CampaignAssignDetailId)
+            @Html.HiddenFor(a => a.EmailAddress)
+            @Html.HiddenFor(a => a.IsSaveNext)
+            @Html.HiddenFor(a => a.CampaignLeadActivityId)
+            @Html.HiddenFor(a => a.StateCode)
+            @Html.HiddenFor(a => a.ProductId)
+            <div class="spacer15"></div>
+            <div class="taC">
+
+
+            </div>
+        </div>
+    }
+</div>
+<script lang="javascript" type="text/javascript">
+
+    $(function () {
+        if ('@UserId' == '@Guid.Empty') {
+            $("#SpancontrolContactGroup").hide();
+        }
+        $("#IsSkip").val($("#isSkipped").val());
+        var StateCode = '@Model.StateCode';
+        if (parseInt('@Model.CampaignAsignedFirstcount') > 0) {
+            //$(".BackbtntopButtom").prop("disabled", false);
+            //$(".BackbtntopButtom").removeClass("disabled_btn");
+            $(".BackbtntopButtom").removeClass("linknotallowed");
+        }
+        else {
+            //$('.BackbtntopButtom').prop('disabled', 'disabled');
+            //$(".BackbtntopButtom").addClass("disabled_btn");
+            $(".BackbtntopButtom").removeAttr("onclick");
+            $(".BackbtntopButtom").addClass("linknotallowed");
+        }
+        if (parseInt('@Model.CampaignAsignedLastcount') > 0) {
+
+            //$(".Nextbtntopbuttom").prop("disabled", false);
+            //$(".Nextbtntopbuttom").removeClass("disabled_btn");
+            $(".Skiplinktopbuttom").removeClass("linknotallowed");
+            $(".Nextbtntopbuttom").removeClass("linknotallowed");
+        }
+        else {
+            //$('.Nextbtntopbuttom').prop('disabled', 'disabled');
+            //$(".Nextbtntopbuttom").addClass("disabled_btn");
+            $(".Skiplinktopbuttom").removeAttr("onclick");
+            $(".Skiplinktopbuttom").addClass("linknotallowed");
+            $(".Nextbtntopbuttom").removeAttr("onclick");
+            $(".Nextbtntopbuttom").addClass("linknotallowed");
+        }
+        @*if (StateCode != null && StateCode != "") {
+            debugger
+            if (parseInt('@Model.CampaignAsignedFirstcountByStatecode') > 0) {
+                $(".BackbtntopButtom").removeClass("linknotallowed");
+            }
+            else {
+                $(".BackbtntopButtom").removeAttr("onclick");
+                $(".BackbtntopButtom").addClass("linknotallowed");
+            }
+            if (parseInt('@Model.CampaignAsignedLastcountByStatecode') > 0) {
+                $(".Skiplinktopbuttom").removeClass("linknotallowed");
+                $(".Nextbtntopbuttom").removeClass("linknotallowed");
+            }
+            else {
+                $(".Skiplinktopbuttom").removeAttr("onclick");
+                $(".Skiplinktopbuttom").addClass("linknotallowed");
+                $(".Nextbtntopbuttom").removeAttr("onclick");
+                $(".Nextbtntopbuttom").addClass("linknotallowed");
+            }
+        }*@
+        $('#Recentactivitylist').dataTable({
+            "paging": false,
+            "bFilter": false,
+            "bInfo": false,
+            "order": [[1, "desc"]],
+            "language": {
+                "emptyTable": "No Records Found"
+            }
+        });
+        $("#FollowupDate").datetimepicker({ format: 'MM/DD/YYYY', minDate: moment() });
+
+        if ('@followDateModel'.length > 0) {
+            $("#FollowupDate").val('@followDateModel');
+        }
+
+        $('#FollowupTime').datetimepicker({
+            format: 'hh:mm a'
+        });
+        if ('@Model.MethodeofContract' == 'CallBack') {
+            $("#CallBack").prop("checked", true);
+        }
+        else if ('@Model.MethodeofContract' == 'LeftVM') {
+            $("#LeftVm").prop("checked", true);
+        }
+        else if ('@Model.MethodeofContract' == 'InvoiceSent') {
+            $("#InvoiceSent").prop("checked", true);
+        }
+        else if ('@Model.MethodeofContract' == 'NotInterested') {
+            $("#NotInterested").prop("checked", true);
+        }
+        else if ('@Model.MethodeofContract' == 'DoNotContact') {
+            $("#DoNotContact").prop("checked", true);
+        }
+        if ('@Model.TypeOfCall' == 'Spoke') {
+            $("#Spoke").prop("checked", true);
+        }
+        else if ('@Model.TypeOfCall' == 'VoiceMail') {
+            $("#VoiceMail").prop("checked", true);
+        }
+
+        functionMethodofContract();
+        Dontdisturb();
+        functionIsFollowRequired();
+        //functionTypeofcall();
+        @*if ('@Model.MethodeofContract' == "Mail") {
+            $(".spoketohide").hide();
+        }*@
+
+    });
+
+    $('#CreateCommunication').validate({
+        rules: {
+            Spoketo: {
+                required: true
+                //    function () {
+                //    if ($("#Spoke").is(":checked")) {
+                //        return true;
+                //    }
+                //    else {
+                //        return false;
+                //    }
+                //}
+            },
+            Reason: {
+                required: function () {
+                    if ($('#DonotContactagain').is(":checked")) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            },
+            FollowupDate: {
+                required: function () {
+                    if ($('#IsFollowRequired').is(":checked")) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            },
+
+            FollowupTime: {
+                required: function () {
+                    if ($('#IsFollowRequired').is(":checked")) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            },
+            OtherReason: {
+                required: function () {
+                    if ($('#Reason').val() == "Other") {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            }
+
+        },
+        messages: {
+            Spoketo: {
+                required: "Please enter Spoke To"
+            },
+            Reason: {
+                required: "Please select  Reason"
+            },
+            FollowupDate: {
+                required: "select  Followup Date"
+            },
+            FollowupTime: {
+                required: "Please select  Followup Time"
+            },
+            OtherReason: {
+                required: "Please enter  Other Reason",
+            }
+        }
+    });
+
+    function functionMethodofContract() {
+        var Communicationtype = $("input:radio[name='Communicationtype']:checked").val();
+        if (Communicationtype == "CallBack") {
+            $(".Phonehide").show();
+            $(".spoketohide").show();
+            $("#hdnMethodofContract").val("CallBack");
+        }
+        else if (Communicationtype == "LeftVM") {
+            $(".Phonehide").hide();
+            $("#hdnMethodofContract").val("LeftVM");
+            $(".spoketohide").show();
+        }
+        else if (Communicationtype == "InvoiceSent") {
+            $(".Phonehide").hide();
+            $("#hdnMethodofContract").val("InvoiceSent");
+            $(".spoketohide").show();
+        }
+        else if (Communicationtype == "NotInterested") {
+            $(".Phonehide").hide();
+            $("#hdnMethodofContract").val("NotInterested");
+            $(".spoketohide").show();
+        }
+        else if (Communicationtype == "DoNotContact") {
+            $(".Phonehide").hide();
+            $("#hdnMethodofContract").val("DoNotContact");
+            $(".spoketohide").show();
+        }
+    }
+    function functionTypeofcall() {
+        var TypeofCall = $("input:radio[name='IsSpokeorVoicemail']:checked").val();
+        if (TypeofCall == "Spoke") {
+
+            $("#hdnTypeofCall").val("Spoke");
+            $(".spoketohide").show();
+        }
+        else {
+            $("#hdnTypeofCall").val("VoiceMail");
+            $(".spoketohide").hide();
+        }
+    }
+    function Dontdisturb() {
+        if ($("#DonotContactagain").is(':checked')) {
+            $("#hdnDonotContactagain").val(true);
+            $(".hidereason").show();
+        }
+        else {
+            $("#hdnDonotContactagain").val(false);
+            $(".hidereason").hide();
+        }
+    }
+
+    function functionIsFollowRequired() {
+        if ($("#IsFollowRequired").is(':checked')) {
+            $("#hdnIsFollowRequired").val(true);
+            $(".hidedatetime").show();
+        }
+        else {
+            $("#hdnIsFollowRequired").val(false);
+            $(".hidedatetime").hide();
+        }
+
+    }
+    function SaveCommunication() {
+        $("#btnSaveComm").attr("disabled", "disabled");
+        if ($('#CreateCommunication').valid()) {
+            $("#savespinner").show();
+            $.post("/Campaign/_Communication", $("#CreateCommunication").serialize(), function (data) {
+                if (data) {
+                    $("#btnSaveComm").attr("disabled", false);
+                    $("#savespinner").hide();
+                    if (data.CampaignLeadActivityId != 0) {
+                        $("#CampaignLeadActivityId").val(data.CampaignLeadActivityId)
+                    }
+                    if (data.Result) {
+                        if ('@Model' != null && '@Model.CampaignLeadActivityId' > 0) {
+                            toastr.success("Communication updated successfully!");
+                        }
+                        else {
+                            toastr.success("Communication Created successfully!");
+                        }
+                        var id = '@Model.CampaignDetailId';
+                        var id2 = '@Model.SupportUserId';
+                        var StateCode = '@Model.StateCode';
+                        var Timezone = '@Model.LeadTimeZone';
+                        var id5 = $("#isSkipped").val();
+                        $.ajax({
+                            type: "GET",
+                            url: "/Campaign/_Communication",
+                            data: {
+                                id: id,
+                                id2: id2,
+                                id3: StateCode,
+                                timeZone: Timezone,
+                                id4: $("#CampaignAssignedDetailsId").val(),
+                                id5: $("#isSkipped").val()
+                            },
+                            success: function (result) {
+                                $("#divCommunication").html(result);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        else {
+            $("#btnSaveComm").attr("disabled", false);
+        }
+    }
+    function SaveNextCommunication() {
+        $("#btnSaveAndNext").attr("disabled", "disabled");
+        if ($('#CreateCommunication').valid()) {
+            $("#savenextspinner").show();
+            $("#IsSaveNext").val(true);
+            $.post("/Campaign/_Communication", $("#CreateCommunication").serialize(), function (data) {
+                $("#savenextspinner").hide();
+                if (data.Result) {
+                    toastr.success("Communication Created successfully!");
+                    $("#btnSaveAndNext").attr("disabled", false);
+                    Skip();
+                }
+            });
+        }
+        else {
+            $("#btnSaveAndNext").attr("disabled", false);
+        }
+    }
+    function Back() {
+        var CampaignDetailId = '@Model.CampaignDetailId';
+        var SupportUserId = '@Model.SupportUserId';
+        var StateCode = '@Model.StateCode';
+        var currentLeadId = '@Model.CampaignAssignDetailId';
+        //if (StateCode != null && StateCode != " ") {
+        $.ajax({
+            type: "Post",
+            url: "/Campaign/_LeadDetailsPrevoiusAndNextbyStatecode",
+            data: { id: CampaignDetailId, id2: SupportUserId, stateCode: StateCode, Callfrom: "Back", currentLeadId: currentLeadId, id5: $("#isSkipped").val() },
+            success: function (result) {
+                Reload();
+            }
+        });
+        //}
+        //else {
+        //    $.ajax({
+        //        type: "Post",
+        //        url: "/Campaign/_LeadDetailsBackSkip",
+        //        data: { id: CampaignDetailId, id2: SupportUserId, Callfrom: "Back",id5: $("#isSkipped").val() },
+        //        success: function (result) {
+        //            Reload();
+        //        }
+        //    });
+        //}
+    }
+    function Skip() {
+        var CampaignDetailId = '@Model.CampaignDetailId';
+        var SupportUserId = '@Model.SupportUserId';
+        var StateCode = '@Model.StateCode';
+        var currentLeadId = '@Model.CampaignAssignDetailId';
+        //if (StateCode != null && StateCode != " ") {
+        $.ajax({
+            type: "Post",
+            url: "/Campaign/_LeadDetailsPrevoiusAndNextbyStatecode",
+            data: { id: CampaignDetailId, id2: SupportUserId, stateCode: StateCode, Callfrom: "Skip", currentLeadId: currentLeadId, id5: $("#isSkipped").val() },
+            success: function (result) {
+                Reload();
+            }
+        });
+        //}
+        //else {
+        //    $.ajax({
+        //        type: "Post",
+        //        url: "/Campaign/_LeadDetailsBackSkip",
+        //        data: { id: CampaignDetailId, id2: SupportUserId, Callfrom: "Skip",id5: $("#isSkipped").val() },
+        //        success: function (result) {
+        //            Reload();
+        //        }
+        //    });
+        //}
+    }
+    function Reload() {
+        var id = '@Model.CampaignDetailId';
+        var id2 = '@Model.SupportUserId';
+        var StateCode = '@Model.StateCode';
+        location.href = "/Campaign/ViewCampaignLeads/" + id + "/" + id2 + "/" + StateCode + "?id5=" + $("#isSkipped").val();
+    }
+    function changeLeadStatus(id) {
+        var campaignLeadActivityId = id;
+        var leadStatus = $("#" + campaignLeadActivityId).val();
+        $.ajax({
+            type: "Post",
+            url: "/Campaign/_LeadStatus",
+            data: { id: campaignLeadActivityId, id2: leadStatus },
+            success: function (result) {
+                if (result) {
+                    if (leadStatus == "Resolved") {
+                        toastr.success("Activity " + leadStatus + " Successfully!");
+                    }
+                    else {
+                        toastr.success("Activity " + "Opened" + " Successfully!");
+                    }
+                }
+                @*var id = '@Model.CampaignDetailId';
+                var id2 = '@Model.SupportUserId';
+                $("#PreviousActivityTab").html('');
+                $("#PreviousActivityTab").load("/Campaign/_PreviousActivitydetails/" + id + "/" + id2)*@
+            }
+        });
+    }
+
+    OnchangeReason();
+
+    function OnchangeReason() {
+        if ($("#Reason").val() == "Other") {
+            $("#tdOtherReason").show();
+        }
+        else {
+            $("#tdOtherReason").hide();
+        }
+    }
+
+    $("#Spoketo").focusout(function () {
+        $("#Comments").focus();
+        return false;
+    });
+
+    function LoadCommunication(leadActivityId) {
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/_Communication",
+            data: {
+                id: '@Model.CampaignDetailId',
+                id2: '@Model.SupportUserId',
+                id3: $("#StateCode").val(),
+                timeZone: $("#Timezone").val(),
+                id4: '@Model.CampaignAssignDetailId',
+                id5: $("#isSkipped").val(),
+                id6: leadActivityId
+            },
+            success: function (result) {
+                $("#divCommunication").html(result);
+            }
+        });
+    }
+
+
+
+</script>

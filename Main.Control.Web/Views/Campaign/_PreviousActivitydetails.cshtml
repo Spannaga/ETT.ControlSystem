@@ -1,0 +1,215 @@
+﻿@using Main.Control.Core.Models
+@model Main.Control.Core.Models.LeadCommunication
+@using Main.Control.Web.Utilities
+@if (Model != null)
+{
+    <div class="selectionBg">
+        @if (Model != null && Model.LeadCommunicationLst != null)
+        {
+            <div class="table-responsive">
+                <table style="width: 100%" class="table table-bordered table_design" id="Previousactivitylist">
+                    <thead>
+                        <tr>
+                            <th class="dash_table_head">
+                                Info
+                            </th>
+                            <th class="dash_table_head">
+                                Date/Time
+                            </th>
+                            <th class="dash_table_head">
+                                Mode
+                            </th>
+                            <th class="dash_table_head">
+                                Follow Up Date/Time
+                            </th>
+                            <th class="dash_table_head">
+                                Support
+                            </th>
+                            <th class="dash_table_head">
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var PreviousActivity in Model.LeadCommunicationLst)
+                        {
+                            string precurrentDate = (PreviousActivity.CreatedDate != DateTime.MinValue && PreviousActivity.CreatedDate != null ? PreviousActivity.CreatedDate.ToString() : "-");
+                            string prefollowDate = (PreviousActivity.FollowupDate != DateTime.MinValue && PreviousActivity.FollowupDate != null ? Utility.GetDateTime(PreviousActivity.FollowupDate).ToShortDateString() : "-");
+                            string prefollowtime = (PreviousActivity.FollowupTime != null ? Utility.GetDateTime(PreviousActivity.FollowupTime).ToShortTimeString() : "");
+                            string prefollowDatetime = prefollowDate + " " + prefollowtime;
+                            <tr id="tr_@PreviousActivity.CampaignLeadActivityId">
+                                <td>
+                                    @if (Model.LeadCommunicationLst != null && Model.LeadCommunicationLst.Any())
+                                    {
+                                        <a style="cursor:pointer" class="business_drop" onclick="showComments(@PreviousActivity.CampaignLeadActivityId)">
+                                            <i id="icon_@PreviousActivity.CampaignLeadActivityId" onclick="" class="fa BaseDrop fa-chevron-circle-down"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td class="noWrap" style="width: 20%;">@precurrentDate</td>
+                                <td>
+                                    @if (PreviousActivity.MethodOfContact == MethodOfContact.Mail)
+                                    {
+
+                                        <span>Email</span>
+                                    }
+                                    else if (PreviousActivity.MethodOfContact == MethodOfContact.Phone)
+                                    {
+                                        <span>Phone</span>
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                            </td>
+                            <td style="width: 20%;">@prefollowDate</td>
+                            <td>@(PreviousActivity.SupportUserName != null ? PreviousActivity.SupportUserName.ToString() : "-")</td>
+                            <td>
+                                @if (PreviousActivity.IsFollowRequired)
+                                {
+                                    @Html.DropDownListFor(x => PreviousActivity.LeadStatus, new List<SelectListItem>
+                          {
+                        new SelectListItem() {Text = LeadStatusflag.Pending.ToString(), Value=LeadStatusflag.Pending.ToString(), Selected = PreviousActivity.LeadStatus == LeadStatusflag.Pending.ToString()},
+                        new SelectListItem() {Text = LeadStatusflag.Resolved.ToString(), Value=LeadStatusflag.Resolved.ToString(), Selected = PreviousActivity.LeadStatus == LeadStatusflag.Resolved.ToString()}
+                         }, new { @id = PreviousActivity.CampaignLeadActivityId, @onchange = "changeLeadStatus(this.id);" });
+                                }
+                                else
+                                {
+                                    @(PreviousActivity.LeadStatus != null ? PreviousActivity.LeadStatus.ToString() : "-")
+
+                                }
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            if (Model != null && Model.LeadCommunicationLst != null && Model.LeadCommunicationLst.Count > 0)
+            {
+                foreach (var assigned in Model.LeadCommunicationLst)
+                {
+                    <div id="div_@assigned.CampaignLeadActivityId" style="display:none" class="collapseborder">
+                        <table class="collapseborder" id="tbl_">
+                            <tr>
+                                <td>
+                                    <div class="row">
+                                        <div class="spacer10"></div>
+                                        @if (!string.IsNullOrWhiteSpace(assigned.Comments))
+                                        {
+                                            <div class="col-md-12">
+                                                <div class="labelText pBot5">Comments: </div>
+                                                <div class="cmt_text">@assigned.Comments</div>
+                                            </div>
+                                        }
+                                        
+
+                                        @if (assigned.DonotContactagain)
+                                        {
+                                            <div class="clearfix"></div>
+                                            <div class="spacer10"></div>
+                                            <div class="col-md-6">
+                                                <span class="labelText">
+                                                    Do not Contact again:
+                                                    <span class="labelvalue">Yes</span>
+                                                </span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <span class="labelText">Reason:<span class="labelvalue">@assigned.Reason</span> </span>
+                                            </div>
+                                        }
+                                        <div class="clearfix"></div>
+                                        <div class="spacer10"></div>
+                                        <div class="col-md-6">
+                                            <span class="labelText">
+                                                <span>Campaign Name: <span class="labelvalue">@assigned.CampaignName</span></span>
+                                            </span>
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span class="labelText">
+                                                @*@if (assigned.MethodOfContact == MethodOfContact.Phone)
+                                                {
+                                                    <span>Spoke To: <span class="labelvalue"><i class="fa fa-user"></i> @assigned.Spoketo</span></span>
+                                                }*@
+
+                                                @if (assigned.MethodOfContact == MethodOfContact.Phone)
+                                                {
+                                                    if (assigned.TypeofCall == TypeofCall.Spoke)
+                                                    {
+                                                        <span class="labelvalue"><i class="fa fa-phone"></i> @assigned.MethodOfContact.ToString()</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="labelvalue"><i class="fa fa-phone"></i> @assigned.MethodOfContact.ToString()</span><span class="labelvalue">(Voice Mail)</span>
+                                                    }
+
+                                                }
+                                                else if (assigned.MethodOfContact == MethodOfContact.Mail)
+                                                {
+                                                    <span class="labelvalue"><i class="fa fa-envelope" aria-hidden="true"></i> Email</span>
+                                                }
+
+                                            </span>
+
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <span class="labelText">
+                                                @if (assigned.MethodOfContact == MethodOfContact.Phone)
+                                                {
+                                                    if (assigned.TypeofCall == TypeofCall.Spoke)
+                                                    {                                                        
+                                                        <span>Spoke To: <span class="labelvalue"><i class="fa fa-user"></i> @assigned.Spoketo.ToString()</span></span>
+                                                    }
+                                                }
+                                            </span>
+
+                                        </div>
+
+
+
+                                        <div class="clearfix"></div>
+                                        <div class="spacer5"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                }
+            }
+        }
+    </div>
+    <script lang="javascript" type="text/javascript">
+        var table;
+        $(function () {
+            table = $('#Previousactivitylist').DataTable(
+               {
+                   "iDisplayLength": 10
+               });
+
+        });
+        function showComments(id) {
+            debugger
+            var trId = "#tr_" + id
+            var tr = $(trId);
+            var row = table.row(tr);
+            var iconTag = "#icon_" + id;
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+                $(iconTag).removeClass('fa-chevron-circle-up').addClass('fa-chevron-circle-down')
+            }
+            else {
+                // Open this row
+                var id = "#div_" + id.toString()
+                if ($(id).html() != null && $(id).html() != undefined) {
+                    row.child($(id).html()).show();
+                    tr.addClass('shown');
+                    $(iconTag).removeClass('fa-chevron-circle-down').addClass('fa-chevron-circle-up')
+                    $(".collapseborder").parents('td').css("padding", "0px 2px 0 0");
+                }
+            }
+        }
+    </script>
+}

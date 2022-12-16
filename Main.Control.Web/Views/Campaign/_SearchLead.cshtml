@@ -1,0 +1,186 @@
+﻿@{
+    Layout = null;
+}
+
+@using (Html.BeginForm("_SearchLead", "Campaign", FormMethod.Post, new { id = "SearchLeadForm", enctype = "multipart/form-data" }))
+{
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"></button>
+        <h4 class="modal-title">Search Lead</h4>
+    </div>
+    <div class="modal-body">
+        <div class="codeIcon" style="min-height: 100px;">
+            <div class="responsive ">
+                <div class="clear"></div>
+                <div style="overflow: auto;">
+                    <table class="responsive">
+                        <tr>
+                            <td colspan="4" class="spacer20"></td>
+                        </tr>
+                        <tr id="rowTimeZone">
+                            <td class="labelName">
+                                <span class="red">*</span>Search Using:
+                            </td>
+                            <td class="fieldName">
+                                @Html.DropDownList("SearchUsing",
+                         new[]
+                         {
+                              new SelectListItem
+                             {
+                             Text = "Select Search Type",
+                             Value = ""
+                             },
+                             new SelectListItem
+                             {
+                             Text = "Phone",
+                             Value = "Phone"
+                             },
+                                new SelectListItem
+                                {
+                                        Text = "Email",
+                                        Value = "Email"
+                                },
+                               new SelectListItem
+                                 {
+                                         Text = "Name",
+                                         Value =  "Name"
+                                 },
+                             new SelectListItem
+                                 {
+                                         Text = "Business Name",
+                                         Value = "BusinessName"
+                                 }
+
+                        }, new { id = "ddlSearchUsing", @onchange = "PhoneMask();", @style = "width:200px;", @tabindex = "121" })
+                            </td>
+                            <td class="labelName">
+                                <span class="red">*</span><span id="lblvalue">Value</span>:
+                            </td>
+                            <td class="fieldName" style="width: 365px;">
+                                @Html.TextBox("SearchValue", null, new { @id = "txtSearchValue", @tabindex = "122" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="spacer25"></td>
+                        </tr>
+                        <tr>
+                            <td class="taC" colspan="4">
+                                <button class="btn btn-cancel" type="reset" onclick="Clear()" tabindex="123">
+                                    Clear <i id="ClearLeadSpinner" style="display: none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i>
+                                </button>
+                                <a class="btn btn-primary" href="javascript:void(0);" onclick="LeadSearch()" tabindex="124">
+                                    Search <i id="ShowLeadSpinner" style="display: none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="clearfix"></div>
+                    <div id="divLeadList">
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<script type="text/javascript">
+
+    var supportUserId = '@(Session[Main.Control.Utilities.Infrastructure.SessionItemKey.AdminUserId])'
+    $(function () {
+        PhoneMask();
+        $('#SearchLeadForm').validate({
+            ignore: ":not(:visible)",
+            debug: true,
+            rules: {
+                SearchUsing: {
+                    required: true
+                },
+                SearchValue: {
+                    required: true,
+                    email: {
+                        depends: function (element) {
+                            if ($("#ddlSearchUsing").val() == "Email") {
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            },
+            messages: {
+                SearchUsing: { required: "Please select search type" },
+                SearchValue: {
+                    required: function (element) {
+                        if ($("#ddlSearchUsing").val() == "Email") {
+                            return "Enter email address"
+                        }
+                        else if ($("#ddlSearchUsing").val() == "Phone") {
+                            return "Enter phone number"
+                        }
+                        else if ($("#ddlSearchUsing").val() == "Name") {
+                            return "Enter name"
+                        }
+                        else if ($("#ddlSearchUsing").val() == "BusinessName") {
+                            return "Enter business name"
+                        }
+                        else {
+                            return "Enter search value"
+                        }
+                    }
+                }
+            }
+
+        });
+
+        $("form").bind("keypress", function (e) {
+            if (e.keyCode == 13) {
+                LeadSearch();
+            }
+        });
+    });
+    function LeadSearch() {
+        if ($('#SearchLeadForm').valid()) {
+            $("#ShowLeadSpinner").show();
+            var searchUsing = $("#ddlSearchUsing option:selected").val();
+            var searchValue = $("#txtSearchValue").val();
+            $("#divLeadList").load("/Campaign/_ViewLeadList/?id=" + searchUsing + "&id2=" + encodeURIComponent(searchValue));
+        }
+    }
+    function PhoneMask() {
+        $('label[for="txtSearchValue"]').hide();
+        $("#txtSearchValue").val("");
+        if ($("#ddlSearchUsing").val() == "Phone") {
+            $("#txtSearchValue").mask("(999) 999-9999");
+            $("#lblvalue").text("Phone Number");
+        }
+        else if ($("#ddlSearchUsing").val() == "Email") {
+            $("#lblvalue").text("Email");
+            $("#txtSearchValue").unmask("(999) 999-9999");
+        }
+        else if ($("#ddlSearchUsing").val() == "Name") {
+            $("#lblvalue").text("Name");
+            $("#txtSearchValue").unmask("(999) 999-9999");
+        }
+        else if ($("#ddlSearchUsing").val() == "BusinessName") {
+            $("#lblvalue").text("Business Name");
+            $("#txtSearchValue").unmask("(999) 999-9999");
+        }
+        else {
+            $("#lblvalue").text("Value");
+            $("#txtSearchValue").unmask("(999) 999-9999");
+        }
+    }
+    function Clear() {
+        var validator = $("#SearchLeadForm").validate();
+        validator.resetForm();
+        $("#divLeadList").html('');
+        $("#lblvalue").text("Value");
+        $("#txtSearchValue").unmask("(999) 999-9999");
+    }
+</script>

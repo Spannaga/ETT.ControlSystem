@@ -1,0 +1,287 @@
+﻿@{
+    var isLive = Main.Control.Web.Utilities.Utility.GetAppSettings("IsTextLive").ToLower().ToString();
+    
+    var mobileNumber = Main.Control.Web.Utilities.Utility.GetMobileNumberFromSession();
+
+    if (!string.IsNullOrEmpty(mobileNumber))
+    {
+        mobileNumber = mobileNumber.Replace("+91", "");
+    }
+}
+
+           
+<div class="modal-header">
+    @*<button type="button" class="close" data-dismiss="modal">&times;</button>*@
+    <h4 class="modal-title">Mobile Verification</h4>
+</div>
+<div class="modal-body">
+    <div class="codeIcon">
+        <div id="divMobileVerification">
+            @if (isLive == "true")
+                {
+                <p>
+                    A verification code has been sent to your cell (@mobileNumber).
+                    </p>
+                }
+                else
+                {
+                <p>
+                    A verification code has been sent to your email.
+                    </p>
+                }
+            <div class="example-wrap" id="divVerificationCode">
+                <div class="col-sm-12 col-lg-12 noPad">
+                    <div class="form-group mTop10">
+                        <div class=" label_name taL">Enter verification code</div>
+                        <div class="">
+                            @Html.TextBox("txtVerificationCode", "", new { @class = "codeField", @maxlength = "4" }) <button type="button" class="btn-orange btn-size" id="btnVerifyCode" onclick="VerifyCode()">
+                                <i id="divVerifyCode" style="display:none;" class="floatL mTop4 fa fa-spinner fa-spin mRight10"></i>
+                                Verify
+                            </button>
+                            <div id="lblVerifyCode" class="pos_rel errorBg" style="display:none;"></div>
+                        </div>
+                        <div class="spacer10"></div>
+                        <div class="clear smallText">
+                            <span id="divResendVerificationCode">If you have not received the code, <a href="javascript:void(0);" onclick="ReSendVerificationCode()"> click here </a> to resend.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="spacer10"></div>
+        <div class="spacer10"></div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(function () {
+        $.ajaxSetup({ cache: false });
+        $('#divVerificationCode input[type="text"]').keypress(function (e) {
+            var key = e.which;
+            if (key == 13)  // the enter key code
+            {
+                VerifyCode();
+            }
+        });
+    })
+
+    function SendVerificationCode() {
+
+            $.ajax({
+                url: '/Admin/SendVerificationCode',
+                type: "POST",
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader("X-Robots-Tag", "noindex, nofollow");
+                },
+            data: { MobileNumber: "" },
+                success: function (data) {
+                    if (data.UniqueId != null && data.UniqueId != "") {
+                        $("#hdnUniqueId").val(data.UniqueId);
+                        $("#hdnSenderNumber").val(data.SenderNumber);
+                        CheckMessageStatus();
+                    }
+                }
+            });
+    }
+
+    function VerifyCode() {
+        if ($("#txtVerificationCode").val().length > 0) {
+            $("#btnVerifyCode").attr("disabled", "disabled");
+            $("#divVerifyCode").show();
+            $.ajax({
+                url: '/Admin/VerifyCode',
+                type: "POST",
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader("X-Robots-Tag", "noindex, nofollow");
+                },
+                data: { VerificationCode: $("#txtVerificationCode").val(), ProductName: $("#hdnproductName").val() },
+                success: function (data) {
+                    $("#btnVerifyCode").removeAttr("disabled");
+                    if (data != null && data != false) {
+                        location.href = data;
+                    }
+                    else {
+
+                        $('#lblVerifyCode').html('<label id="Label2New" class="error">Invalid Verification code</label>');
+                        $('#lblVerifyCode').show();
+                        setTimeout(function () {
+                            $("#lblVerifyCode").fadeOut();
+                        }, 5000);
+
+                        $("#divVerifyCode").hide();
+                    }
+
+                }
+            });
+        }
+        else {
+
+            $('#lblVerifyCode').html('<label id="Label2New" class="error">Please enter verification code</label>');
+            $('#lblVerifyCode').show();
+            setTimeout(function () {
+                $("#lblVerifyCode").fadeOut();
+            }, 5000);
+
+
+            $("#divVerifyCode").hide();
+        }
+    }
+
+
+    function CheckMessageStatus() {
+        var status = false;
+        dbHitCount = dbHitCount + 1;
+
+        if (dbHitCount <= 3) {
+            $.ajax({
+                url: '/Admin/GetVerificationCodeByUniqueId',
+                data: { uniqueId: $("#hdnUniqueId").val() },
+                success: function (data) {
+                    if (data != null && data != "") {
+                        if ('@isLive' == 'true') {
+                            $('#divSuccess').html('Verification code has been sent to your cell');
+                        }
+                        else {
+                            $('#divSuccess').html('Verification code has been sent to your email');
+                        }
+                        
+                        $('#divSuccess').show();
+                        setTimeout(function () {
+                            $("#divSuccess").fadeOut();
+                        }, 5000);
+                        clearTimeout(CheckMessageStatus);
+                        status = true;
+                    } else {
+                        setTimeout(CheckMessageStatus, 5000);
+                    }
+                }
+            });
+
+        }
+        else {
+            dbHitCount = 0;
+            if ('@isLive' == 'true') {
+                $('#divSuccess').html('Verification code has been sent to your cell');
+            }
+            else {
+                $('#divSuccess').html('Verification code has been sent to your email');
+            }
+            $('#divSuccess').show();
+            setTimeout(function () {
+                $("#divSuccess").fadeOut();
+            }, 5000);
+        }
+    }
+
+
+    function ReSendVerificationCode() {
+        if (ResendCount <= 5) {
+          
+                $("#divResendVerificationCode").show();
+                $.ajax({
+                    url: '/Admin/SendVerificationCode',
+                    type: "POST",
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader("X-Robots-Tag", "noindex, nofollow");
+                    },
+                data: { MobileNumber: "" },
+                    success: function (data) {
+                        if (data.UniqueId != null && data.UniqueId != "") {
+                            $("#hdnUniqueId").val(data.UniqueId);
+                            $("#hdnSenderNumber").val(data.SenderNumber);
+                            ResendCount = ResendCount + 1;
+                            CheckResendMessageStatus();
+                        }
+                        else if (data != null && data.OperationStatus == "Success") {
+
+                            ResendCount = ResendCount + 1;
+                            if ('@isLive' == 'true') {
+                                $('#divSuccess').html('Verification code has been sent to your cell');
+                            }
+                            else {
+                                $('#divSuccess').html('Verification code has been sent to your email');
+                            }
+                            $('#divSuccess').show();
+                            setTimeout(function () {
+                                $("#divSuccess").fadeOut();
+                            }, 5000);
+
+                            if (parseInt(ResendCount) >= 5) {
+                                $("#divResendVerificationCode").hide();
+                            }
+                        }
+                    }
+                });
+        }
+        else {
+            ResendCount = 0;
+            $("#divResendVerificationCode").hide();
+        }
+    }
+
+    function CheckResendMessageStatus() {
+        var status = false;
+        dbHitCount = dbHitCount + 1;
+
+        if (dbHitCount <= 3) {
+            $.ajax({
+                url: '/Admin/GetVerificationCodeByUniqueId',
+                data: { uniqueId: $("#hdnUniqueId").val() },
+                success: function (data) {
+                    if (data != null && data != "") {
+                        if ('@isLive' == 'true') {
+                            $('#divSuccess').html('Verification code has been sent to your cell');
+                        }
+                        else {
+                            $('#divSuccess').html('Verification code has been sent to your email');
+                        }
+                        $('#divSuccess').show();
+                        setTimeout(function () {
+                            $("#divSuccess").fadeOut();
+                        }, 5000);
+
+                        clearTimeout(CheckResendMessageStatus);
+                        status = true;
+
+                        if (parseInt(ResendCount) >= 5) {
+                            $("#divResendVerificationCode").hide();
+                        }
+
+                    } else {
+                        setTimeout(CheckResendMessageStatus, 5000);
+                    }
+                }
+            });
+
+        }
+        else {
+            dbHitCount = 0;
+            $("#txtMobileNumber").removeAttr('ReadOnly');
+            $("#divVerificationCode").show();
+            $("#divResendVerificationCode").show();
+
+            if ('@isLive' == 'true') {
+                $('#divSuccess').html('Verification code has been sent to your cell');
+            }
+            else {
+                $('#divSuccess').html('Verification code has been sent to your email');
+            }
+            $('#divSuccess').show();
+            setTimeout(function () {
+                $("#divSuccess").fadeOut();
+            }, 5000);
+
+            if (parseInt(ResendCount) >= 5) {
+                $("#divResendVerificationCode").hide();
+            }
+        }
+    }
+
+
+</script>

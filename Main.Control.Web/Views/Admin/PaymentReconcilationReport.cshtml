@@ -1,0 +1,153 @@
+﻿@using Main.Control.Core.Models
+@{
+    ViewBag.Title = "Payment Reconciliation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var spanProducts = ViewData["SpanProducts"]!= null ? ViewData["SpanProducts"] as List<SpanProducts>: new List<SpanProducts>();
+    var beginDate = ViewData["BeginDate"];
+}
+
+@using (Html.BeginForm("PaymentReconcilationReport", "Admin", FormMethod.Get, new { id = "Filterform" }))
+{
+    <div class="page-header" style="box-shadow: none; border-color: rgb(218, 218, 218);">
+        <div class="page-head">
+            <h2 class="floatL">
+                Payment Reconciliation Report
+            </h2>
+        </div>
+    </div>
+
+    <div class="">
+        <table id="tblDaterange" class="inlineblocktble w-auto mx-auto">
+            <tr>
+                <td class="labelName w-auto">
+                    Pick a product:
+                </td>
+                <td class="fieldName mRight25">
+                    @Html.DropDownList("Products", new SelectList(spanProducts, "ProductId", "ProductName"))
+                </td>
+                <td class="labelName w-auto">
+                     Date:
+                </td>
+                <td class="fieldName mRight25">
+                    @Html.TextBox("BeginDate", null, new { id = "BeginDate", name = "BeginDate", @onchange = "ValidateFromDate();", @placeholder = "mm/dd/yyyy", @class = "NFollowUpDateTime" })
+                </td>
+                @*<td class="labelName">
+                    To Date:
+                </td>
+                <td class="fieldName">
+                    @Html.TextBox("EndDate", null, new { id = "EndDate", name = "EndDate", @onchange = "ValidateToDate();", @placeholder = "mm/dd/yyyy", @class = "NFollowUpDateTime" })
+                </td>*@
+                <td class="mLeft10  headerBtn">
+                    <a href="javascript:void(0);" onclick="GetRecords();" class="floatR viewBtn viewBtn_fw getRecBt_md" title="Get Records">Get Records</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+}
+<div class="spacer15"></div>
+<div class="dashWidget report2290">
+    <div id="LoadData" class="taC" style="display:none;">
+    </div>
+</div>
+<script class="text/javascript">
+    var _fromdate = '@(ViewData["BeginDate"] != null && !string.IsNullOrWhiteSpace(ViewData["BeginDate"].ToString()) ? ViewData["BeginDate"] : "")';
+    var _todate = '@(ViewData["EndDate"] != null && !string.IsNullOrWhiteSpace(ViewData["EndDate"].ToString()) ? ViewData["EndDate"] : "")';
+    $(function () {
+        
+        $("#ReportMenulst").addClass("active");
+        $('#begindate').mask('99/99/9999');
+        $('#enddate').mask('99/99/9999');
+        jQuery.validator.addMethod("CheckDate", function (value, element) {
+            var _FromDate = new Date($('#begindate').val());
+            var _ToDate = new Date($('#txtToDate').val());
+            if (_FromDate <= _ToDate) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+        var form = $('#Filterform').get(0);
+        $.removeData(form, 'validator');
+        $("#Filterform").validate({
+            rules: {
+                begindate: {
+                    required: true
+                },
+                txtToDate: {
+                    required: true,
+                    CheckDate: true
+                }
+            },
+            messages: {
+                begindate: {
+                    required: "From Date Should Not Be Empty"
+                },
+                txtToDate: {
+                    required: "To Date Should Not Be Empty",
+                    CheckDate: "End date should be greater than start date."
+                }
+            }
+        });
+
+        $('#BeginDate').datepicker({
+            changeYear: true,
+            minDate: new Date(2009, 1 - 1, 1),
+            maxDate: '0',
+            changeYear: true,
+            changeMonth: true,
+            endDate: "today",
+            autoclose: true,
+            onSelect: function (selected) {
+                //if (selected.length <= 0) {
+                //     // selected is empty
+                //    $("#EndDate").datepicker('disable')
+                //}
+                //else {
+                //    $("#EndDate").datepicker('enable');
+                //}
+                $('#EndDate').datepicker("option", "minDate", selected)
+            }
+        });
+        $('#EndDate').datepicker({
+            changeYear: true,
+            maxDate: '0',
+            changeYear: true,
+            changeMonth: true,
+            endDate: "today",
+            autoclose: true,
+            onSelect: function (selected) {
+                $('#BeginDate').datepicker("option", "maxDate", selected)
+            }
+        });
+        $("#BeginDate").val(_fromdate);
+        $("#EndDate").val(_todate);
+        GetRecords();
+    });
+    function ValidateToDate() {
+        $("#EndDate").valid();
+    }
+
+    function ValidateFromDate() {
+        $("#BeginDate").valid();
+    }
+
+    function GetRecords() {
+        var fromDate = $('#BeginDate').val();
+        var toDate = $('#EndDate').val();
+        var ddlValue = $('#Products').val();
+        if (value == "") {
+            var value = 0;
+        }
+        if ($('#Filterform').valid()) {
+            $('#LoadData').html('<div id="loading" style="z-index: 10;" class="taC"><img src = "/Content/Images/loading.gif"/></div>');
+            $('#LoadData').show();
+            $('#LoadData').load("/Admin/_PaymentReconcilationReport/?id=" + ddlValue + "&id1=" + fromDate /*+ "&id2=" + toDate*/);
+        }
+    }
+</script>
+@section ScriptStyleContent {
+    <link href="@Url.Content("~/Content/mainSite.css")" rel="stylesheet" type="text/css" />
+}
+

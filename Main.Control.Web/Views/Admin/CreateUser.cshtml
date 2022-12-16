@@ -1,0 +1,459 @@
+﻿@model Main.Control.Core.Models.AdminUser
+@using Main.Control.Core.Models
+@{
+    ViewBag.Title = "Create User";
+}
+
+
+<div class="page-header">
+    <div class="page-head">
+        <h2 class="floatL">
+            Create User
+        </h2>
+        @if (!Model.IsNewUser)
+        {
+            <div class="floatR" id="SetPassword">
+                <a href="javascript:void(0);" title="Change Password" name="Set Password" onclick="SetPassword();" class="baseBtn">Change Password</a>
+            </div>
+            <div class="floatR" id="CancelSetPassword">
+                <a href="javascript:void(0);" title="Cancel Change Password" name="Cancel Set Password" class="clearBtn" onclick="CancelSetPassword();">Cancel Change Password</a>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="clear">
+</div>
+<div class=" col-md-12">
+    @using (Html.BeginForm("CreateUser", "Admin", FormMethod.Post, new { id = "createForm", enctype = "multipart/form-data" }))
+    {
+
+        <div class="mainBg">
+            <div class="">
+                <div class="">
+
+                    <table class="responsive">
+                        <tr>
+                            <td colspan="2">
+                                @if (TempData["CreateSuccessMsg"] != null)
+                                {
+                                    <div class="taC pT5">
+                                        <label id="Label1" class="success" style="color: #0000FF">
+                                            @TempData["CreateSuccessMsg"]
+                                        </label>
+                                    </div>
+                                    TempData["CreateSuccessMsg"] = null;
+                                }
+                                <label id="lblSuccess" class="taC success" style="display: none; font-size: medium; background-color: Green;">
+                                </label>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="labelName" style="width:200px;">
+                                <label for="AdminEmailAddress">
+                                    <span class=" red">*</span>Email Address:
+                                </label>
+                            </td>
+                            <td class="fieldName">
+                                @Html.TextBox("AdminEmailAddress", Model != null && Model.AdminEmailAddress != null ? Model.AdminEmailAddress : string.Empty, new { @tabindex = "1", @class = "textfield", size = "40" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="spacer20"></td>
+                        </tr>
+                        <tr>
+                            <td class="labelName" style="width:200px;">
+                                <label for="AlternateAdminEmailAddress">
+                                    Alternate Email Address:
+                                </label>
+                            </td>
+                            <td class="fieldName">
+                                @Html.TextBox("AlternateAdminEmailAddress", Model != null && Model.AlternateAdminEmailAddress != null ? Model.AlternateAdminEmailAddress : string.Empty, new { @tabindex = "1", @class = "textfield", size = "40" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="spacer20"></td>
+                        </tr>
+                        <tr>
+                            <td class="labelName">
+                                <label for="AdminFirstName">
+                                    <span class=" red">*</span>First Name:
+                                </label>
+                            </td>
+                            <td class="fieldName">
+                                @Html.TextBox("AdminFirstName", Model != null && Model.AdminFirstName != null ? Model.AdminFirstName : string.Empty, new { @tabindex = "2", @class = "textfield", size = "40", @onkeyup = "capitalize(this)" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="spacer20"></td>
+                        </tr>
+                        <tr>
+                            <td class="labelName">
+                                <label for="AdminLastName">
+                                    <span class=" red">*</span>Last Name:
+                                </label>
+                            </td>
+                            <td class="fieldName">
+                                @Html.TextBox("AdminLastName", Model != null && Model.AdminLastName != null ? Model.AdminLastName : string.Empty, new { @tabindex = "3", @class = "textfield", size = "40", @onkeyup = "capitalize(this)" })
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="spacer20"></td>
+                        </tr>
+
+                        <tr>
+                            <td class="labelName">
+                                <label for="AdminLastName">
+                                    <span class=" red">*</span>Phone Number:
+                                </label>
+                            </td>
+                            <td class="fieldName">
+                                @Html.TextBox("PhoneNumber", Model != null && Model.PhoneNumber != null ? Model.PhoneNumber : string.Empty, new { @tabindex = "4", @class = "textfield", size = "40", @maxlength = "15" })
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" class="spacer20"></td>
+                        </tr>
+                        <tr>
+                            <td class="labelName">
+                                <label for="AdminLocation">
+                                    <span class=" red">*</span>Location:
+                                </label>
+                            </td>
+                            <td class="fieldName">
+                                @Html.DropDownListFor(x => x.AdminLocation, new List<SelectListItem>
+                          {
+                        new SelectListItem() {Text = "Select Location", Value=""},
+                        new SelectListItem() {Text = "Coimbatore", Value=Location.CBE.ToString()},
+                        new SelectListItem() {Text = "Chennai", Value=Location.CHE.ToString()},
+                        new SelectListItem() {Text = "Erode", Value=Location.ERD.ToString()},
+                        new SelectListItem() {Text = "United States of America", Value=Location.USA.ToString()}
+                         }, new { @tabindex = "5", @onchange = "", @style = "width:199px;" })
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" class="spacer20"></td>
+                        </tr>
+                        <tr>
+                            <td class="labelName">
+                                <label for="VerificationCodType">
+                                    Preferred Verification Method:
+                                </label>
+                            </td>
+                            <td class="fieldName">
+                                @Html.DropDownListFor(x => x.VerificationCodType, new List<SelectListItem>
+                          {
+                               new SelectListItem() {Text = "Authenticator App", Value=VerificationCodeType.AUTHENTICATOR.ToString()},
+                               //new SelectListItem() {Text = "SMS", Value=VerificationCodeType.SMS.ToString()},
+                               //new SelectListItem() {Text = "Email", Value=VerificationCodeType.EMAIL.ToString()}
+
+                         }, new { @tabindex = "5", @onchange = "VerificationCodeType()", @style = "width:199px;" })
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><small class="msgTxt" style="background-color: #fcf8e3; border-color: #faf2cc; color: #8a6d3b; padding: 5px 10px;
+" ><b>Note:</b> SMS and EMAIL Verification option has been disabled</small></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="spacer20"></td>
+                        </tr>
+
+                        @if (Model != null && Model.AdminUserId == 0)
+                        {
+                            <tr>
+                                <td class="labelName">
+                                    <label for="AdminPassword">
+                                        <span class=" red">*</span>Password:
+                                    </label>
+                                </td>
+                                <td class="fieldName">
+                                    @Html.Password("AdminPassword", Model != null && Model.AdminPassword != null ? Model.AdminPassword : string.Empty, new { @tabindex = "6", @class = "textfield", size = "40", @maxlength = "12" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><small class="msgTxt">Password must between 6 and 12 characters in length</small></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="spacer20"></td>
+                            </tr>
+                            <tr>
+                                <td class="labelName">
+                                    <label for="RetypePassword">
+                                        <span class=" red">*</span>Re-enter Password:
+                                    </label>
+                                </td>
+                                <td class="fieldName">
+                                    @Html.Password("RetypePassword", null, new { @class = "textfield", size = "40", @maxlength = "12", @tabindex = "6" })
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="spacer20"></td>
+                            </tr>
+                        }
+                        else if (Model.AdminUserId > 0)
+                        {
+                            <tr id="trRAdminPassword" style="display: none;">
+                                <td class="labelName">
+                                    <label for="RAdminPassword">
+                                        <span class=" red">*</span>Password:
+                                    </label>
+                                </td>
+                                <td class="fieldName">
+                                    @Html.Password("RAdminPassword", Model != null && Model.AdminPassword != null ? Model.AdminPassword : string.Empty, new { @tabindex = "6", @class = "textfield", size = "40", @maxlength = "12" })
+                                </td>
+                            </tr>
+                            <tr id="trRAdminPasswordmsg" style="display: none;">
+                                <td></td>
+                                <td><small class="msgTxt">Password must between 6 and 12 characters in length</small></td>
+                            </tr>
+                            <tr id="trRAdminPasswordspacer" style="display: none;">
+                                <td colspan="2" class="spacer20"></td>
+                            </tr>
+                            <tr id="trRRetypePassword" style="display: none;">
+                                <td class="labelName">
+                                    <label for="RRetypePassword">
+                                        <span class=" red">*</span>Re-enter Password:
+                                    </label>
+                                </td>
+                                <td class="fieldName">
+                                    @Html.Password("RRetypePassword", null, new { @class = "textfield", size = "40", @maxlength = "12", @tabindex = "6" })
+                                </td>
+                            </tr>
+                            <tr id="trSpacerBelow" style="display: none;">
+                                <td colspan="2" class="spacer20"></td>
+                            </tr>
+                        }
+
+                        @{ long _tempUserId = Main.Control.Web.Utilities.Utility.GetAdminUserIdFromSession(); }
+                        @if (_tempUserId != Model.AdminUserId)
+                        {
+                            <tr>
+                                <td class="normalTxt"></td>
+                                <td>
+
+                                    @Html.CheckBox("IsApproved", Model != null && Model.AdminUserId > 0 ? !Model.IsApproved : false, new { id = "IsApproved", @class = "css-checkbox" })
+                                    <label for="IsApproved" class="css-labelbox">
+                                        Block User
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="spacer15"></td>
+                            </tr>
+                        }
+                        <tr>
+                            <td class="normalTxt"></td>
+                            <td>
+
+                                @Html.CheckBox("NotifyUser", false, new { id = "NotifyUser", @class = "css-checkbox" })
+                                <label for="NotifyUser" class="css-labelbox">
+                                    @Html.Raw("Notify User")
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="spacer15"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="button" id="btnSubmit" value="Save" tabindex="8" class="btn btn-primary mRight10" style="font-size: 14px;padding: 6px 13px;" />
+                                <input type="button" id="btnCancel" value="Cancel" tabindex="9" class="btn btn-cancel mTop3" onclick=" CancelCreateUser(); " style="padding: 5px 13px;font-size: 14px; margin-right: 10px !important;" />
+                                <input type="button" id="btnDelete" value="Delete" tabindex="10" class="btn btn-danger mTop3" onclick="Deleteuser(@Model.AdminUserId)" style="font-weight: 600;font-size: 14px;padding: 5px 13px;" />
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        @Html.Hidden("AdminUserId", Model != null && Model.AdminUserId > 0 ? Model.AdminUserId : 0)
+                            @Html.Hidden("AdminRoleId", Model != null && Model.AdminRoleId > 0 ? Model.AdminRoleId : (int)AdminRoleType.Team)
+                            }
+</div>
+<div class="clearfix"></div>
+<script type="text/javascript">
+    $(function () {
+        $("#ManageUserLink").addClass("active")
+        $('#CancelSetPassword').hide();
+        $("#AdminRole").val("@(Model != null && Model.AdminRoleId > 0 ? Model.AdminRoleId : 0)");
+        $('#lblResult').hide();
+        if (parseInt($("#AdminUserId").val()) > 0) {
+            $("#btnDelete").show();
+        }
+        else {
+            $("#btnDelete").hide();
+        }
+        var form = $('#createForm').get(0);
+        $.removeData(form, 'validator');
+        //validate createCall form
+        $('#createForm').validate({
+            ignore: ":not(:visible)",
+            rules: {
+                AdminFirstName: { required: true },
+                AdminLastName: { required: true },
+                PhoneNumber: { required: true },
+                AdminLocation: { required: true },
+                AdminPassword: { required: true, minlength: 6, maxlength: 12 },
+                RetypePassword: { required: true, equalTo: "#AdminPassword" },
+                RAdminPassword: { required: true, minlength: 6, maxlength: 12 },
+                RRetypePassword: { required: true, equalTo: "#RAdminPassword" },
+                AdminEmailAddress: { required: true, email: true },
+                AlternateAdminEmailAddress:{email:true}
+            },
+            messages: {
+                AdminFirstName: { required: "Enter the First Name" },
+                AdminLastName: { required: "Enter the Last Name" },
+                PhoneNumber: { required: "Enter the Phone Number" },
+                AdminLocation: { required: "Select Location" },
+                RAdminPassword: { required: "Enter the Password", minlength: "Password must minimum 6 characters in length", maxlength: "Max 12 characters" },
+                RetypePassword: { required: "Re-enter Password", equalTo: "Password and Retype password should be same" },
+                RetypePassword: { required: "Enter the Password", minlength: "Password must minimum 6 characters in length", maxlength: "Max 12 characters" },
+                RRetypePassword: { required: "Re-enter Password", equalTo: "Password and Retype password should be same" },
+                AdminEmailAddress: { required: "Enter the Email", email: "Enter valid Email" },
+                AlternateAdminEmailAddress: { email: "Enter valid Email" }
+            }
+        });
+
+        $('#btnSubmit').unbind('click');
+        $('#btnSubmit').click(function (e) {
+            var update = '@(ViewData["Update"] != null ? ViewData["Update"] : 0)';
+
+            if ($('#createForm').valid()) {
+                $("#loader").show();
+                var _subDomain = $('#AdminEmailAddress').val();
+                if (_subDomain != "") {
+                    var _userId = $('#AdminUserId').val();
+                    $.getJSON("/Admin/IsUserNameAvailable/?t=" + new Date(), { str: _subDomain, UserId: _userId },
+                    function (data) {
+                        if (data == true) {
+                            if ($("#VerificationCodType").val() == "AUTHENTICATOR") {
+                                $('#createForm').submit();
+                            }
+                            else {
+                                toastr.error("Choose Authenticator app as your Preferred Verification Method.");
+                            }
+                          
+                        }
+                        else {
+                            $("#loader").hide();
+                            $('#AdminUserName').val("");
+                            toastr.error("Sorry, Username is already taken");
+                        }
+                    });
+                }
+            }
+        });
+
+        $('#btnsubmitpassword').unbind('click');
+        $('#btnsubmitpassword').click(function (e) {
+            debugger
+            if ($('#createForm').valid()) {
+                var _password = $("#RAdminPassword").val();
+                var _repassword = $("#RRetypepassword").val();
+                var _userid = $("#AdminUserId").val();
+                if (_password != "" && _repassword != "" && _userid > 0) {
+                    $("#Rloader").show();
+                    $.getJSON("/Admin/SavePassword/?t=" + new Date(), { str: _password, UserId: _userid },
+                        function (data) {
+                            if (data != null) {
+                                $("#Rloader").hide();
+                                toastr.success("Password Updated Successfully!");
+                            }
+                            else {
+                                $("#Rloader").hide();
+
+                            }
+                        });
+                }
+            }
+        });
+
+        $('#cnlpassword').unbind('click');
+        $("#cnlpassword").click(function () {
+            $("#trRAdminPassword").hide();
+            $('#trRRetypePassword').hide();
+            $('#trRAdminPasswordspacer').hide();
+            $('#trRAdminPasswordmsg').hide();
+            $('#trSpacerBelow').hide();
+            $('#SetPassword').show();
+            $('#CancelSetPassword').hide();
+        });
+    });
+
+
+    function ManageUser() {
+        location.href = "/Admin/Index";
+    }
+    function CancelCreateUser() {
+        location.href = "/Admin/Index";
+    }
+
+    function SetPassword() {
+        $("#trRAdminPassword").show();
+        $('#trRRetypePassword').show();
+        $('#trRAdminPasswordspacer').show();
+        $('#trRAdminPasswordmsg').show();
+        $('#trSpacerBelow').show();
+        $('#SetPassword').hide();
+        $('#CancelSetPassword').show();
+    }
+    function CancelSetPassword() {
+        $("#trRAdminPassword").hide();
+        $('#trRRetypePassword').hide();
+        $('#trRAdminPasswordspacer').hide();
+        $('#trRAdminPasswordmsg').hide();
+        $('#trSpacerBelow').hide();
+        $('#SetPassword').show();
+        $('#CancelSetPassword').hide();
+    }
+    function capitalize(captilize) {
+        captilize.value = captilize.value.charAt(0).toUpperCase() + captilize.value.slice(1);
+    }
+
+    function Deleteuser(AdminUserId) {
+        AdminTable = $('#adminList').DataTable();
+        bootbox.dialog({
+            message: "Are you sure you want to Delete User?",
+            title: "Confirm Delete?",
+            buttons: {
+                cancel: {
+                    label: "Cancel",
+                    className: "btn-cancel floatL mTop3"
+                },
+                delete: {
+                    label: "Delete",
+                    className: "btn-org",
+                    callback: function () {
+                        $.getJSON("/Admin/DeleteUser/?t=" + new Date(), { aId: AdminUserId },
+                       function (data) {
+                           if (data == true) {
+                               AdminTable.row($("#aDelete" + parseInt(AdminUserId)).parents('tr')).remove().draw(false);
+                               toastr.success("User deleted successfully");
+                               window.location.href = "/Admin/Index/";
+                           }
+                           else {
+                               toastr.error("Error while Deleting, Please Try Again.");
+                           }
+                       });
+                    }
+                }
+            }
+        }).find(".modal-dialog").removeClass("edit-modal-dialog");
+    }
+   
+</script>
+
+@section ScriptStyleContent {
+    <link href="@Url.Content("~/Content/mainSite.css")" rel="stylesheet" type="text/css" />
+}

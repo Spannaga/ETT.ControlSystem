@@ -1,0 +1,77 @@
+﻿@model List<Main.Control.Core.Models.ScActivityLog>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"></button>
+    <h4 class="modal-title">Activity Log - <span>@ViewData["AdminUserName"]</span></h4>
+</div>
+<div class="modal-body" style="border-radius:0px 0px 6px 6px;">
+    <div class="formTable" style="max-height:500px; overflow:auto;">
+
+        <div>
+            <table class="listGrid" id="tblLog">
+                <thead>
+                    <tr>
+                        <th>
+                            IP Address
+                        </th>
+                        <th>
+                            Activity
+                        </th>
+                        <th>Memo</th>
+                        <th style="width: 150px !important;">Project</th>
+                        <th class="noWrap" style="width: 210px !important;">Activity On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count() > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <a href="https://www.whatismyipaddress.com/ip/ @Html.DisplayFor(modelItem => item.IPAddress)" target="_new">@Html.DisplayFor(modelItem => item.IPAddress)</a>
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Activity)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Memo)
+                                </td>
+                                <td style="width:150px;">
+                                    @Html.DisplayFor(modelItem => item.ProjectName)
+                                </td>
+                                <td style="width:210px;">
+                                    @Html.DisplayFor(modelItem => item.CreateTimeStamp)@Html.Raw("(EST)")
+                                </td>
+
+                            </tr>
+
+                        }
+                    }
+                    @*else
+                        {
+                            <tr>
+                                <td colspan="4">
+                                    No data Available
+                                </td>
+                            </tr>
+                        }*@
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        oTable = $("#tblLog").dataTable({
+            "oLanguage": {
+                "sEmptyTable": "<p class='taC'>No data Available</p>"
+            },
+            "bSort": false,
+            //"aoColumns": [{ "bSortable": false }, { "bSortable": false }, { "bSortable": false }, { "bSortable": false }],
+            //"sDom": 't' //to remove data table controls
+        });
+        $('#tblLog_filter').hide();
+    });
+</script>

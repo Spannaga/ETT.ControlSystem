@@ -1,0 +1,144 @@
+﻿@model Main.Control.Core.Models.AdditionalContacts
+@using Main.Control.Web.Utilities
+@using Main.Control.Core.Models
+@{
+    Layout = null;
+}
+
+@using (Html.BeginForm("_AddAdditionalContacts", "Campaign", FormMethod.Post, new { id = "AdditionalDetailsForm", enctype = "multipart/form-data" }))
+{
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"></button>
+        @if (Model != null && Model.AdditionalContactsDetailsId > 0)
+        {
+            <h4 class="modal-title">Edit Additional Contact</h4>
+        }
+        else
+        {
+            <h4 class="modal-title">Add Additional Contact</h4>
+        }
+
+    </div>
+    <div class="modal-body">
+        <div class="codeIcon">
+            <div class="responsive ">
+                <div class="clear"></div>
+                <table class="">
+                    <tr>
+                        <td>
+                            <div class="spacer10"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="labelName">
+                            <span class="red">*</span>Name:
+                        </td>
+                        <td class="fieldName pos_rel">
+                            @Html.TextBoxFor(model => model.ContactName, new { @id = "contName" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="spacer10"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="labelName">
+                            Title:
+                        </td>
+                        <td class="fieldName">
+                            @Html.TextBoxFor(model => model.ContactTitle, new { @id = "contTitle" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="spacer10"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="labelName">
+                            Email:
+                        </td>
+                        <td class="fieldName">
+                            @Html.TextBoxFor(model => model.ContactEmailAddress, new { @id = "contEmail" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="spacer10"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="labelName">
+                            <span class="red">*</span>Phone:
+                        </td>
+                        <td class="fieldName pos_rel">
+                            @Html.TextBoxFor(model => model.ContactPhone, new { @id = "contPhone", @maxlength = "14" })
+                        </td>
+                    </tr>
+                </table>
+                @Html.HiddenFor(m => m.CampaignAssignedDetailsId)
+                @Html.HiddenFor(m => m.AdditionalContactsDetailsId)
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer taC">
+        <a class="btn btn-cancel" data-dismiss="modal">Cancel</a>
+        @if (Model != null && Model.AdditionalContactsDetailsId > 0)
+        {
+            <a class="btn btn-primary" id="btnSaveContacts" href="javascript:void(0)" onclick="SaveAdditionalContacts()">Update</a>
+        }
+        else
+        {
+            <a class="btn btn-primary" id="btnSaveContacts" href="javascript:void(0)" onclick="SaveAdditionalContacts()">Save</a>
+        }
+
+    </div>
+}
+<script type="text/javascript">
+    var campaignAssignedDetailsId = '@(Model != null && Model.CampaignAssignedDetailsId > 0 ? Model.CampaignAssignedDetailsId : 0)';
+    var isUpdate = '@(Model != null && Model.AdditionalContactsDetailsId > 0 ? true : false)';
+    $(document).ready(function () {
+
+        $("#AdditionalDetailsForm").validate({
+            rules: {
+                ContactName: { required: true },
+                ContactPhone: { required: true, minlength: 10 },
+                ContactEmailAddress: { email: true }
+            },
+            messages: {
+                ContactName: { required: "Enter Contact Name" },
+                ContactPhone: { required: "Enter Contact Phone Number", minlength: "Enter valid Phone Number" },
+                ContactEmailAddress: { email: "Enter valid Email Address" }
+            }
+        })
+
+        $('#contPhone').mask("(999) 999-9999")
+    });
+
+    function SaveAdditionalContacts() {
+        $("#btnSaveContacts").attr("disabled", "disabled");
+        if ($("#AdditionalDetailsForm").valid()) {
+            
+            $.post('/Campaign/_AddAdditionalContacts', $("#AdditionalDetailsForm").serialize(), function (data) {
+                if (data == returnAjax.Success || data == true) {
+                    $("#myModal").modal('hide');
+                    if (isUpdate == "True" || isUpdate == true) {
+                        toastr.success("Additional Contacts updated successfully!");
+                    }
+                    else {
+                        toastr.success("Additional Contacts saved successfully!");
+                    }
+                    $("#btnSaveContacts").attr("disabled", false);
+                    $("#divAdditionalContacts").load("/Campaign/_AdditionalContactList/" + campaignAssignedDetailsId)
+                }
+            }).error(function () {
+
+            });
+        }
+        else {
+            $("#btnSaveContacts").attr("disabled", false);
+        }
+    }
+</script>

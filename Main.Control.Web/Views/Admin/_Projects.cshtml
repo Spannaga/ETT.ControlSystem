@@ -1,0 +1,575 @@
+﻿@model Main.Control.Core.Models.AdminUser
+@using Main.Control.Core.Models
+@{ bool _adminSkuType = Main.Control.Web.Utilities.Utility.CheckAdminFromSession();}
+
+<div class="responsive">
+
+    @if (Model.AdminUserRoleList != null && Model.AdminUserRoleList.Count > 0)
+    {
+        <div class="projectList">
+            @if (Model.AdminUserRoleList.Exists(m => m.AdminCategoryId == 1) || Model.AdminUserRoleList.Exists(m => m.AdminCategoryId == 3))
+            {
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <h4 class="subTitle">Projects</h4>
+                </div>
+            }
+            <div class="clear"></div>
+            <div id="payerListDiv">
+                @foreach (var _adminrole in Model.AdminUserRoleList.Where(a => a.AdminCategoryId == 1 || a.AdminCategoryId == 3))
+                {
+
+                    if (_adminrole.AdminProjectId == (int)Project.UnitWise)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/1" title="UnitWise" name="UnitWise" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/uwLogo.gif" alt="UnitWise" title="UnitWise" />
+                                </a>
+                            </div>
+                        </div>
+
+                    }
+
+                    else if (_adminrole.AdminProjectId == (int)Project.SpanPlan)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/3" title="Inshperio" name="Inspherio" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/spLogo.gif" alt="Inspherio" title="Inspherio" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.ExpressTruckTax)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/5" title="Express Truck Tax" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/ETT.png" alt="ETT" title="Express Truck Tax" />
+                                </a>
+                            </div>
+                        </div>
+
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.ExpressIFTA)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/6" title="Express IFTA" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/IFTA.png" alt="EIFTA" title="Express IFTA" />
+                                </a>
+                            </div>
+                        </div>
+
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.ExpressTaxFilings)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/7" title="TaxBandits" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/ETF.png" alt="TBS" title="TaxBandits" />
+                                </a>
+                            </div>
+                        </div>
+
+
+
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.ExpressExtension)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/4" title="Express Extension" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/EET.png" alt="EE" title="Express Extension" />
+                                </a>
+                            </div>
+                        </div>
+
+
+
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.Express990)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/12" title="ExpressTaxExempt" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/E990.png" alt="ExpressTaxExempt" title="ExpressTaxExempt" />
+                                </a>
+                            </div>
+                        </div>
+
+                    }
+
+                    else if (_adminrole.AdminProjectId == (int)Project.TruckLogics)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/13" title="Truck Logics" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/ETL.png" alt="Truck Logics" title="Truck Logics" />
+                                </a>
+                            </div>
+                        </div>
+
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.TSNAAdmin)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/18" title="TSNAmerica" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/TSNA.png" alt="TSNAmerica" title="TSNAmerica" />
+                                </a>
+                            </div>
+                        </div>
+
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.StayTaxExempt)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/19" title="StayTaxExempt" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/STE.jpg" alt="StayTaxExempt" title="StayTaxExempt" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.ACAwise)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/25" title="ACAwise" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/ACAw.png" alt="ACAwise" title="ACAwise" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.PayWow)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/28" title="Paywow" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/PayWow.jpg" alt="Paywow" title="Paywow" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.PayWowCompliance)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/29" title="Paywow Compliance" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/PayWowCompliance.jpg" alt="Paywow Compliance" title="Paywow Compliance" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.ExpressPaystubGenerator)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/40" title="123PayStubs" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/123-paystubs.png" alt="123PayStubs" title="123PayStubs" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.ExpressEfile)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/31" title="Express Efile" target="_blank" class="EEF">
+                                    <img src="~/Content/Images/EEF.png" alt="Express Efile" title="Express Efile" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.ExpressEFileAdmin1)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/49" title="ExpressEfile Admin New" target="_blank" class="EEF">
+                                    <img src="~/Content/Images/EEF-admin-image.jpg" alt="ExpressEfile Admin New" title="ExpressEfile Admin New" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    @*else if (_adminrole.AdminProjectId == (int)Project.ExpressEFileAngular)
+                        {
+                            <div class="col-md-2 col-sm-4 col-xs-6">
+                                <div class="projectBox">
+                                    <a href="/Admin/GotoProduct/48" title="Express Efile Angular" target="_blank" class="EEF">
+                                        <img src="~/Content/Images/EEF.png" alt="Express Efile" title="Express Efile Angular" />
+                                    </a>
+                                </div>
+                            </div>
+                        }*@
+                    else if (_adminrole.AdminProjectId == (int)Project.TaxBanditsPEO)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/32" title="TaxLogics" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/tlspeo.png" alt="TaxLogics" title="TaxLogics" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.ETTSUPPORTADMIN)
+                    {
+                        <div class="col-md-2 col-sm-3 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/36" title="ExpressTruckTax Support Admin" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/ETTSupportAdmin.png" alt="ETT Efile Mobile" title="ExpressTruckTax Support Admin" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.EPSSupportAdmin)
+                    {
+                        <div class="col-md-2 col-sm-3 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/@((int)Project.EPSSupportAdmin)" title="123PayStubs Support Admin" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/123-paystubs-support.png" alt="123PayStubs Support Admin" title="123PayStubs Support Admin" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.EESUPPORTADMIN)
+                    {
+                        <div class="col-md-2 col-sm-3 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/41" title="ExpressExtension Support Admin" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/EETadmin.jpg" alt="ExpressExtension Support Admin" title="ExpressExtension Support Admin" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.PayWowT_AND_A)
+                    {
+                        <div class="col-md-2 col-sm-3 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/38" title="Paywow T & A" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/PayWowT&A.png" alt="ETT Efile Mobile" title="Paywow T & A" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.PayWowSymmetryCompliance)
+                    {
+                        <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/39" title="Paywow Symmetry Compliance" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/PayWowCompliance-sym.png" alt="Paywow Symmetry Compliance" title="Paywow Symmetry Compliance" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.EXPRESSNOTIFY)
+                    {
+                        <div class="col-md-2 col-sm-3 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/44" title="Express Notify" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/notify-logo-192X192.png" alt="Express Notify" title="Express Notify" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else if (_adminrole.AdminProjectId == 46)
+                    {
+                        <div class="col-md-2 col-sm-3 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/46" title="Express Notify" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/Express-support-logo-192X192.png" alt="Express Support" title="Express Support - Admin" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else if (_adminrole.AdminProjectId == 50)
+                    {
+                        <div class="col-md-2 col-sm-3 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/50" title="TBS 2.0" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/tbs.png" alt="TBS 2.0" title="TaxBandits - Admin" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else if (_adminrole.AdminProjectId == (int)Project.ExpressPayments)
+                    {
+                        <div class="col-md-2 col-sm-3 col-xs-6">
+                            <div class="projectBox">
+                                <a href="/Admin/GotoProduct/52" title="TBS 2.0" target="_blank" class="ETT">
+                                    <img src="~/Content/Images/EP_logo.png" alt="EP" title="Express Payments" />
+                                </a>
+                            </div>
+                        </div>
+                    }
+
+                }
+            </div>
+        </div>
+
+
+        if (Model.AdminUserRoleList.Exists(m => m.AdminCategoryId == 4))
+        {
+
+            <div class="projectList">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <h4 class="subTitle">E-File Admin</h4>
+                </div>
+
+
+                <div class="clear"></div>
+
+                <div id="payerListDiv">
+
+                    @foreach (var _adminrole in Model.AdminUserRoleList.Where(a => a.AdminCategoryId == 4))
+                    {
+
+                        if (_adminrole.AdminProjectId == (int)Project.ExtensionEfileAdmin)
+                        {
+                            <div class="col-md-2 col-sm-4 col-xs-6">
+                                <div class="projectBox efileAdmin">
+                                    <a href="/Admin/GotoProduct/14" title="Extension Efile Admin" target="_blank" class="ETT">
+                                        <img src="~/Content/Images/EETefile.jpg" alt="ETF" title="Express Extension E-File Admin" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        else if (_adminrole.AdminProjectId == (int)Project.EXPRESSEFILEADMIN)
+                        {
+                            <div class="col-md-2 col-sm-4 col-xs-6">
+                                <div class="projectBox">
+                                    <a href="/Admin/GotoProduct/47" title="Express Efile Admin" target="_blank" class="EEF">
+                                        <img src="~/Content/Images/EEFEFile.png" alt="Express Efile" title="Express Efile Admin" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        else if (_adminrole.AdminProjectId == (int)Project.ExpressTruckTaxEfileAdmin)
+                        {
+                            <div class="col-md-2 col-sm-4 col-xs-6">
+                                <div class="projectBox efileAdmin">
+                                    <a href="/Admin/GotoProduct/15" title="Truck Tax Efile Admin" target="_blank" class="ETT">
+                                        <img src="~/Content/Images/ETTefile.jpg" alt="EE" title="Express Truck Tax E-File Admin" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        else if (_adminrole.AdminProjectId == (int)Project.E990EfileAdmin)
+                        {
+                            <div class="col-md-2 col-sm-4 col-xs-6">
+                                <div class="projectBox efileAdmin">
+                                    <a href="/Admin/GotoProduct/16" title="ExpressTaxExempt E-File Admin" target="_blank" class="ETT">
+                                        <img src="~/Content/Images/E990efile.jpg" alt="ExpressTaxExempt" title="ExpressTaxExempt E-File Admin" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+
+                        else if (_adminrole.AdminProjectId == (int)Project.ETFEfileAdmin)
+                        {
+                            <div class="col-md-2 col-sm-4 col-xs-6">
+                                <div class="projectBox efileAdmin">
+                                    <a href="/Admin/GotoProduct/17" title="ExpressTaxFilings E-File Admin" target="_blank" class="ETT">
+                                        <img src="~/Content/Images/TBS_Efile_Old.png" alt="ExpressTaxFilings E-File Admin" title="TaxBandits E-File Admin" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        else if (_adminrole.AdminProjectId == (int)Project.ETFEfileAdmin2016)
+                        {
+                            <div class="col-md-2 col-sm-4 col-xs-6">
+                                <div class="projectBox efileAdmin">
+                                    <a href="/Admin/GotoProduct/30" title="ExpressTaxFilings E-File Admin" target="_blank" class="ETT">
+                                        <img src="~/Content/Images/TBS_Efile_New.png" alt="ExpressTaxFilings E-File Admin 2021 " title="Express Tax Filings E-File Admin 2016" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+
+                        else if (_adminrole.AdminProjectId == (int)Project.ACAEfileAdmin)
+                        {
+                            <div class="col-md-2 col-sm-4 col-xs-6">
+                                <div class="projectBox efileAdmin">
+                                    <a href="/Admin/GotoProduct/20" title="ACA Efile Admin" target="_blank" class="ETT">
+                                        <img src="~/Content/Images/ACAefile.jpg" alt="ACA Efile Admin" title="ExpressACAForms E-File Admin" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        else if (_adminrole.AdminProjectId == (int)Project.ACAwiseEfileAdmin)
+                        {
+                            <div class="col-md-2 col-sm-3 col-xs-6">
+                                <div class="projectBox efileAdmin">
+                                    <a href="/Admin/GotoProduct/26" title="StayTaxExempt" target="_blank" class="ETT">
+                                        <img src="~/Content/Images/ACAwiseEfile.jpg" alt="ACAwise Efile Admin" title="ACAwise Efile Admin" />
+                                    </a>
+                                </div>
+                            </div>
+
+                        }
+                        else if (_adminrole.AdminProjectId == (int)Project.ExpressTruckTaxEfileAdminMobile)
+                        {
+                            <div class="col-md-2 col-sm-3 col-xs-6">
+                                <div class="projectBox efileAdmin">
+                                    <a href="/Admin/GotoProduct/27" title="ETT Efile Admin Mobile" target="_blank" class="ETT">
+                                        <img src="~/Content/Images/ETTefile.jpg" alt="ETT Efile Mobile" title="Express Truck Tax E-File Admin Mobile" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        else if (_adminrole.AdminProjectId == (int)Project.EXPRESSNOTIFY)
+                        {
+                            <div class="col-md-2 col-sm-3 col-xs-6">
+                                <div class="projectBox">
+                                    <a href="/Admin/GotoProduct/44" title="Express Notify" target="_blank" class="ETT">
+                                        <img src="~/Content/Images/notify-logo.png" alt="Express Notify" title="Express Notify" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        else if (_adminrole.AdminProjectId == (int)Project.ExpressTruckTaxTestEfileAdmin)
+                        {
+                            <div class="col-md-2 col-sm-4 col-xs-6">
+                                <div class="projectBox efileAdmin">
+                                    <a href="/Admin/GotoProduct/53" title="Test Truck Tax Efile Admin" target="_blank" class="ETT">
+                                        <img src="~/Content/Images/ETTefileTest.jpg" alt="EE" title="Express Truck Tax Test E-File Admin" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+
+                    }
+                </div>
+            </div>
+
+        }
+
+        if (Model.AdminUserRoleList.Exists(m => m.AdminCategoryId == 5))
+        {
+            <div class="projectList">
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <h4 class="subTitle">Tools</h4>
+                </div>
+                <div class="clear"></div>
+                <div id="payerListDiv">
+                    @foreach (var _adminrole in Model.AdminUserRoleList.Where(a => a.AdminCategoryId == 5))
+                    {
+                        if (_adminrole.ProjectName == "Mef Services")
+                        {<div class="col-md-2 col-sm-4 col-xs-6">
+                                <div class="projectBox">
+                                    <a href="@System.Configuration.ConfigurationManager.AppSettings["MefWSBaseURL"].ToString()" target="_blank" title="Mef Efile Admin" class="ETT">
+                                        <img src="~/Content/Images/efile.png" alt="ETT" title="MeF E-File Admin" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        else if (_adminrole.ProjectName == "Tools Services")
+                        {<div class="col-md-2 col-sm-4 col-xs-6">
+                                <div class="projectBox">
+                                    <a href="@System.Configuration.ConfigurationManager.AppSettings["EIFWSBaseURL"].ToString()" target="_blank" title="Express Tax Filings" class="ETT">
+                                        <img src="~/Content/Images/eirs.png" alt="ETF" title="Express Tax Filings Services" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        else if (_adminrole.ProjectName == "UW Services")
+                        {<div class="col-md-2 col-sm-4 col-xs-6">
+                                <div class="projectBox">
+                                    <a href="@System.Configuration.ConfigurationManager.AppSettings["UWWSBaseURL"].ToString()" target="_blank" title="UnitWise" class="ETT">
+                                        <img src="~/Content/Images/uwws.png" alt="ETF" title="UnitWise" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        else if (_adminrole.ProjectName == "IN Services")
+                        {<div class="col-md-2 col-sm-4 col-xs-6">
+                                <div class="projectBox">
+                                    <a href="@System.Configuration.ConfigurationManager.AppSettings["INWSBaseURL"].ToString()" target="_blank" title="Inspherio" class="ETT">
+                                        <img src="~/Content/Images/inws.png" alt="ETF" title="Inspherio" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        else if (_adminrole.ProjectName == "ACA Services")
+                        {<div class="col-md-2 col-sm-4 col-xs-6">
+                                <div class="projectBox">
+                                    <a href="@System.Configuration.ConfigurationManager.AppSettings["AWWSBaseURL"].ToString()" target="_blank" title="Inspherio" class="ETT">
+                                        <img src="~/Content/Images/awtools.png" alt="AW" title="ACAwise" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+
+                        else if (_adminrole.ProjectName == "ACA Tools")
+                        {<div class="col-md-2 col-sm-4 col-xs-6">
+                                <div class="projectBox">
+                                    <a href="/Admin/GotoProduct/35" target="_blank" title="ACAwise Tools" class="ETT">
+                                        <img src="~/Content/Images/awtools.png" alt="AW" title="ACAwise" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        else if (_adminrole.AdminProjectId == (int)Project.SERVICECONTROLCENTER)
+                        {
+                            <div class="col-md-2 col-sm-3 col-xs-6">
+                                <div class="projectBox">
+                                    <a href="/Admin/GotoProduct/37" title="Service Control Center" target="_blank" class="ETT">
+                                        <img src="~/Content/Images/ServiceControlCenter.png" alt="Service Control Center" title="Service Control Center" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        else if (_adminrole.AdminProjectId == (int)Project.EXPRESSNOTIFY)
+                        {
+                            <div class="col-md-2 col-sm-3 col-xs-6">
+                                <div class="projectBox">
+                                    <a href="/Admin/GotoProduct/44" title="Express Notify" target="_blank" class="ETT">
+                                        <img src="~/Content/Images/notify-logo.png" alt="Express Notify" title="Express Notify" />
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+        }
+
+
+        <div class="projectList">
+            @if (Model.AdminEmailAddress != "heather@tsnamerica.com" && Model.AdminEmailAddress != "zach@tsnamerica.com" && Model.AdminEmailAddress != "cthr1@tsnamerica.com" && Model.AdminEmailAddress != "cthr2@tsnamerica.com")
+            {
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <h4 class="subTitle">Campaign</h4>
+                </div>
+
+
+                <div class="clear"></div>
+                <div id="payerListDiv">
+                    <div class="col-md-2 col-sm-4 col-xs-6">
+                        <div class="projectBox">
+                            <a href="javascript:void(0)" title="Mef Efile Admin" class="ETT" onclick="ExpressCampaign()">
+                                <img src="~/Content/Images/campaign_200.jpg" alt="ETT" title="Express Campaign" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <label>No Product Assigned</label>
+    }
+
+
+
+</div>
+
+<script>
+    function ExpressCampaign() {
+        window.location.href = "/Campaign/Index/";
+    }
+</script>

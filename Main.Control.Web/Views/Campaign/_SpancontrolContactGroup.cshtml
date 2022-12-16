@@ -1,0 +1,105 @@
+﻿@using Main.Control.Web.Utilities
+@using Main.Control.Core.Models
+@model List<Main.Control.Core.Models.SpancontrolContactGroup>
+    @{ ViewBag.Title = "SC Contact group";}
+@{ 
+    Guid userId = ViewBag.UserId != Guid.Empty ? ViewBag.UserId : Guid.Empty;
+}
+    <div class="clear">
+        <div id="GroupMsg" class="taC pT5">
+
+        </div>
+        <div id="GroupRemoveMsg" class="taC pT5">
+
+        </div>
+    </div>
+    <div id="dt_example">
+        <div id="demo">
+            <div id="no-more-tables">
+                <div class="row communicationGrp">
+
+                    @{List<long> groupMembers = ViewBag.IsActive;}
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                <div class="n_grpbg GrpCheckBox">
+                                    @if (groupMembers != null)
+                                    {
+                                        if (groupMembers.Contains(item.GroupNameId))
+                                        {
+                                            <input type="checkbox" id="CHK_@item.GroupNameId" class="css-checkbox" onchange="Savegroupmember(@item.GroupNameId);" checked="checked" />
+                                            <label for="CHK_@item.GroupNameId" class="css-labelbox">
+                                                <b>@item.GroupName</b>
+                                            </label>
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" id="CHK_@item.GroupNameId" class="css-checkbox" onchange="Savegroupmember(@item.GroupNameId);" />
+                                            <label for="CHK_@item.GroupNameId" class="css-labelbox">
+                                                <b>@item.GroupName</b>
+                                            </label> }
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" id="CHK_@item.GroupNameId" class="css-checkbox" onchange="Savegroupmember(@item.GroupNameId);" />
+                                        <label for="CHK_@item.GroupNameId" class="css-labelbox">
+                                            <b>@item.GroupName</b>
+                                        </label>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+<script>
+    $(function () {
+
+        var userId = '@userId';
+        if (userId =="00000000-0000-0000-0000-000000000000") {
+            $("#GroupMsg").html('<label id="Label2" class="succmsg">User Not Exist In ETT</label><div class="spacer10"/>');
+        }
+    });
+    function Savegroupmember(id) {
+        var userid = '@userId';
+        var checkorunchecked = 0
+        if ($("#CHK_" + id).prop('checked') == true) {
+            checkorunchecked = 1;
+        }
+        else {
+            checkorunchecked = 0;
+
+        }
+        $.ajax({
+            url: "/Campaign/SaveGroupMemberDetailsJson",
+            type: 'post',
+            data: { id: id, checkorunchecked: checkorunchecked, userid: userid},
+            cache: false,
+            async: false,
+            processData: true,
+            success: function (data) {
+                if (data != null && data == true) {
+                    if (checkorunchecked == 1) {
+                        //$('#GroupMsg').html('<label id="Label2" class="succmsg">User added to the Group(s) successfully</label><div class="spacer10" />');
+                        //$('#GroupMsg').show();
+                        //$('#GroupMsg').fadeOut(5000);
+                        toastr.success("User added to the Group(s) successfully");
+                    }
+                    else {
+                        //$('#GroupRemoveMsg').html('<label id="Label2" class="succmsg">User removed from the Group(s) successfully</label><div class="spacer10" />');
+                        //$('#GroupRemoveMsg').show();
+                        //$('#GroupRemoveMsg').fadeOut(5000);
+                        toastr.success("User removed from the Group(s) successfully");
+                    }
+                }
+            },
+        });
+    }
+
+    </script>

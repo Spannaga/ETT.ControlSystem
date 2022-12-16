@@ -1,0 +1,29 @@
+﻿@model Main.Control.Core.Models.AdminUser
+@{
+    ViewBag.Title = "Switch Project";
+}
+
+@{  string _adminSkuType = Main.Control.Web.Utilities.Utility.GetAdminUserSKUTypeFromSession();}
+
+<div class="page-header">
+    <div class="page-head">
+        <h2>
+           Switch Project
+        </h2>
+      
+    </div>
+</div>
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+
+    <div id="projectsHolder"></div>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        $("#projectsHolder").load("/Admin/_Projects/");
+        $("#DashboardLink").addClass("active");
+        
+    });
+</script>

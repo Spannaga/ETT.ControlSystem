@@ -1,0 +1,223 @@
+﻿@using Main.Control.Core.Models;
+@model List<UserPayments>
+
+@{
+    ViewBag.Title = "UserPayments";
+}
+
+
+
+<div class="panel-body">
+    <div class="taC" id="dSuccessMsg">
+    </div>
+
+    <div class="page-header" style="margin-top:15px;box-shadow: none; border-color: rgb(218, 218, 218);">
+        <div class="page-head">
+            <h2 class="floatL">
+                User Payments
+            </h2>
+            <div class="floatR mRight15" id="SetPassword">
+                <a href="javascript:void(0);" title="Create Payment Request" onclick="AddUserPayment();" class="baseBtn">Create Payment Request</a>
+            </div>
+
+        </div>
+    </div>
+    <div class="spacer15"></div>
+    <div>
+        <div class="clear"></div>
+
+        <table class="table table-bordered pack-table mBot10" id="TransactionTable">
+            <thead>
+                <tr>
+                    <th class="taL">
+                        Invoice No
+                    </th>
+                    <th class="taL">
+                        Email
+                    </th>
+                    <th class="taR">
+                        Amount
+                    </th>
+                    <th class="taL">
+                        Status
+                    </th>
+                    <th>
+                        Card No
+                    </th>
+
+                    <th>
+                        Approval Code
+                    </th>
+                    <th class="taL">
+                        Paid Time
+                    </th>
+                    <th class="taL">
+                        Logs
+                    </th>
+                    <th class="taC">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count() > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="taL">
+                                @item.InvoiceNo
+
+                            </td>
+                            <td class="taL">
+                                @item.ToEmail
+
+                            </td>
+                            <td class="taR">
+                                @(item.PaymentAmount.ToString("C2"))
+                            </td>
+                            <td class="taL paymentSts">
+                                @{ 
+                                    string className = string.Empty;
+                                    string displayField = string.Empty;
+                                    if (item.PaymentStatus == PaymentEmailStatus.CREATED.ToString()) { className = "created"; displayField = "Created"; }
+                                    if (item.PaymentStatus == PaymentEmailStatus.MAILERROR.ToString()) { className = "MailError"; displayField = "Mail Failed"; }
+                                    if (item.PaymentStatus == PaymentEmailStatus.MAILSENT.ToString() ) {className = "MailSent"; displayField = "Mail Sent"; }
+                                    if (item.PaymentStatus == PaymentEmailStatus.PAYMENTSUCCESS.ToString()) { className = "MailSent"; displayField = "Paid"; }
+                                    if (item.PaymentStatus == PaymentEmailStatus.PAYMENTFAILED.ToString()) { className = "MailError"; displayField = "Payment Failed"; }
+                                }
+                                <div class="@className">
+                                    @displayField
+                                </div>
+                            </td>
+
+                            <td class="taL">
+                                @item.CardNo
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(item.PaymentApprovalCode))
+                                {
+                                    @item.PaymentApprovalCode
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </td>
+                            <td class="taL">
+                                @item.PaidTime
+                            </td>
+                            <td>
+                                <a href="javascript:void(0)" class="viewBtn" data-paymentid="@item.UserPaymentId" data-eventtype="userlogs">User</a>
+                                <a href="javascript:void(0)" class="viewBtn" data-paymentid="@item.UserPaymentId" data-eventtype="adminlogs">Admin</a>
+                            </td>
+                            <td class="taC">
+                                @if (item.PaymentStatus == PaymentEmailStatus.CREATED.ToString() || item.PaymentStatus == PaymentEmailStatus.MAILSENT.ToString() || item.PaymentStatus == PaymentEmailStatus.MAILERROR.ToString())
+                                {
+                                    <a href="javascript:void(0)" class="viewBtn" data-eventtype="editPayment" data-paymentid="@item.UserPaymentId">Edit</a>
+                                    <a href="javascript:void(0)" class="viewBtn" data-eventtype="resendPayment" data-paymentid="@item.UserPaymentId">Resend</a>
+                                }
+                                @if (item.PaymentStatus == PaymentEmailStatus.MAILERROR.ToString())
+                                {
+                                    <a href="javascript:void(0)" class="viewBtn" data-eventtype="viewfailure" data-paymentid="@item.UserPaymentId">Mail Failure Detail</a>
+                                }
+                                @if (item.PaymentStatus == PaymentEmailStatus.PAYMENTFAILED.ToString())
+                                {
+                                    <a href="javascript:void(0)" class="viewBtn" data-eventtype="viewfailure" data-paymentid="@item.UserPaymentId">Payment Failure Detail</a>
+                                }
+                                @if (item.PaymentStatus == PaymentEmailStatus.PAYMENTSUCCESS.ToString())
+                                {
+                                    <a href="@item.ReceiptS3Path" class="viewBtn" target="_blank">Receipt</a>
+                                }
+
+                            </td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="spacer20">
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        
+        $("#TransactionTable").dataTable({
+            "order": []
+        });
+        $("[data-eventtype='editPayment']").on('click', function () {
+            var paymentId = $(this).attr('data-paymentid');
+             $.ajax({
+                url: '/Payments/_AddUserPayment?UserPaymentId=' + paymentId,
+                type: 'GET',
+                cache: false,
+                async: true,
+                success: function (data) {
+                    $('#ModelBody').html(data);
+                    $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                    $('#myModal').modal('show');
+                    $('.modal-dialog').addClass('modal-dialog-md');
+                }
+            });
+        });
+        $("[data-eventtype='resendPayment']").on('click', function () {
+            var paymentId = $(this).attr('data-paymentid');
+            $('#ModelBody').load('/Payments/_PreparePaymentEmail?UserPaymentId=' + paymentId);
+            $("#myModal").modal({ backdrop: 'static', keyboard: true });
+            $('#myModal').modal('show');
+            $('.modal-dialog').addClass('modal-dialog-md');
+        });
+        $("[data-eventtype='viewfailure']").on('click', function () {
+            var paymentId = $(this).attr('data-paymentid');
+            $.ajax({
+                url: '/Payments/GetFailureMsg?paymentId=' + paymentId,
+                type: 'GET',
+                cache: false,
+                async: true,
+                success: function (data) {
+                    $('#ModelBody').html('<div><textarea>' + data + '</textarea></div>');
+                    $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                    $('#myModal').modal('show');
+                    $('.modal-dialog').addClass('modal-dialog-md');
+                }
+            })
+        });
+
+        $("[data-eventtype='userlogs']").on('click', function () {
+            var paymentId = $(this).attr('data-paymentid');
+            $('#ModelBody').load('/Payments/_PaymentLogs?paymentId=' + paymentId+'&activityType=USER');
+            $("#myModal").modal({ backdrop: 'static', keyboard: true });
+            $('#myModal').modal('show');
+            $('.modal-dialog').addClass('modal-dialog-md');
+        });
+        $("[data-eventtype='adminlogs']").on('click', function () {
+            var paymentId = $(this).attr('data-paymentid');
+            $('#ModelBody').load('/Payments/_PaymentLogs?paymentId=' + paymentId + '&activityType=ADMIN');
+            $("#myModal").modal({ backdrop: 'static', keyboard: true });
+            $('#myModal').modal('show');
+            $('.modal-dialog').addClass('modal-dialog-md');
+        });
+    });
+    function AddUserPayment() {
+
+        $.ajax({
+            url: '/Payments/_AddUserPayment?UserPaymentId=@Guid.Empty',
+            type: 'GET',
+            cache: false,
+            async: true,
+            success: function (data) {
+                $('#ModelBody').html(data);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-md');
+            }
+        });
+    }
+    
+</script>

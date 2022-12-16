@@ -1,0 +1,116 @@
+﻿@model  Main.Control.Web.ViewModels.SignInUI
+@using Main.Control.Web.Utilities
+@{
+    ViewBag.Title = "SignIn";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+    bool IsMicrosoftSignIn = Utility.GetBool(Utility.GetAppSettings("IsMicrosoftSignIn"));
+    string _microsoftLoginLink = "";
+    if (IsMicrosoftSignIn)
+    {
+        oAuthMicrosoft oMicrosoft = new oAuthMicrosoft();
+        _microsoftLoginLink = oMicrosoft.AuthorizationLinkGet();
+    }
+}
+<div class="container loginMain">
+    <div class="row">
+        @*<div class="col-md-6 col-sm-5 col-xs-12 logoHeader ">
+
+            </div>*@
+        <div id="loginbox" style="" class="mainbox col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
+
+            <div class="panel panel-info">
+                <a href="/" class="Logo"><img src="~/Content/Images/logo.png" /></a>
+                <div class="lineBar"></div>
+                <h1 class="mTopNo">
+                    Welcome to SPAN Control
+                </h1>
+                <p class="normalText">Growing great ideas into even greater software solutions is our specialty. </p>
+                @*<div class="panel-heading">
+                        <div class="panel-title">Sign In</div>
+                    </div>*@
+                @using (Html.BeginForm("SignIn", "Admin", FormMethod.Post, new { id = "SignIn" }))
+                {
+                    if (TempData["Invalid"] != null)
+                    {
+                        <div id="SuccessMsg" style="padding-left:50px; padding-bottom:10px" class="taC pT5">
+                            <label class="error taC">
+                                @TempData["Invalid"]
+                            </label>
+                        </div>
+                        TempData["Invalid"] = null;
+                    }
+                   
+                    <div class="clear"></div>
+
+                    { Html.RenderAction("_ShowProduct", "Admin"); }
+
+            <div class="panel-body taC">
+                @{
+
+                    oAuthGoogle oGoogle = new oAuthGoogle();
+                    string _googleLoginLink = oGoogle.AuthorizationLinkGet();
+                }
+                <a href="@_googleLoginLink" class="go taC" title="google" style="cursor: pointer;">
+                    <img class="shade" src="/Content/Images/NewImages/google.png" alt="" title="google">
+                </a>
+                @if (IsMicrosoftSignIn)
+                {
+                    <a href="@_microsoftLoginLink" class="go taC" title="microsoft" style="cursor: pointer;">
+                        <img class="shade" src="/Content/Images/NewImages/microsoft-signin.png" alt="" title="microsoft">
+                    </a>
+                }
+                @if (TempData["MobileVerificationMessage"] != null)
+                {
+                    <div class="">
+                        <label class="error google-sign" style="">
+                            @TempData["MobileVerificationMessage"]
+                        </label>
+                    </div>
+                    TempData["MobileVerificationMessage"] = null;
+                }
+
+
+            </div>
+
+
+                    <div class="spacer20"></div>
+
+                    @Html.Hidden("ProductName", ViewData["ProductName"]);
+                }
+                <div class="panel-heading-bottom">
+                    One account. All of SPAN Control. Sign in with your Official Account.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        var form = $('#SignIn').get(0);
+        $.removeData(form, 'validator');
+        $("#SignIn").validate({
+            rules: {
+                ignore: ":not(:visible)",
+
+                UserName: {
+                    required: true,
+                },
+
+                Password: {
+                    required: true,
+                    minlength: 6
+                }
+            },
+
+            messages: {
+                UserName: {
+                    required: "Username is required",
+                },
+                Password: {
+                    required: "Password is required",
+                    minlength: "Password should be minimum of 6 characters",
+                }
+            }
+        });
+    });
+</script>

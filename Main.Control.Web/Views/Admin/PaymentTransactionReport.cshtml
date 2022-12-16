@@ -1,0 +1,218 @@
+@using Main.Control.Core.Models;
+@using Main.Control.Web.Utilities;
+
+@{
+    ViewBag.Title = "Payment Report";
+    List<SpanProducts> spanProducts = new List<SpanProducts>();
+    var adminEmailAddress = Convert.ToString(Session["AdminEmailAddress"]);
+    bool isBestPassEmail = false;
+    if (!string.IsNullOrWhiteSpace(adminEmailAddress))
+    {
+        string bestPassEmails = Utility.GetAppSettings("BestPassEmailIds");
+        if (!string.IsNullOrWhiteSpace(bestPassEmails) && bestPassEmails.ToLower().Contains(adminEmailAddress.ToLower()))
+        {
+            isBestPassEmail = true;
+        }
+    }
+    spanProducts = ViewData["SpanProducts"] as List<SpanProducts>;
+    if (isBestPassEmail)
+    {
+        List<string> _BestPassProductCode = new List<string>();
+        _BestPassProductCode.Add("ETTBP");
+        _BestPassProductCode.Add("TSNABP");
+        spanProducts = spanProducts.Where(x => _BestPassProductCode.Contains(x.ProductName)).ToList();
+    }
+
+    var spanPaymentProcessors = ViewData["SpanPaymentProcessors"] as List<PaymentProcessors>;
+    var beginDate = ViewData["BeginDate"];
+    var lstItems = new List<SelectListItem>();
+    lstItems.Add(new SelectListItem
+    {
+        Text = "ALL",
+        Value = "ALL"
+    });
+    lstItems.Add(new SelectListItem
+    {
+        Text = "Success",
+        Value = "Success"
+    });
+    lstItems.Add(new SelectListItem
+    {
+        Text = "Failure",
+        Value = "Failure"
+    });
+    lstItems.Add(new SelectListItem
+    {
+        Text = "Voided",
+        Value = "Voided"
+    });
+
+}
+
+@using (Html.BeginForm("PaymentTransactionReport", "Admin", FormMethod.Get, new { id = "Filterform" }))
+{
+<div class="page-header" style="box-shadow: none; border-color: rgb(218, 218, 218);">
+    <div class="page-head">
+        <h2 class="floatL">
+            Payment Transaction Report
+        </h2>
+    </div>
+    
+</div>
+<div class="">
+    <table id="tblDaterange" style="width:90%;">
+        <tr>
+            <td class="labelName">
+                Pick a product:
+            </td>
+            <td class="fieldName">
+                @Html.DropDownList("Products", new SelectList(spanProducts, "ProductId", "ProductName"))
+            </td>
+            <td class="labelName">
+                Payment Processor Type:
+            </td>
+            <td class="fieldName">
+                @Html.DropDownList("SpanPaymentProcessors", new SelectList(spanPaymentProcessors, "PaymentProcessorId", "PaymentProcessorName"), "All", new { })
+            </td>
+            <td class="labelName">
+                Payment Status:
+            </td>
+            <td class="fieldName">
+                @Html.DropDownList("TransactionType", lstItems, new { })
+            </td>
+            <td class="labelName">
+                From Date:
+            </td>
+            <td class="fieldName">
+                @Html.TextBox("BeginDate", null, new { id = "BeginDate", name = "BeginDate", @onchange = "ValidateFromDate();", @placeholder = "mm/dd/yyyy", @class = "NFollowUpDateTime" })
+            </td>
+
+            <td class="labelName">
+                To Date:
+            </td>
+            <td class="fieldName">
+                @Html.TextBox("EndDate", null, new { id = "EndDate", name = "EndDate", @onchange = "ValidateToDate();", @placeholder = "mm/dd/yyyy", @class = "NFollowUpDateTime" })
+            </td>
+            <td class="mLeft10  headerBtn">
+                <a href="javascript:void(0);" onclick="GetRecords();" class="mLeft10 floatR viewBtn viewBtn_fw" title="Get Records">Get Records</a>
+            </td>
+        </tr>
+
+    </table>
+</div>
+
+}
+<div class="spacer15"></div>
+<div class="dashWidget report2290">
+    <div id="LoadData" class="taC" style="display:none;">
+    </div>
+</div>
+<script type="text/javascript">
+    var _fromdate = '@(ViewData["BeginDate"] != null && !string.IsNullOrWhiteSpace(ViewData["BeginDate"].ToString()) ? ViewData["BeginDate"] : "")';
+    var _todate = '@(ViewData["EndDate"] != null && !string.IsNullOrWhiteSpace(ViewData["EndDate"].ToString()) ? ViewData["EndDate"] : "")';
+    var _productName = '@(ViewData["ProductName"] != null && !string.IsNullOrWhiteSpace(ViewData["ProductName"].ToString()) ? ViewData["ProductName"] : "")';
+    var _transactionType = '@(ViewData["TransactionType"] != null && !string.IsNullOrWhiteSpace(ViewData["TransactionType"].ToString()) ? ViewData["TransactionType"] : "")';
+    var _paymentProcessors = '@(ViewData["PaymentProcessors"] != null && !string.IsNullOrWhiteSpace(ViewData["PaymentProcessors"].ToString()) ? ViewData["PaymentProcessors"] : "")';
+    $(function () {
+        //For selected product again select for Ticket -4581
+        if (_productName != '') {
+            $("#Products").val(_productName);
+        }
+        if (_fromdate != '') {
+            $("#BeginDate").val(_fromdate);
+        }
+        if (_todate != '') {
+            $("#EndDate").val(_todate);
+        }
+        if (_transactionType != '') {
+            $("#TransactionType").val(_transactionType);
+        }
+        if (_paymentProcessors != '') {
+            $("#SpanPaymentProcessors").val(_paymentProcessors);
+        }
+        $("#ReportMenulst").addClass('active');
+        $('#begindate').mask('99/99/9999');
+        $('#enddate').mask('99/99/9999');
+        jQuery.validator.addMethod("CheckDate", function (value, element) {
+            var _FromDate = new Date($('#begindate').val());
+            var _ToDate = new Date($('#txtToDate').val());
+            if (_FromDate <= _ToDate) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+        var form = $('#Filterform').get(0);
+        $.removeData(form, 'validator');
+        $("#Filterform").validate({
+            rules: {
+                begindate: {
+                    required: true
+                },
+                txtToDate: {
+                    required: true,
+                    CheckDate: true
+                }
+            },
+            messages: {
+                begindate: {
+                    required: "From Date Should Not Be Empty"
+                },
+                txtToDate: {
+                    required: "To Date Should Not Be Empty",
+                    CheckDate: "End date should be greater than start date."
+                }
+            }
+        });
+        $('#BeginDate').datepicker({
+            changeYear: true,
+            minDate: new Date(2009, 1 - 1, 1),
+            maxDate: '0',
+            changeYear: true,
+            changeMonth: true,
+            onSelect: function (selected) {
+                $('#EndDate').datepicker("option", "minDate", selected)
+            }
+        });
+
+        $('#EndDate').datepicker({
+            changeYear: true,
+            maxDate: '0',
+            changeYear: true,
+            changeMonth: true,
+            onSelect: function (selected) {
+                $('#BeginDate').datepicker("option", "maxDate", selected)
+            }
+        });
+        $("#BeginDate").val(_fromdate);
+        $("#EndDate").val(_todate);
+        GetRecords();
+    });
+
+    function ValidateToDate() {
+        $("#EndDate").valid();
+    }
+
+    function ValidateFromDate() {
+        $("#BeginDate").valid();
+    }
+    function GetRecords() {
+        var fromDate = $('#BeginDate').val();
+        var toDate = $('#EndDate').val();
+        var ddlValue = $('#Products').val();
+        var tranType = $("#TransactionType").val();
+        var value = $('#SpanPaymentProcessors').val();
+        if (value == "") {
+            var value = 0;
+}
+        if ($('#Filterform').valid()) {
+            $('#LoadData').html('<div id="loading" style="z-index: 10;" class="taC"><img src = "/Content/Images/loading.gif"/></div>');
+            $('#LoadData').show();
+            $('#LoadData').load("/Admin/_TransactionReport/?id=" + ddlValue + "&id1=" + value + "&id2=" + fromDate + "&id3=" + toDate + "&transactionType=" + tranType);
+        }
+    }
+</script>
+@section ScriptStyleContent {
+    <link href="@Url.Content("~/Content/mainSite.css")" rel="stylesheet" type="text/css" />
+}

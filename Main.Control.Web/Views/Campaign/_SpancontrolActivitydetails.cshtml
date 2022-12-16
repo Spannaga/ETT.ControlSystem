@@ -1,0 +1,170 @@
+﻿@using Main.Control.Core.Models
+@model Main.Control.Core.Models.Notes
+@using Main.Control.Web.Utilities
+@if (Model != null)
+{
+    <div class="selectionBg">
+        @if (Model != null && Model.commentsList != null)
+        {
+            <div class="table-responsive">
+                <table style="width: 100%" class="table table-bordered table_design" id="Spancontrolactivitylist">
+                    <thead>
+                        <tr>
+                            <th class="dash_table_head">
+                                Info
+                            </th>
+                            <th class="dash_table_head">
+                                Date
+                            </th>
+                            <th class="dash_table_head">
+                                What
+                            </th>
+                            <th class="dash_table_head">
+                                FollowUp Date
+                            </th>
+                            <th class="dash_table_head">
+                                Status
+                            </th>
+                            <th class="dash_table_head">
+                                Assigned To
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var spancontrolcomments in Model.commentsList)
+                        {
+                            string precurrentDate = (spancontrolcomments.Contactedon != DateTime.MinValue && spancontrolcomments.Contactedon != null ? spancontrolcomments.Contactedon.ToString() : "-");
+                            string prefollowDate = (spancontrolcomments.FollowUpDate != DateTime.MinValue && spancontrolcomments.FollowUpDate != null ? Utility.GetDateTime(spancontrolcomments.FollowUpDate).ToShortDateString() : "-");
+                            string prefollowtime = (spancontrolcomments.FollowUpTime != null ? Utility.GetDateTime(spancontrolcomments.FollowUpTime).ToShortTimeString() : "");
+                            string prefollowDatetime = prefollowDate + " " + prefollowtime;
+                            <tr id="sptr_@spancontrolcomments.UserProfileId">
+                                <td>
+                                    @if (spancontrolcomments.UserProfileCommentsList != null && spancontrolcomments.UserProfileCommentsList.Any())
+                                    {
+                                        <a style="cursor:pointer" class="business_drop" onclick="showspancontrolComments(@spancontrolcomments.UserProfileId)">
+                                            <i id="spicon_@spancontrolcomments.UserProfileId" onclick="" class="fa BaseDrop fa-chevron-circle-up"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td class="noWrap" style="width: 20%;">@precurrentDate</td>
+                                <td>
+                                    <span>@Html.Raw(!string.IsNullOrWhiteSpace(spancontrolcomments.Subject) ? spancontrolcomments.Subject : "-")</span>
+                                </td>
+                                <td style="width: 20%;">@prefollowDate</td>
+                                <td>@(spancontrolcomments.Status != null ? spancontrolcomments.Status.ToString() : "-")</td>
+                                <td>
+                                    @(spancontrolcomments.AdminUserName != null ? spancontrolcomments.AdminUserName.ToString() : "-")
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            if (Model != null && Model.commentsList != null && Model.commentsList.Count > 0)
+            {
+                foreach (var assigned in Model.commentsList)
+                {
+                    if (assigned != null)
+                    {
+                        var i = 1;
+                        var j = assigned.UserProfileCommentsList.Count;
+                        <div id="spdiv_@assigned.UserProfileId" style="display:none" class="collapseborder">
+                            <table class="collapseborder" id="tbl_">
+
+                                @foreach (var items in assigned.UserProfileCommentsList)
+                                {
+                                    if (i == j)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="spacer10"></div>
+                                                    @if (!string.IsNullOrWhiteSpace(items.Comments))
+                                                    {
+                                                        <div class="col-md-12">
+                                                            <div class="labelText pBot5">Comments: </div>
+                                                            <div class="spcmt_text">@items.Comments</div>
+                                                        </div>
+                                                    }
+                                                    <div class="clearfix"></div>
+                                                    <div class="spacer10"></div>
+                                                    <div class="col-md-6">
+                                                        <span class="labelText">
+                                                            <span><b style="color: #0f43a0;">Created on</b><i class="fa fa-calendar mLeft10"></i> @items.CreateTimeStamp<b style="color: #0f43a0;"> by </b>@items.AdminUserName<br /></span>
+                                                        </span>
+
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="spacer10"></div>
+                                                    @if (!string.IsNullOrWhiteSpace(items.Comments))
+                                                    {
+                                                        <div class="col-md-12">
+                                                            <div class="labelText pBot5">Comments: </div>
+                                                            <div class="spcmt_text">@items.Comments</div>
+                                                        </div>
+                                                    }
+                                                    <div class="clearfix"></div>
+                                                    <div class="spacer10"></div>
+                                                    <div class="col-md-6">
+                                                        <span class="labelText">
+                                                            <span><b style="color: #0f43a0;">Updated on</b><i class="fa fa-calendar mLeft10"></i> @items.CreateTimeStamp<b style="color: #0f43a0;"> by </b>@items.AdminUserName<br /></span>
+                                                        </span>
+
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                    i++;
+                                }
+                            </table>
+                        </div>
+                    }
+                }
+            }
+        }
+    </div>
+    <script lang="javascript" type="text/javascript">
+        var sptable;
+        $(function () {
+            sptable = $('#Spancontrolactivitylist').DataTable(
+               {
+                   "iDisplayLength": 10
+               });
+
+        });
+        function showspancontrolComments(id) {
+            debugger
+            var trId = "#sptr_" + id
+            var tr = $(trId);
+            var row = sptable.row(tr);
+            var iconTag = "#ispcon_" + id;
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+                $(iconTag).removeClass('fa-chevron-circle-down').addClass('fa-chevron-circle-up')
+            }
+            else {
+                // Open this row
+                var id = "#spdiv_" + id.toString()
+                if ($(id).html() != null && $(id).html() != undefined) {
+                    row.child($(id).html()).show();
+                    tr.addClass('shown');
+                    $(iconTag).removeClass('fa-chevron-circle-up').addClass('fa-chevron-circle-down')
+                    $(".collapseborder").parents('td').css("padding", "0px 2px 0 0");
+                }
+            }
+        }
+    </script>
+}

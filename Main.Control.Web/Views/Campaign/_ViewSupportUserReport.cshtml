@@ -1,0 +1,1102 @@
+﻿@model Main.Control.Core.Models.CampaignDetails
+@using Main.Control.Web.Utilities
+@using Main.Control.Core.Models
+@{
+    bool isLive = Utility.GetBool(Utility.GetAppSettings("IsLive"));
+    List<AdminUser> adminSupportUsersList = new List<AdminUser>();
+    int phoneCnt = 0, emailCnt = 0, followupCnt = 0;
+    if (ViewBag.SupportUsersList != null && isLive)
+    {
+        adminSupportUsersList = (List<AdminUser>)ViewBag.SupportUsersList;
+        adminSupportUsersList = adminSupportUsersList.Where(x => !string.IsNullOrWhiteSpace(x.AdminLocation) && x.AdminLocation == Location.USA.ToString()).ToList();
+    }
+    else if (ViewBag.SupportUsersList != null && !isLive)
+    {
+        adminSupportUsersList = (List<AdminUser>)ViewBag.SupportUsersList;
+    }
+    int pendingTask = 0;
+    long baseSupportUserId = 0;
+    if (Model != null && Model.LeadCommunicationLst != null && Model.LeadCommunicationLst.Any())
+    {
+        var list = (from a in Model.LeadCommunicationLst group a by a.CampaignAssignDetailId into ad select new { ad }).ToList();
+        phoneCnt = list.Sum(a => a.ad.Where(b => b.MethodeofContract == "Phone" || b.MethodeofContract == "CallBack" || b.MethodeofContract == "InvoiceSent" || b.MethodeofContract == "LeftVM" || b.MethodeofContract == "NotInterested" || b.MethodeofContract == "DoNotContact").Count());
+        emailCnt = list.Sum(a => a.ad.Where(b => b.MethodeofContract == "Mail").Count());
+        followupCnt = list.Sum(a => a.ad.Where(b => b.IsFollowRequired).Count());
+    }
+    bool isCampaingSuspendedOrExpired = false;
+    if (Utility.GetBool(ViewData["IsCampaignExpired"]) || (Model != null && Model.IsSuspended))
+    {
+        isCampaingSuspendedOrExpired = true;
+    }
+}
+
+
+<style type="text/css">
+    .btn-group, .btn-group-vertical {
+        width: 300px;
+    }
+
+    .multiDrop .dropdown dt a:focus {
+        border-color: #000;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(0, 0, 0, 0.3);
+        outline: 0 none;
+    }
+
+    .multiDrop li {
+        padding: 4px 5px;
+    }
+
+        .multiDrop li.multiselect-filter:hover, .multiDrop li.multiselect-filter:focus {
+            background: none;
+            color: #000;
+        }
+
+        .multiDrop li:hover, .multiDrop li:focus {
+            background: #1C5BB1;
+            color: #fff;
+        }
+
+    .multiDrop input[type="radio"], .multiDrop input[type="checkbox"] {
+        margin: 2px 4px 0 4px;
+        vertical-align: top;
+        cursor: pointer;
+    }
+
+    .multiDrop .dropdown {
+        position: absolute;
+        transform: translateY(-50%);
+        width: 100%;
+        z-index: 99 !important;
+    }
+
+
+        .multiDrop .dropdown dd,
+        .multiDrop .dropdown dt {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .multiDrop .dropdown ul {
+            margin: -1px 0 0 0;
+        }
+
+        .multiDrop .dropdown dd {
+            position: relative;
+        }
+
+        .multiDrop .dropdown a,
+        .multiDrop .dropdown a:visited {
+            color: #fff;
+            text-decoration: none;
+            outline: none;
+            font-size: 12px;
+        }
+
+        .multiDrop .dropdown dt a {
+            background-color: #fff;
+            padding: 10px 20px 7px 10px;
+            min-height: 22px;
+            line-height: 14px;
+            overflow: hidden;
+            border: 0;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            width: 300px;
+            display: block;
+            color: #000;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 400;
+            position: relative;
+        }
+
+            .multiDrop .dropdown dt a:before {
+                content: "\f107";
+                position: absolute;
+                font-family: 'FontAwesome';
+                padding: 10px;
+                right: 0;
+                top: 0;
+                font-weight: bold;
+            }
+
+            .multiDrop .dropdown dt a span,
+            .multiDrop .multiSel span {
+                cursor: pointer;
+                display: inline-block;
+                padding: 0 3px 2px 0;
+                display: inline;
+            }
+
+        .multiDrop .dropdown dd ul {
+            background-color: #fff;
+            color: #000;
+            display: none;
+            left: 0px;
+            padding: 0;
+            position: absolute;
+            top: 2px;
+            width: 300px;
+            list-style: none;
+            height: 100px;
+            overflow: auto;
+            border: 1px solid #ccc;
+            margin-top: -4px;
+        }
+
+    .multiDrop dropdown span.value {
+        display: none;
+    }
+
+    .multiDrop .dropdown dd ul li a {
+        padding: 5px;
+        display: block;
+    }
+
+        .multiDrop .dropdown dd ul li a:hover {
+            background-color: #fff;
+        }
+
+    .labelName + label {
+        margin-bottom: 0;
+    }
+
+    .labelName {
+        width: 300px;
+    }
+</style>
+
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"></button>
+    @*<h4 class="modal-title">Leads from @(Model != null && !string.IsNullOrWhiteSpace(Model.CampaignName) ? Model.CampaignName : string.Empty) - @(Model != null && Model.CampaignSupportUserDetailsList != null ? Model.CampaignSupportUserDetailsList.FirstOrDefault().AdminUserName : string.Empty)</h4>*@
+    <h4 class="modal-title">@(Model != null && !string.IsNullOrWhiteSpace(Model.CampaignName) ? Model.CampaignName : string.Empty) Report - @(Model != null && Model.CampaignSupportUserDetailsList != null ? Model.CampaignSupportUserDetailsList.FirstOrDefault().AdminUserName : string.Empty)</h4>
+</div>
+<div class="modal-body">
+    <div class="codeIcon">
+        <div class="responsive ">
+            <div class="clear"></div>
+            @*<div class="row support_user_details">
+                    <div class="col-md-6"><b>Support Name:</b> <span>@(Model != null && Model.CampaignSupportUserDetailsList != null ? Model.CampaignSupportUserDetailsList.FirstOrDefault().AdminUserName : string.Empty)</span></div>
+                    <div class="col-md-6 taR"><b>Allocated Leads:</b> <span class="value_circle floatR">@(Model != null && Model.CampaignAssignedDetailsList != null ? Model.CampaignAssignedDetailsList.Count : 0)</span></div>
+                </div>
+                <div class="spacer5">
+                </div>*@
+            <div class="clearfix"></div>
+            <div style="overflow: auto;">
+                <table style="width: 100%" class="table table-bordered table_design top_table" id="ReportList">
+                    <thead>
+                        <tr>
+                            <th class="dash_table_head taC">
+                                Phone
+                            </th>
+                            @*<th class="dash_table_head taC">
+                                    Email
+                                </th>*@
+                            <th class="dash_table_head taC">
+                                Follow-up
+                            </th>
+                            <th class="dash_table_head taC">
+                                Pending
+                            </th>
+                            <th class="dash_table_head taC">
+                                Completed
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.CampaignSupportUserDetailsList != null)
+                        {
+                            int index = 0;
+
+                            foreach (var support in Model.CampaignSupportUserDetailsList)
+                            {
+                                if (index == 0)
+                                {
+                                    pendingTask = support.NoOfPending ?? 0;
+                                    baseSupportUserId = support.SupportUserId;
+                                }
+                                <tr class="bold_text">
+                                    <td class="taC">
+                                        <span class="supp_name_txt">
+                                            @(phoneCnt)
+                                        </span>
+                                    </td>
+                                    @*<td class="taC"><span class="supp_name_txt">@(emailCnt) </span></td>*@
+                                    <td class="taC"><span class="supp_name_txt">@(followupCnt) </span></td>
+                                    <td class="taC"><span class="supp_name_txt">@(support.NoOfPending) </span></td>
+                                    <td class="taC"><span class="supp_name_txt">@(support.NoOfCompleted != null ? support.NoOfCompleted : 0)/@(support.NoOfUserAssigned) </span></td>
+                                </tr>
+                                index++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="clearfix"></div>
+            <div>
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="#ReportTab">
+                            @if (Model.CampaignType == CampaignType.LEADS.ToString())
+                            {
+                                <span>Leads</span>
+                            }
+                            else if (Model.CampaignType == CampaignType.CLIENTS.ToString())
+                            {
+                                <span>Clients</span>
+                            }
+                        </a>
+                    </li>
+                    <li id="assginPendingLiTab">
+                        <a data-toggle="tab" href="#AssignPendingTab">
+                            Assign Pending
+                            @if (Model.CampaignType == CampaignType.LEADS.ToString())
+                            {
+                                <span>Leads</span>
+                            }
+                            else if (Model.CampaignType == CampaignType.CLIENTS.ToString())
+                            {
+                                <span>Clients</span>
+                            }
+                        </a>
+                    </li>
+                    @if (Model.CampaignContactedDetailsList != null && Model.CampaignContactedDetailsList.Any())
+                    {
+                        <li class="contactedLiTab">
+                            <a data-toggle="tab" href="#ContactedTab">
+                                Contacted
+                                @if (Model.CampaignType == CampaignType.LEADS.ToString())
+                                {
+                                    <span>Leads</span>
+                                }
+                                else if (Model.CampaignType == CampaignType.CLIENTS.ToString())
+                                {
+                                    <span>Clients</span>
+                                }
+                            </a>
+                        </li>
+                    }
+                    @if (Model.CampaignSkippedDetailsList != null && Model.CampaignSkippedDetailsList.Any())
+                    {
+                        <li class="skippedLiTab">
+                            <a data-toggle="tab" href="#SkippedTab">
+                                Skipped
+                                @if (Model.CampaignType == CampaignType.LEADS.ToString())
+                                {
+                                    <span>Leads</span>
+                                }
+                                else if (Model.CampaignType == CampaignType.CLIENTS.ToString())
+                                {
+                                    <span>Clients</span>
+                                }
+                            </a>
+                        </li>
+                    }
+                </ul>
+                <div id="myTabContent" class="tab-content content_scroll">
+                    <div class="tab-pane fade active in" id="ReportTab">
+                        @if (Model != null && Model.CampaignAssignedDetailsList != null)
+                        {
+                            <div class="table-responsive scroll_table noWrap">
+                                <table style="width: 100%" class="table table-bordered table_design top_table " id="leadReportList">
+                                    <thead class="table_head">
+                                        <tr>
+                                            @*<th class="dash_table_info">
+                                                Info
+                                            </th>*@
+                                            <th class="dash_table_name">
+                                                Name
+                                            </th>
+                                            @*<th class="dash_table_bus">
+                                                Business
+                                            </th>*@
+                                            <th class="dash_table_phone" width="130px">
+                                                Phone
+                                            </th>
+                                            <th class="dash_table_return noWrap" width="130px">
+                                                Return Number
+                                            </th>
+                                            @*<th class="dash_table_mail">
+                                                Email
+                                            </th>*@
+                                            @*<th class="dash_table_add">
+            Address
+        </th>*@
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table_body_1 table_body">
+                                        @foreach (var assigned in Model.CampaignAssignedDetailsList)
+                                        {
+                                            string maskingPhoneNumber = string.Empty;
+                                            string maskingEmailAddress = string.Empty;
+                                            string firstPart = string.Empty;
+                                            int len = 0;
+                                            string lastPart = string.Empty;
+                                            string middlePart = string.Empty;
+                                            string returnNumber = string.Empty;
+
+
+                                            if (!string.IsNullOrWhiteSpace(assigned.PhoneNumber))
+                                            {
+
+                                                if (assigned.PhoneNumber.Length == 13 && assigned.PhoneNumber.Contains("(") && assigned.PhoneNumber.Contains(")"))
+                                                {
+                                                    firstPart = assigned.PhoneNumber.Substring(0, 5);
+                                                    len = assigned.PhoneNumber.Length;
+                                                    lastPart = assigned.PhoneNumber.Substring(len - 3, 3);
+                                                    middlePart = "***-*";
+
+                                                }
+                                                else if (assigned.PhoneNumber.Length == 14 && assigned.PhoneNumber.Contains("(") && assigned.PhoneNumber.Contains(")"))
+                                                {
+                                                    firstPart = assigned.PhoneNumber.Substring(0, 5);
+                                                    len = assigned.PhoneNumber.Length;
+                                                    lastPart = assigned.PhoneNumber.Substring(len - 3, 3);
+                                                    middlePart = " ***-*";
+
+                                                }
+                                                else if (assigned.PhoneNumber.Length == 10)
+                                                {
+                                                    firstPart = assigned.PhoneNumber.Substring(0, 3);
+                                                    len = assigned.PhoneNumber.Length;
+                                                    lastPart = assigned.PhoneNumber.Substring(len - 3, 3);
+
+                                                    //take the middle part (XXXXXXXXX)
+                                                    middlePart = new String('*', 5);
+
+                                                    //take first 6 characters
+                                                }
+                                                if (assigned.PhoneNumber.Length != 13 && assigned.PhoneNumber.Length != 14 && assigned.PhoneNumber.Length != 10)
+                                                {
+                                                    maskingPhoneNumber = assigned.PhoneNumber;
+                                                }
+                                                else
+                                                {
+                                                    maskingPhoneNumber = firstPart + middlePart + lastPart;
+                                                }
+
+
+                                                //take last 4 characters
+                                            }
+
+
+                                            if (!string.IsNullOrWhiteSpace(assigned.EmailAddress))
+                                            {
+                                                String regex = @"(.{2}).+@.+(.{3}(?:\..{2,4}){1,2})";
+                                                String replace = "$1**********@***********$2";
+
+                                                maskingEmailAddress = System.Text.RegularExpressions.Regex.Replace(assigned.EmailAddress, regex, replace);
+                                            }
+
+                                            string assignedLeadCollapse = "assignedLeadCollapse" + assigned.CampaignAssignedDetailsId;
+                                            var count = Model.LeadCommunicationLst.Where(x => x.CampaignAssignDetailId == assigned.CampaignAssignedDetailsId).ToList().Count;
+                                            string disNone = string.Empty;
+                                            if (count == 0)
+                                            {
+                                                disNone = "disnone";
+                                            }
+                                            if(assigned.ReturnNumber > 0)
+                                            {
+                                                returnNumber = assigned.ReturnNumber.ToString();
+                                            }
+                                        <tr id="tr_@assigned.CampaignAssignedDetailsId">
+                                            @*<td class="dash_table_info_td taC">
+                                                @if (Model.LeadCommunicationLst != null && Model.LeadCommunicationLst.Any())
+                                                {
+                                                    <a style="cursor:pointer" class="business_drop @disNone" onclick="showComments(@assigned.CampaignAssignedDetailsId)">
+                                                        <i id="icon_@assigned.CampaignAssignedDetailsId" onclick="" class="fa BaseDrop fa-chevron-circle-up"></i>
+                                                    </a>
+                                                }
+                                            </td>*@
+                                            <td class="dash_table_name_td">@(assigned.Name)</td>
+                                            @*<td class="dash_table_bus_td">@(assigned.BusinessName)</td>*@
+                                            <td class="dash_table_phone_td noWrap">@(maskingPhoneNumber)</td>
+                                            <td class="dash_table_return_td">@(returnNumber)</td>
+                                            @*<td class="dash_table_mail_td">@(maskingEmailAddress)</td>*@
+                                            @*<td class="dash_table_add_td">@(assigned.Address)</td>*@
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            if (Model != null && Model.CampaignAssignedDetailsList != null && Model.CampaignAssignedDetailsList.Count > 0 && Model.LeadCommunicationLst != null && Model.LeadCommunicationLst.Count > 0)
+                            {
+                                foreach (var assigned in Model.CampaignAssignedDetailsList)
+                                {
+                                    var campaignLeadCommunicationLst = Model.LeadCommunicationLst.Where(x => x.CampaignAssignDetailId == assigned.CampaignAssignedDetailsId).ToList();
+                                    if (campaignLeadCommunicationLst != null && campaignLeadCommunicationLst.Count > 0)
+                                    {
+                                        <div id="div_@assigned.CampaignAssignedDetailsId" style="display:none" class="collapseborder">
+                                            <table class="collapseborder" id="tbl_">
+                                                <tr>
+                                                    <td>
+                                                        @if (Utility.GetInt(ViewData["AdminRoleId"]) != (int)AdminRoleType.Team)
+                                                        {
+                                                            <button onclick="AddComments(@assigned.CampaignAssignedDetailsId);" class="btn btn-primary" style="float:right; padding: 3px 10px !important;">Add Comments</button>
+                                                            <div class="clearfix"></div>
+                                                        }
+                                                        @foreach (var item in campaignLeadCommunicationLst)
+                                                        {
+                                                            string[] _comments;
+                                                            <div class="row">
+                                                                <div class="spacer10"></div>
+                                                                <div class="col-md-6">
+                                                                    <span class="labelText">
+                                                                        <span style="text-decoration: underline;">Method of Contact</span>:
+                                                                        @if (!string.IsNullOrWhiteSpace(item.MethodeofContract) && item.MethodeofContract != MethodOfContact.Mail.ToString())
+                                                                        {
+                                                                            //if (item.TypeOfCall == TypeofCall.Spoke.ToString())
+                                                                            //{
+                                                                            <span class="labelvalue"><i class="fa fa-phone"></i> Phone </span>
+                                                                            //}
+                                                                            @*else
+                                                                                {
+                                                                                    <span class="labelvalue"><i class="fa fa-phone"></i> @item.MethodeofContract</span><span class="labelvalue">(Voice Mail)</span>
+                                                                                }*@
+                                                                        }
+                                                                        else if (item.MethodeofContract == MethodOfContact.Mail.ToString())
+                                                                        {
+                                                                            <span class="labelvalue"><i class="fa fa-envelope" aria-hidden="true"></i> Email</span>
+                                                                        }
+
+                                                                    </span>
+                                                                </div>
+
+                                                                <div class="col-md-6">
+                                                                    <span class="labelText">
+                                                                        @if (item.MethodeofContract != MethodOfContact.Mail.ToString())
+                                                                        {
+                                                                            <span>Spoke To: <span class="labelvalue"><i class="fa fa-user"></i> @item.Spoketo</span></span>
+                                                                            @*if (item.TypeOfCall == TypeofCall.Spoke.ToString())
+                                                                                {
+                                                                                    <span>Spoke To: <span class="labelvalue"><i class="fa fa-user"></i> @item.Spoketo</span></span>
+                                                                                }*@
+                                                                        }
+                                                                    </span>
+
+                                                                </div>
+                                                                <div class="clearfix"></div>
+                                                                <div class="spacer10"></div>
+
+                                                                @*@if (!string.IsNullOrWhiteSpace(item.Comments))
+                                                                    {
+                                                                        <div class="col-md-12">
+                                                                            <div class="labelText pBot5">Comments: </div>
+                                                                            <div class="cmt_text">@Html.Raw(item.Comments)</div>
+                                                                        </div>
+                                                                    }*@
+                                                                @if (item != null && !string.IsNullOrWhiteSpace(item.Comments) && item.Comments.Contains('-'))
+                                                                {
+                                                                    _comments = item.Comments.Split('-');
+                                                                    <div class="col-md-12">
+                                                                        <div class="labelText pBot5">Comments: </div>
+                                                                        <div class="cmt_text">
+                                                                            @_comments[0] - <label><b><i>@_comments[1]</i></b></label>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="col-md-12">
+                                                                        <div class="labelText pBot5">Comments: </div>
+                                                                        <div class="cmt_text">
+                                                                            @Html.Raw(item.Comments != null ? (item.Comments) : "-")
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                                <div class="clearfix"></div>
+                                                                <div class="spacer10"></div>
+                                                            </div>
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    }
+
+                                }
+                            }
+
+                        }
+                    </div>
+                    <div class="tab-pane" id="AssignPendingTab">
+                        <div>
+                            <table style="width: 100%" class="table-responsive" id="AssignPendingList">
+                                <tr class="techLeadClass">
+                                    <td class="labelName">
+                                        Total pending leads:
+                                    </td>
+                                    <td class="fieldText">
+                                        <span id="pendingTaskSpan"> @pendingTask</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="spacer15"></td>
+                                </tr>
+                                <tr class="techLeadClass">
+                                    <td class="labelName">
+                                        <label>
+                                            <span class="red">*</span>Assign pending leads to:
+                                        </label>
+                                    </td>
+                                    <td class="headField multiDrop" id="dropdownTd">
+                                        @if (adminSupportUsersList != null && adminSupportUsersList.Count > 0)
+                                        {
+                                            @Html.Hidden("listCheckbox")
+                                            <label for="listCheckbox" class="error" style="display:none" id="listOfChecklabel">Please Select Team</label>
+
+
+                                            <select id="insightList" multiple="multiple">
+                                                @foreach (var suportusers in adminSupportUsersList)
+                                                {
+                                                    <option value="@suportusers.UserId">@suportusers.UserName</option>
+                                                }
+
+                                            </select>
+
+                                        }
+
+                                        <div class="spacer20"></div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="labelName"></td>
+                                    <td>
+                                        <ul id="assignedDetails" class="listBox" style="display:none"></ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="labelName"></td>
+                                    <td class="">
+                                        <button id="btnAssign" class="btn btn_md btn-primary" type="button">
+                                            Assign & Notify
+                                            <i id="spinner" style="display:none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="ContactedTab">
+                        @if (Model != null && Model.CampaignContactedDetailsList != null)
+                        {
+                            <div class="table-responsive scroll_table">
+                                <table style="width: 100%" class="table table-bordered table_design top_table " id="leadContactList">
+                                    <thead class="table_head">
+                                        <tr>
+                                            <th class="dash_table_info">
+                                                Info
+                                            </th>
+                                            <th class="dash_table_bus">
+                                                Business
+                                            </th>
+                                            <th class="dash_table_phone">
+                                                Phone
+                                            </th>
+                                            <th class="dash_table_mail">
+                                                Email
+                                            </th>
+                                            @*<th class="dash_table_add">
+                                                    Address
+                                                </th>*@
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table_body_1 table_body">
+                                        @foreach (var assigned in Model.CampaignContactedDetailsList)
+                                        {
+                                            string maskingPhoneNumber = string.Empty;
+                                            string maskingEmailAddress = string.Empty;
+                                            string firstPart = string.Empty;
+                                            int len = 0;
+                                            string lastPart = string.Empty;
+                                            string middlePart = string.Empty;
+
+
+                                            if (!string.IsNullOrWhiteSpace(assigned.PhoneNumber))
+                                            {
+
+                                                if (assigned.PhoneNumber.Length == 13 && assigned.PhoneNumber.Contains("(") && assigned.PhoneNumber.Contains(")"))
+                                                {
+                                                    firstPart = assigned.PhoneNumber.Substring(0, 5);
+                                                    len = assigned.PhoneNumber.Length;
+                                                    lastPart = assigned.PhoneNumber.Substring(len - 3, 3);
+                                                    middlePart = "***-*";
+
+                                                }
+                                                else if (assigned.PhoneNumber.Length == 14 && assigned.PhoneNumber.Contains("(") && assigned.PhoneNumber.Contains(")"))
+                                                {
+                                                    firstPart = assigned.PhoneNumber.Substring(0, 5);
+                                                    len = assigned.PhoneNumber.Length;
+                                                    lastPart = assigned.PhoneNumber.Substring(len - 3, 3);
+                                                    middlePart = " ***-*";
+
+                                                }
+                                                else if (assigned.PhoneNumber.Length == 10)
+                                                {
+                                                    firstPart = assigned.PhoneNumber.Substring(0, 3);
+                                                    len = assigned.PhoneNumber.Length;
+                                                    lastPart = assigned.PhoneNumber.Substring(len - 3, 3);
+
+                                                    //take the middle part (XXXXXXXXX)
+                                                    middlePart = new String('*', 5);
+
+                                                    //take first 6 characters
+                                                }
+                                                if (assigned.PhoneNumber.Length != 13 && assigned.PhoneNumber.Length != 14 && assigned.PhoneNumber.Length != 10)
+                                                {
+                                                    maskingPhoneNumber = assigned.PhoneNumber;
+                                                }
+                                                else
+                                                {
+                                                    maskingPhoneNumber = firstPart + middlePart + lastPart;
+                                                }
+
+
+                                                //take last 4 characters
+                                            }
+
+
+                                            if (!string.IsNullOrWhiteSpace(assigned.EmailAddress))
+                                            {
+                                                String regex = @"(.{2}).+@.+(.{3}(?:\..{2,4}){1,2})";
+                                                String replace = "$1**********@***********$2";
+
+                                                maskingEmailAddress = System.Text.RegularExpressions.Regex.Replace(assigned.EmailAddress, regex, replace);
+                                            }
+
+                                            string assignedLeadCollapse = "assignedLeadCollapse" + assigned.CampaignAssignedDetailsId;
+                                            var count = Model.LeadCommunicationLst.Where(x => x.CampaignAssignDetailId == assigned.CampaignAssignedDetailsId).ToList().Count;
+                                            string disNone = string.Empty;
+                                            if (count == 0)
+                                            {
+                                                disNone = "disnone";
+                                            }
+                                            <tr id="trcon_@assigned.CampaignAssignedDetailsId">
+                                                <td class="dash_table_info_td taC">
+                                                    @if (Model.LeadCommunicationLst != null && Model.LeadCommunicationLst.Any())
+                                                    {
+                                                        <a style="cursor:pointer" class="business_drop @disNone" onclick="showConactedComments(@assigned.CampaignAssignedDetailsId)">
+                                                            <i id="iconcon_@assigned.CampaignAssignedDetailsId" onclick="" class="fa BaseDrop fa-chevron-circle-up"></i>
+                                                        </a>
+                                                    }
+                                                </td>
+                                                <td class="dash_table_bus_td">@(assigned.BusinessName)</td>
+                                                <td class="dash_table_phone_td noWrap">@(maskingPhoneNumber)</td>
+                                                <td class="dash_table_mail_td">@(maskingEmailAddress)</td>
+                                                @*<td class="dash_table_add_td">@(assigned.Address)</td>*@
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            if (Model != null && Model.CampaignContactedDetailsList != null && Model.CampaignContactedDetailsList.Count > 0 && Model.LeadCommunicationLst != null && Model.LeadCommunicationLst.Count > 0)
+                            {
+                                foreach (var assigned in Model.CampaignContactedDetailsList)
+                                {
+                                    var campaignLeadCommunicationLst = Model.LeadCommunicationLst.Where(x => x.CampaignAssignDetailId == assigned.CampaignAssignedDetailsId).ToList();
+                                    if (campaignLeadCommunicationLst != null && campaignLeadCommunicationLst.Count > 0)
+                                    {
+                                        <div id="divcon_@assigned.CampaignAssignedDetailsId" style="display:none" class="collapseborder">
+                                            <table class="collapseborder" id="tblcon_">
+                                                <tr>
+                                                    <td>
+
+                                                        @foreach (var item in campaignLeadCommunicationLst)
+                                                        {
+                                                            <div class="row">
+                                                                <div class="spacer10"></div>
+                                                                <div class="col-md-6">
+                                                                    <span class="labelText">
+                                                                        <span style="text-decoration: underline;">Method of Contact</span>:
+                                                                        @if (!string.IsNullOrWhiteSpace(item.MethodeofContract) && item.MethodeofContract != MethodOfContact.Mail.ToString())
+                                                                        {
+                                                                            //if (item.TypeOfCall == TypeofCall.Spoke.ToString())
+                                                                            //{
+                                                                            <span class="labelvalue"><i class="fa fa-phone"></i> Phone </span>
+                                                                            //}
+                                                                            //else
+                                                                            //{
+                                                                            //<span class="labelvalue"><i class="fa fa-phone"></i> @item.MethodeofContract</span><span class="labelvalue">(Voice Mail)</span>
+                                                                            //}
+
+                                                                        }
+                                                                        else if (item.MethodeofContract == MethodOfContact.Mail.ToString())
+                                                                        {
+                                                                            <span class="labelvalue"><i class="fa fa-envelope" aria-hidden="true"></i> Email</span>
+                                                                        }
+
+                                                                    </span>
+                                                                </div>
+
+                                                                <div class="col-md-6">
+                                                                    <span class="labelText">
+                                                                        @if (item.MethodeofContract != MethodOfContact.Mail.ToString())
+                                                                        {
+                                                                            //if (item.TypeOfCall == TypeofCall.Spoke.ToString())
+                                                                            //{
+                                                                                <span>Spoke To: <span class="labelvalue"><i class="fa fa-user"></i> @item.Spoketo</span></span>
+                                                                           // }
+                                                                        }
+                                                                    </span>
+
+                                                                </div>
+                                                                <div class="clearfix"></div>
+                                                                <div class="spacer10"></div>
+
+                                                                @if (!string.IsNullOrWhiteSpace(item.Comments))
+                                                                {
+                                                                    <div class="col-md-12">
+                                                                        <div class="labelText pBot5">Comments: </div>
+                                                                        <div class="cmt_text">@item.Comments</div>
+                                                                    </div>
+                                                                }
+
+                                                                <div class="clearfix"></div>
+                                                                <div class="spacer10"></div>
+                                                            </div>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    }
+
+                                }
+                            }
+
+                        }
+                    </div>
+                    <div class="tab-pane" id="SkippedTab">
+                        @if (Model != null && Model.CampaignSkippedDetailsList != null)
+                        {
+                            <div class="table-responsive scroll_table">
+                                <table style="width: 100%" class="table table-bordered table_design top_table" id="leadSkippedListTable">
+                                    <thead class="table_head">
+                                        <tr>
+                                            <th class="dash_table_bus">
+                                                Business
+                                            </th>
+                                            <th class="dash_table_phone">
+                                                Phone
+                                            </th>
+                                            <th class="dash_table_mail">
+                                                Email
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table_body_1 table_body">
+                                        @foreach (var assigned in Model.CampaignSkippedDetailsList)
+                                        {
+                                            string maskingPhoneNumber = string.Empty;
+                                            string maskingEmailAddress = string.Empty;
+                                            string firstPart = string.Empty;
+                                            int len = 0;
+                                            string lastPart = string.Empty;
+                                            string middlePart = string.Empty;
+
+
+                                            if (!string.IsNullOrWhiteSpace(assigned.PhoneNumber))
+                                            {
+
+                                                if (assigned.PhoneNumber.Length == 13 && assigned.PhoneNumber.Contains("(") && assigned.PhoneNumber.Contains(")"))
+                                                {
+                                                    firstPart = assigned.PhoneNumber.Substring(0, 5);
+                                                    len = assigned.PhoneNumber.Length;
+                                                    lastPart = assigned.PhoneNumber.Substring(len - 3, 3);
+                                                    middlePart = "***-*";
+
+                                                }
+                                                else if (assigned.PhoneNumber.Length == 14 && assigned.PhoneNumber.Contains("(") && assigned.PhoneNumber.Contains(")"))
+                                                {
+                                                    firstPart = assigned.PhoneNumber.Substring(0, 5);
+                                                    len = assigned.PhoneNumber.Length;
+                                                    lastPart = assigned.PhoneNumber.Substring(len - 3, 3);
+                                                    middlePart = " ***-*";
+
+                                                }
+                                                else if (assigned.PhoneNumber.Length == 10)
+                                                {
+                                                    firstPart = assigned.PhoneNumber.Substring(0, 3);
+                                                    len = assigned.PhoneNumber.Length;
+                                                    lastPart = assigned.PhoneNumber.Substring(len - 3, 3);
+
+                                                    //take the middle part (XXXXXXXXX)
+                                                    middlePart = new String('*', 5);
+
+                                                    //take first 6 characters
+                                                }
+                                                if (assigned.PhoneNumber.Length != 13 && assigned.PhoneNumber.Length != 14 && assigned.PhoneNumber.Length != 10)
+                                                {
+                                                    maskingPhoneNumber = assigned.PhoneNumber;
+                                                }
+                                                else
+                                                {
+                                                    maskingPhoneNumber = firstPart + middlePart + lastPart;
+                                                }
+
+
+                                                //take last 4 characters
+                                            }
+
+
+                                            if (!string.IsNullOrWhiteSpace(assigned.EmailAddress))
+                                            {
+                                                String regex = @"(.{2}).+@.+(.{3}(?:\..{2,4}){1,2})";
+                                                String replace = "$1**********@***********$2";
+
+                                                maskingEmailAddress = System.Text.RegularExpressions.Regex.Replace(assigned.EmailAddress, regex, replace);
+                                            }
+
+                                        <tr>
+                                            <td class="dash_table_bus_td">@(assigned.BusinessName)</td>
+                                            <td class="dash_table_phone_td noWrap">@(maskingPhoneNumber)</td>
+                                            <td class="dash_table_mail_td">@(maskingEmailAddress)</td>
+                                            @*<td class="dash_table_add_td">@(assigned.Address)</td>*@
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<form id="assignCampaignForm" method="post">
+    @Html.Hidden("hdnSupportUserIds")
+    @Html.Hidden("hdnCampaignDetailId", Model.CampaignDetailsId)
+    @Html.Hidden("hdnTotalPendingSupportCount", pendingTask)
+    @Html.Hidden("hdnBaseSupportUserId", baseSupportUserId)
+</form>
+
+<script type="text/javascript">
+
+    var table;
+    var CampaignDetailsId = 0;
+    var SupportUserId = 0;
+    $(function () {
+        CampaignDetailsId = '@ViewData["compaignId"]';
+        SupportUserId = '@ViewData["supportUserId"]';
+
+        @*if ($("#CampaignStatus").val() == "Suspended" || $("#CampaignStatus").val() == "Expired") {
+            $("#assginPendingLiTab").hide();
+        }
+        else if ('@isCampaingSuspendedOrExpired.ToString().ToLower()' == 'true') {
+            $("#assginPendingLiTab").hide();
+        }*@
+        $('#insightList').multiselect({
+            enableFiltering: true,
+            enableCaseInsensitiveFiltering: true,
+            nonSelectedText: 'Select Team',
+            maxHeight: 260,
+            onChange: function (element, checked) {
+                var assignedLength = $('#insightList option:selected').length;
+                if (assignedLength > 0) {
+                    $('#listOfChecklabel').hide();
+                    $("#assignedDetails").show();
+                    var array = [];
+                    $('#insightList option:selected').each(function () {
+                        array.push($(this).text());
+                    });
+
+                    var totalPendingTask = parseInt($("#pendingTaskSpan").text());
+                    var assignedTotal = parseInt(totalPendingTask) / (array.length);
+                    var totalAssignedDetails = 0;
+                    var differnceCount = 0;
+                    var html = '';
+                    for (var inndex = 0; inndex < array.length; inndex++) {
+                        html += "<ul> <li>" + "<span>" + array[inndex] + "</span>" + "<div class='assignedCampainDetails Count'>" + parseInt(assignedTotal) + "</div>" + "</li></ul>";
+                        totalAssignedDetails += parseInt(assignedTotal);
+                    }
+
+                    differnceCount = totalPendingTask - totalAssignedDetails;
+                    $("#assignedDetails").empty().append(html);
+                    if (differnceCount > 0) {
+                        var assignedIndex = 0;
+                        $(".assignedCampainDetails").each(function () {
+                            if (assignedIndex < differnceCount) {
+                                $(this).text(parseInt($(this).text()) + 1);
+                                assignedIndex++;
+                            }
+                        });
+                    }
+                }
+                else {
+                    $("#assignedDetails").empty();
+                    $("#assignedDetails").hide();
+                    $('#listOfChecklabel').show();
+                }
+            }
+        });
+
+        function HideDataTablePrevAndNext() {
+            $(".dataTables_info").hide();
+            $(".dataTables_paginate.paging_simple_numbers").hide();
+        }
+
+        function ShowDataTablePrevAndNext() {
+            $(".dataTables_info").show();
+            $(".dataTables_paginate.paging_simple_numbers").show();
+        }
+
+        skippedtable = $('#leadSkippedListTable').DataTable(
+      {
+          "bSort": false,
+          "bStateSave": true,
+          "fnDrawCallback": function (row) {
+              if (row.aiDisplay.length == 0) {
+                  HideDataTablePrevAndNext();
+              }
+              else {
+                  ShowDataTablePrevAndNext();
+              }
+          }
+      });
+
+        table = $('#leadReportList').DataTable(
+            {
+                "bSort": false,
+                "bStateSave": true,
+                "fnDrawCallback": function (row) {
+                    if (row.aiDisplay.length == 0) {
+                        HideDataTablePrevAndNext();
+                    }
+                    else {
+                        ShowDataTablePrevAndNext();
+                    }
+                }
+            });
+
+
+
+        conacttable = $('#leadContactList').DataTable(
+         {
+             "bSort": false,
+             "bStateSave": true,
+             "fnDrawCallback": function (row) {
+                 if (row.aiDisplay.length == 0) {
+                     HideDataTablePrevAndNext();
+                 }
+                 else {
+                     ShowDataTablePrevAndNext();
+                 }
+             }
+         });
+
+
+
+
+        $('#btnAssign').click(function () {
+            var selected = [];
+            $('#insightList option:selected').each(function () {
+                selected.push($(this).val());
+            });
+            if (selected.length > 0) {
+                $('#hdnSupportUserIds').val(selected.join(','));
+                var form = $("#assignCampaignForm").serialize();
+                if (form != null) {
+                    $('#spinner').show();
+                    $.post("/Campaign/AssignCampaign/", form, function (data) {
+
+                        if (data) {
+                            $('#spinner').hide();
+                            $('#myModal').modal('hide');
+                            toastr.success("Campaign Assigned Successfully!");
+
+                            $("#campaignTab").load("/Campaign/_CampaignDashboard");
+                            $("#requestTab").load("/Campaign/_CampaignUploadRequest");
+                            $("#supportTab").load("/Campaign/_SupportDashboard");
+
+                        }
+
+                    })
+                }
+            }
+            else {
+                $('#listOfChecklabel').show();
+            }
+
+        })
+
+
+    });
+    function AddComments(campaignAssignedDetailId) {
+        $('#myModal').modal('hide');
+        $.ajax({
+            type: "GET",
+            url: "/Campaign/_AddComments",
+            data: { id: CampaignDetailsId, id2: SupportUserId,id3: campaignAssignedDetailId},
+            success: function (result) {
+                $("#ModelBody").empty();
+                $("#ModelBody").html(result);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-800');
+            },
+        });
+    }
+    function getSelectedValue(id) {
+        return $("#" + id).find("dt a span.value").html();
+    }
+
+    function showComments(id) {
+        //var tr = $('#leadReportList tbody').closest('table tbody').children('tr:first');
+        var trId = "#tr_" + id
+        var tr = $(trId);
+        var row = table.row(tr);
+        var iconTag = "#icon_" + id;
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+            $(iconTag).removeClass('fa-chevron-circle-down').addClass('fa-chevron-circle-up')
+        }
+        else {
+            // Open this row
+            var id = "#div_" + id.toString()
+            if ($(id).html() != null && $(id).html() != undefined) {
+                row.child($(id).html()).show();
+                tr.addClass('shown');
+                $(iconTag).removeClass('fa-chevron-circle-up').addClass('fa-chevron-circle-down')
+                $(".collapseborder").parents('td').css("padding", "0px 2px 0 0");
+            }
+        }
+    }
+
+
+    function showConactedComments(id) {
+        //var tr = $('#leadReportList tbody').closest('table tbody').children('tr:first');
+        var trId = "#trcon_" + id
+        var tr = $(trId);
+        var row = conacttable.row(tr);
+        var iconTag = "#iconcon_" + id;
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+            $(iconTag).removeClass('fa-chevron-circle-down').addClass('fa-chevron-circle-up')
+        }
+        else {
+            // Open this row
+            var id = "#divcon_" + id.toString()
+            if ($(id).html() != null && $(id).html() != undefined) {
+                row.child($(id).html()).show();
+                tr.addClass('shown');
+                $(iconTag).removeClass('fa-chevron-circle-up').addClass('fa-chevron-circle-down')
+                $(".collapseborder").parents('td').css("padding", "0px 2px 0 0");
+            }
+        }
+    }
+
+
+</script>

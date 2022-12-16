@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{794E22E7-01FE-487E-8E28-B1CC4CF880C5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Main.Control.Core</RootNamespace>
+    <AssemblyName>Main.Control.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Caching, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.Caching.7.0.0\lib\netstandard2.0\System.Runtime.Caching.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security.AccessControl, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.AccessControl.6.0.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.ProtectedData, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.ProtectedData.7.0.0\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Permissions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Permissions.7.0.0\lib\netstandard2.0\System.Security.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Principal.Windows, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Infrastructure\CacheBlock.cs" />
+    <Compile Include="Models\AdditionalContacts.cs" />
+    <Compile Include="Models\AdminActivityLog.cs" />
+    <Compile Include="Models\AdminEntityBase.cs" />
+    <Compile Include="Models\AdminNotes.cs" />
+    <Compile Include="Models\AdminRole.cs" />
+    <Compile Include="Models\AdminUser.cs" />
+    <Compile Include="Models\AdminUserRole.cs" />
+    <Compile Include="Models\ApiLogEntry.cs" />
+    <Compile Include="Models\APIResponse.cs" />
+    <Compile Include="Models\BizAdminProjects.cs" />
+    <Compile Include="Models\BusinessDetails.cs" />
+    <Compile Include="Models\CampaignAssignedDetails.cs" />
+    <Compile Include="Models\CampaignDetails.cs" />
+    <Compile Include="Models\CampaignManagerFollowUpDetails.cs" />
+    <Compile Include="Models\CampaignSupportUserDetails.cs" />
+    <Compile Include="Models\ChampaignExcelHeaderDetails.cs" />
+    <Compile Include="Models\ChampaignExcelValueDetails.cs" />
+    <Compile Include="Models\CookieSessionItems.cs" />
+    <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\CreditCardAPI.cs" />
+    <Compile Include="Models\EmailDetailAPI.cs" />
+    <Compile Include="Models\GroupMembers.cs" />
+    <Compile Include="Models\IpAddress.cs" />
+    <Compile Include="Models\JQueryDataTableParamModel.cs" />
+    <Compile Include="Models\LeadCommunication.cs" />
+    <Compile Include="Models\LeadDetails.cs" />
+    <Compile Include="Models\LeadDetailsSearchOption.cs" />
+    <Compile Include="Models\LeadLog.cs" />
+    <Compile Include="Models\LeadLogState.cs" />
+    <Compile Include="Models\LeadStatus.cs" />
+    <Compile Include="Models\MailDetails.cs" />
+    <Compile Include="Models\MobileVerification.cs" />
+    <Compile Include="Models\Notes.cs" />
+    <Compile Include="Models\PaymentProcessor.cs" />
+    <Compile Include="Models\PaymentReconReport.cs" />
+    <Compile Include="Models\PaymentTemplate.cs" />
+    <Compile Include="Models\RecentReturns.cs" />
+    <Compile Include="Models\RequestResponseLogDetails.cs" />
+    <Compile Include="Models\ScActivityLog.cs" />
+    <Compile Include="Models\SPAddress.cs" />
+    <Compile Include="Models\SpancontrolContactGroup.cs" />
+    <Compile Include="Models\SpanLibraryProductDetails.cs" />
+    <Compile Include="Models\SpanProducts.cs" />
+    <Compile Include="Models\SPLeadLog.cs" />
+    <Compile Include="Models\SPModules.cs" />
+    <Compile Include="Models\SPSKU.cs" />
+    <Compile Include="Models\SPSKUType.cs" />
+    <Compile Include="Models\SPUser.cs" />
+    <Compile Include="Models\State.cs" />
+    <Compile Include="Models\StatusCount.cs" />
+    <Compile Include="Models\StripeCredential.cs" />
+    <Compile Include="Models\TransactionReport.cs" />
+    <Compile Include="Models\TransactionReportDetails.cs" />
+    <Compile Include="Models\UserPaymentDetail.cs" />
+    <Compile Include="Models\UserPaymentLog.cs" />
+    <Compile Include="Models\UserPayments.cs" />
+    <Compile Include="Models\UserProfileComments.cs" />
+    <Compile Include="Models\VoidRefundRequest.cs" />
+    <Compile Include="Models\WfRefundRequest.cs" />
+    <Compile Include="Models\WfVoidRefundResponse.cs" />
+    <Compile Include="Models\WfVoidRequest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\IAdminRepository.cs" />
+    <Compile Include="Repositories\IEmailRepository.cs" />
+    <Compile Include="Repositories\ILeadRepository.cs" />
+    <Compile Include="Repositories\ISpanControlRepository.cs" />
+    <Compile Include="Repositories\ITaxCustomerRepository.cs" />
+    <Compile Include="Repositories\ITaxDashboardRepository.cs" />
+    <Compile Include="Repositories\ITaxNotesRepository.cs" />
+    <Compile Include="Services\IAdminService.cs" />
+    <Compile Include="Services\IEmailService.cs" />
+    <Compile Include="Services\ILeadService.cs" />
+    <Compile Include="Services\ILoger.cs" />
+    <Compile Include="Services\ISpanControlService.cs" />
+    <Compile Include="Services\ITaxCustomerService.cs" />
+    <Compile Include="Services\ITaxDashboardService.cs" />
+    <Compile Include="Services\ITaxNotesService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ExternalReferences\AWSSDK.dll" />
+    <Content Include="ExternalReferences\Bitly.dll" />
+    <Content Include="ExternalReferences\BouncyCastle.Crypto.dll" />
+    <Content Include="ExternalReferences\Elmah.dll" />
+    <Content Include="ExternalReferences\Microsoft.Practices.Unity.dll" />
+    <Content Include="ExternalReferences\NLog.dll" />
+    <Content Include="ExternalReferences\Telerik.Web.Mvc.dll" />
+    <Content Include="ExternalReferences\xVal.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

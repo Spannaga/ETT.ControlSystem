@@ -1,0 +1,140 @@
+﻿@using Main.Control.Core.Models
+@using Main.Control.Web.Utilities;
+@model Main.Control.Core.Models.CampaignDetails
+
+
+@{
+    ViewBag.Title = "Campaign Summary";
+    string names = string.Join(", ", Model.SupportAdminUserList.Select(m => m.UserName).ToArray());
+}
+<style>
+    tooltip{
+        top:10px !important;
+    }
+    .listBox {
+        width: 500px;
+    }
+</style>
+<div class="page-header">
+    <div class="page-head">
+        <h2 class="floatL">
+            <span> @ViewBag.Title</span> 
+        </h2>
+        <a class="btn btn-red floatR"  onclick="DeleteCampaign()">Discard and Start Over</a>
+
+    </div>
+</div>
+<div class="clear">
+</div>
+<div class="col-md-12">
+    @using (Html.BeginForm("CampaignSummary", "Campaign", FormMethod.Post, new { id = "CampaignSummary" }))
+{
+    <div class="mainBg">
+        <div class="listPage centerField pos_rel">
+            <div class="taR btn_right"><a class="btn btn-cancel backBtn" data-toggle="tooltip" data-placement="bottom" title="Edit Campaign" onclick="EditCampaign()">Edit</a></div>
+            <div class="">
+                <label class="labelName">Campaign Name:</label>
+                <span>@Model.CampaignName</span>
+            </div>
+            <div class="spacer10"></div>
+            <div class="">
+                <label class="labelName">Goals:</label>
+                <span>@Model.Goals</span>
+            </div>
+            <div class="spacer10"></div>
+            <div class="">
+                <label class="labelName">Created On:</label>
+                <span>@DateTime.Now.ToString("MM/dd/yyyy")</span>
+            </div>
+            <div class="spacer10"></div>
+            <div class="">
+                <label class="labelName">Campaign Period:</label>
+                <span><b>@Utility.GetDateTime(Model.CampaignStartDate).ToString("MM/dd/yyyy")</b> to <b>@Utility.GetDateTime(Model.CampaignEndDate).ToString("MM/dd/yyyy")</b></span>
+            </div>
+            <div class="spacer10"></div>
+            <div class="">
+                <label class="labelName">Campaign Team:</label>
+                <span class="word_break campTeam">@names</span>
+            </div>
+            <div class="spacer10"></div>
+            <div class="">
+                <label class="labelName">Campaign File:</label>
+                <span >@Model.CampaignFileName</span>
+                @if(Model.IsUploadFileAssign)
+                {
+                <a class="btn btn_sm btn-third mLeft5" onclick="downloadCampaignFile()">Download File</a>
+                }
+            </div>
+            <div class="spacer10"></div>
+            <div class="">
+                <label class="labelName">No. of Leads:</label>
+                <span>@Model.NoOfLeads</span>
+            </div>
+            <div class="spacer10"></div>
+            <div class="">
+                <label class="labelName vaT">Assigned To:</label>
+                <ul class="listBox">
+                    @foreach (var supportUser in Model.SupportAdminUserList)
+                    {
+                        <li>
+                            <span>@supportUser.UserName</span>
+                            <div class="Count">@supportUser.TotalAssignedCount</div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+            <div class="spacer15"></div>
+            <div class="taC">
+                <a class="btn btn-primary" id="btnCreateCampaign" onclick="CreateCampaign()">Create Campaign<i id="spinner" style="display:none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></a>
+            </div>
+       
+    </div>
+}
+</div>
+<script>
+    $(function () {
+
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+    function EditCampaign() {
+        window.history.back(1);
+    }
+
+    function DeleteCampaign() {
+        bootbox.dialog({
+            message: "Are you sure you want to discard the Campaign?",
+            title: "Discard Campaign",
+            buttons: {
+                Cancel: {
+                    label: "No",
+                    className: "btn-cancel floatL"
+                },
+                Discarded: {
+                    label: "Yes",
+                    className: "btn-danger",
+                    callback: function () {
+                        location.href = "/Campaign/DeleteCampaignSessionValue";
+                    }
+                },
+
+            },
+            onEscape: function () {
+                $('.bootbox.modal').modal('hide');
+            }
+        });
+
+    }
+
+
+    function CreateCampaign() {
+        $("#btnCreateCampaign").attr("disabled", "disabled");
+        $("#spinner").show();
+        $("#CampaignSummary").submit();
+    }
+
+    function downloadCampaignFile() {
+        location.href = "/Campaign/DownloadCampaingFile";
+    }
+
+</script>

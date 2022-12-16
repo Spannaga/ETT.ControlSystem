@@ -1,0 +1,442 @@
+﻿@model List<Main.Control.Core.Models.AdminUser>
+@using Main.Control.Core.Models
+@using Main.Control.Web.Utilities
+@{
+    ViewBag.Title = "User List";
+    var resetAdminIds = Utility.GetAppSettings("ResetAuthenticatorApp").Split(',');
+    long[] usList = { 49, 370 };
+    List<long> usUserId = usList.ToList();
+    var isLiveAI = Utility.GetBool(Utility.GetAppSettings("IsLive"));
+    var isShowUSUsersOnly = Utility.GetBool(Utility.GetAppSettings("IsShowUSUsersOnly"));
+}
+<div class="page-header">
+    <div class="page-head">
+        <h2 class="floatL">
+            User List
+        </h2>
+        <div class="floatR headerBtn">
+            <a href="javascript:void(0);" onclick="ShowActivityLog();" class="logBtn mRight10" title="Activity Log">Activity Log</a>
+            <a href="javascript:void(0);" onclick="CreateAdminUser();" class="userBtn" title="Create User">Create User</a>
+        </div>
+    </div>
+</div>
+
+<div class="clear">
+</div>
+
+<div class="col-md-12">
+    <div class="mainBg" style="min-height: inherit;">
+        <table class="responsive">
+            <tr class="">
+                <td class="labelName resWidth">
+                    <label>Category:</label>
+
+                </td>
+                <td class="headField">
+                    @Html.DropDownList("CategoryId", ViewData["AdminCategoryList"] as SelectList, "Select Site", new { @tabindex = "1009", id = "AdminCategoryIdId", @class = "textfield", @style = "width: 200px;" })
+                </td>
+                <td class="" id="AdminProjectIdDiv">
+                    <table>
+                        <tr>
+                            <td class="labelName">
+
+                                <label>Product:</label>
+
+                            </td>
+                            <td class="headField">
+                                <select id="AdminProjectId" class="textfield" name="AdminProjectId" onchange="ShowChanges()" style="width: 250px;"></select>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+        </table>
+        <div class="spacer10"></div>
+        <hr />
+        <div class="panel-body">
+            <div class="taC" id="dSuccessMsg">
+            </div>
+            <table class="listGrid" id="adminList">
+
+                <thead>
+                    <tr id="headingRow">
+
+                        <th style="width:25%">
+                            Name
+                        </th>
+                        <th style="width:30%">
+                            Email Address
+                        </th>
+                        <th style="width:5%">
+                            Role
+                        </th>
+                        <th style="width:25%">
+                            Created / Last Updated By
+                        </th>
+
+                        <th class="admin_action">
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count() > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            if (!isShowUSUsersOnly || (isShowUSUsersOnly && item.AdminLocation == Location.USA.ToString() && !(usUserId.Where(uId => uId == item.AdminUserId).Count() > 0)))
+                            {
+                                <tr>
+
+                                    <td>
+                                        @if (item.IsAdmin)
+                                        {
+                                            <img src="~/Content/Images/user.png" />
+                                        }
+                                        @Html.Raw(item.AdminFirstName + " " + item.AdminLastName)
+                                    </td>
+                                    <td>
+                                        <div class="mLeft10">
+                                            <span>@Html.Raw(item.AdminEmailAddress)</span>
+                                            @if (!string.IsNullOrEmpty(item.VerificationCode) && Main.Control.Web.Utilities.Utility.GetBool(Main.Control.Web.Utilities.Utility.GetAppSettings("IsLive")))
+                                            {
+                                                <span class="floatR">
+                                                    <span style="display:none;" class="label_code" id="vcSpan@(item.AdminUserId)"><b>@Html.Raw(item.VerificationCode)</b></span>
+                                                    <a href="javascript:void(0);" title="Show Verification Code" name="Access" class="mLeft10 floatR viewBtn viewBtn_fw" onclick="ViewVerificationCode(@item.AdminUserId);" id="vc@(item.AdminUserId)">Show Code</a>
+                                                </span>
+                                            }
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </td>
+
+                                    <td>
+
+                                        @Html.Raw(item.AdminRoles)
+                                        @*<a href="javascript:void(0);" name="Access" class="viewBtn" onclick="ViewAdminProjectRoles(@item.AdminUserId);" id="a8">View</a>*@
+                                    </td>
+                                    <td style="width:110px">
+                                        @Html.Raw(item.CreatedUserName) /
+                                        @Html.Raw(item.UpdatedUserName)
+                                    </td>
+
+                                    <td class="actionTd">
+                                        <div class="noWrap" style="display:flex;">
+                                            <a href="javascript:void(0);" title="Edit" name="Edit" onclick="EditUser(@item.AdminUserId);" id="a3" class="floatL"><span class="borderCircle blue"><i class="fa fa-pencil"></i></span></a>
+                                            @{ long _tempUserId = Main.Control.Web.Utilities.Utility.GetAdminUserIdFromSession(); }
+                                            <a href="javascript:void(0);" id="VerificationCode@(item.AdminUserId)" title="Update Verification Code Type" name="Update" onclick="UpdateUserVerificationCodeType(@item.AdminUserId, '@item.VerificationCodType');" class="floatL"><span class="borderCircle red"><i id="iVerificationCode@(item.AdminUserId)" class="@(item.VerificationCodType== VerificationCodeType.EMAIL.ToString()? " fa fa-envelope":"fa fa-comment")"></i></span></a>
+                                            @Html.Hidden("hdnAlternateEmailAddress" + item.AdminUserId, item.AlternateAdminEmailAddress)
+                                            <a href="javascript:void(0);" title="Access - @item.AdminUserName" name="Access" onclick="Access(@item.AdminUserId);" id="a3" class="access floatL"><span class="borderCircle gre"><i class="fa fa-user"></i></span></a>
+
+                                            @if (item.AdminRoles != AdminRoleType.Administrator.ToString())
+                                            {
+                                                <span id="spanAdmin@(item.AdminUserId)"><a href="javascript:void(0);" title="Add Administrator" name="Access" onclick="AddAdmin(@item.AdminUserId);" id="a3" class="access floatL"><span class="borderCircle org"><i class="fa fa-user-secret"></i></span></a></span>
+                                            }
+                                            else
+                                            {
+                                                <span id="spanAdmin@(item.AdminUserId)"><a href="javascript:void(0);" title="Remove Admin" name="Access" onclick="RemoveAdmin(@item.AdminUserId);" id="a3" class="access floatL"><span class="borderCircle red"><i class="fa fa-user-secret"></i></span></a></span>
+                                            }
+                                            <a href="javascript:void(0);" title="View Log - @item.AdminUserName" name="Log" onclick="ViewLog(@item.AdminUserId);" id="aLog" class="access floatL"><span class="borderCircle blue"><i class="fa fa-line-chart"></i></span></a>
+
+                                            @if (resetAdminIds != null && resetAdminIds.Any(x => Utility.GetLong(x) == Utility.GetAdminUserIdFromSession()) && item.IsEnabledAuthenticator == true)
+                                            {
+                                                <a href="javascript:void(0);" title="Reset Auth" name="Reset" onclick="ResetAuth(@item.AdminUserId,'@item.AdminUserName');" id="aReset" class="access floatL"><span class="borderCircle blue"><i class="fa fa-undo"></i></span></a>
+                                            }
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5">
+                                No data Available
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+
+            <div class="spacer20">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="clear">
+</div>
+
+
+<script type="text/javascript">
+
+    $(function () {
+        if ('@TempData["SuccessMsg"]' != null && '@TempData["SuccessMsg"]' != "") {
+            toastr.success('@TempData["SuccessMsg"]');
+        }
+        if ('@TempData["Update"]' != null && '@TempData["Update"]' != "") {
+            toastr.success('@TempData["Update"]');
+        }
+
+        $("#ManageUserLink").addClass("active")
+        $("body").addClass("adminIndex")
+        var id = '@ViewData["ProjectType"]';
+        FillProjects(id);
+
+        AdminTable = $('#adminList').dataTable({
+
+            "sPaginationType": "full_numbers",
+            "sDom": 'T<"clear">lfrtip',
+        });
+    });
+
+    $('#AdminCategoryIdId').change(function () {
+        FillProjects();
+    });
+
+
+    function FillProjects(id) {
+        var _adminCatId = $('#AdminCategoryIdId').val()
+        $('#AdminProjectIdDiv').show();
+        if (_adminCatId > 0) {
+            $.getJSON('/Admin/ProjectList/' + $('#AdminCategoryIdId').val(), function (data) {
+                var items = '<option>Select Product</option>';
+                $.each(data, function (i, unassignlist) {
+                    if (id == unassignlist.Value) {
+                        items += "<option selected='selected' value='" + unassignlist.Value + "'>" + unassignlist.Text + "</option>";
+                    }
+                    else {
+                        items += "<option value='" + unassignlist.Value + "'>" + unassignlist.Text + "</option>";
+                    }
+                });
+                $('#AdminProjectId').html(items);
+            });
+        }
+        else {
+            $('#AdminProjectIdDiv').hide();
+        }
+    }
+    function CreateAdminUser() {
+        location.href = "/Admin/CreateUser";
+    }
+
+    function ShowChanges() {
+        _ProjectId = $('#AdminProjectId').val();
+        _SiteId = $('#AdminCategoryIdId').val();
+        location.href = "/Admin/Index/" + _ProjectId + "/?id2=" + _SiteId;
+
+    }
+
+    function EditUser(Id) {
+        location.href = "/Admin/CreateUser/" + Id;
+    }
+    function Access(Id) {
+        location.href = "/Admin/CreateProjectRole/" + Id;
+    }
+    function Deleteuser(Id) {
+        AdminTable = $('#adminList').DataTable();
+        bootbox.dialog({
+            message: "Are you sure you want to Delete User?",
+            title: "Confirm Delete?",
+            buttons: {
+                cancel: {
+                    label: "Cancel",
+                    className: "btn-cancel floatL mTop3"
+                },
+                delete: {
+                    label: "Delete",
+                    className: "btn-org",
+                    callback: function () {
+                        $.getJSON("/Admin/DeleteUser/?t=" + new Date(), { aId: Id },
+                       function (data) {
+                           if (data == true) {
+                               AdminTable.row($("#aDelete" + parseInt(Id)).parents('tr')).remove().draw(false);
+                               toastr.success("User deleted successfully");
+                           }
+                           else {
+                               toastr.error("Error while Deleting, Please Try Again.");
+                           }
+                       });
+                    }
+                }
+            }
+        }).find(".modal-dialog").removeClass("edit-modal-dialog");
+    }
+
+    function ViewAdminProjectRoles(Id) {
+        $.ajax({
+            type: 'GET',
+            url: '/Admin/_ViewAdminProjectRoles/' + parseInt(Id) + '?t=' + Math.random(),
+            async: true,
+            success: function (data) {
+                $('#ModelBody').html(data);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-md');
+
+            }
+        });
+    }
+
+    function ViewActivityLog(Id) {
+        parent.$.fn.colorbox({ href: '/Admin/_ViewActivityLog/' + Id, height: "430", width: "850", overlayClose: true, escKey: true, onLoad: function () { $('#cboxClose').hide() }, onComplete: function () { $('#cboxClose').show() }, onClosed: function () { parent.location.reload(); } });
+    }
+
+    function AddAdmin(Id) {
+        bootbox.dialog({
+            message: "Are you sure you want to change this user to admin?",
+            title: "Confirm?",
+            buttons: {
+                cancel: {
+                    label: "No",
+                    className: "btn-cancel floatL mTop3"
+                },
+                delete: {
+                    label: "Yes",
+                    className: "btn-org",
+                    callback: function () {
+                        $.getJSON("/Admin/AddAdmin/?t=" + new Date(), { aId: Id },
+                       function (data) {
+                           if (data == true) {
+                               var iconHtml = '<a href="javascript:void(0);" title="Remove Admin" name="Access" onclick="RemoveAdmin(' + parseInt(Id) + ');" id="a3" class="access floatL"><span class="borderCircle red"><i class="fa fa-user-secret"></i></span></a>'
+                               $("#spanAdmin" + parseInt(Id)).html(iconHtml);
+                               toastr.success("User role changed successfully");
+                           }
+                           else {
+                               toastr.error("Error while Chaning, Please Try Again.");
+                           }
+                       });
+                    }
+                }
+            }
+        }).find(".modal-dialog").removeClass("edit-modal-dialog");
+
+    }
+
+    function RemoveAdmin(Id) {
+        bootbox.dialog({
+            message: "Are you sure you want to remove this user from admin?",
+            title: "Confirm?",
+            buttons: {
+                cancel: {
+                    label: "No",
+                    className: "btn-cancel floatL mTop3"
+                },
+                delete: {
+                    label: "Yes",
+                    className: "btn-org",
+                    callback: function () {
+                        $.getJSON("/Admin/RemoveAdmin/?t=" + new Date(), { aId: Id },
+                       function (data) {
+                           if (data == true) {
+                               var iconHtml = '<a href="javascript:void(0);" title="Add Admin" name="Access" onclick="AddAdmin(' + parseInt(Id) + ');" id="a3" class="access floatL"><span class="borderCircle org"><i class="fa fa-user-secret"></i></span></a>'
+                               $("#spanAdmin" + parseInt(Id)).html(iconHtml);
+                               toastr.success("User role changed successfully");
+                           }
+                           else {
+                               toastr.error("Error while Changing, Please Try Again.");
+                           }
+                       });
+                    }
+                }
+            }
+        }).find(".modal-dialog").removeClass("edit-modal-dialog");
+    }
+
+
+    function ViewLog(id) {
+        $.ajax({
+            type: 'GET',
+            url: '/Admin/_AdminLogs?id=' + parseInt(id) + '&t=' + Math.random(),
+            async: true,
+            success: function (data) {
+                $('#ModelBody').html(data);
+                $("#myModal").modal({ backdrop: 'static', keyboard: true });
+                $('#myModal').modal('show');
+                $('.modal-dialog').addClass('modal-dialog-md');
+
+            }
+        });
+    }
+
+    function ShowActivityLog() {
+        location.href = '/Admin/AdminActivityLog?t=' + Math.random();
+    }
+
+    function UpdateUserVerificationCodeType(Id, VerificationCodeType) {
+        var isAlternateEmail = $("#hdnAlternateEmailAddress" + Id).val() != "" && $("#hdnAlternateEmailAddress" + Id).val() != null && $("#hdnAlternateEmailAddress" + Id).val() != undefined ? true : false;
+        bootbox.dialog({
+            message: isAlternateEmail ? "Are you sure you want to change Verification Code type as " + (VerificationCodeType == 'SMS' ? "EMAIL" : "SMS") : "Please add your Alternate Email Address",
+            title: isAlternateEmail ? "Confirm?" : "Update",
+            buttons: {
+                cancel: {
+                    label: isAlternateEmail ? "No" : "Cancel",
+                    className: "btn-cancel floatL mTop3"
+                },
+                delete: {
+                    label: isAlternateEmail ? "Yes" : "Ok",
+                    className: "btn-org",
+                    callback: function () {
+                        if (isAlternateEmail) {
+                            $.getJSON("/Admin/UpdateUserVerificationCodeType/?t=" + new Date(), { aId: Id },
+        function (data) {
+            if (data == true) {
+                $("#iVerificationCode" + parseInt(Id)).removeClass(VerificationCodeType == 'SMS' ? 'fa-comment' : 'fa-envelope').addClass(VerificationCodeType == 'SMS' ? 'fa-envelope' : 'fa-comment');
+                $("#VerificationCode" + parseInt(Id)).attr('onclick', "UpdateUserVerificationCodeType(" + Id + ",'" + (VerificationCodeType == 'SMS' ? 'EMAIL' : 'SMS') + "')");
+                toastr.success("Verification Code type changed as " + (VerificationCodeType == 'SMS' ? 'EMAIL' : 'SMS'));
+            }
+            else {
+                toastr.error("Error while Changing, Please Try Again.");
+            }
+        });
+                        }
+                        else {
+                            location.href = "/Admin/CreateUser/" + Id;
+                        }
+                    }
+                }
+            }
+        }).find(".modal-dialog").removeClass("edit-modal-dialog");
+    }
+
+    function ViewVerificationCode(aId) {
+        if ($('#vc' + aId).html().indexOf('Show') > -1) {
+            $('#vcSpan' + aId).show();
+            $('#vc' + aId).html("Hide");
+        }
+        else {
+            $('#vc' + aId).html("Show Code");
+            $('#vcSpan' + aId).hide();
+        }
+    }
+    function ResetAuth(id,name) {
+        bootbox.dialog({
+            message: "Are you sure you want to reset Two Factor Authentication for " + name +" ?",
+            title: "Reset Authentication",
+            buttons: {
+                cancel: {
+                    label: "No",
+                    className: "btn-cancel floatL mTop3"
+                },
+                delete: {
+                    label: "Yes",
+                    className: "btn-org",
+                    callback: function () {
+                        $.getJSON("/Admin/ResetAuthentication/?t=" + new Date(), { Id: id },
+                            function (data) {
+                                if (data == true) {
+                                    toastr.success("Two Factor Authentication reset successful");
+                                    location.reload();
+                                }
+                                else {
+                                    toastr.error("Authentication reset unsuccessful");
+                                }
+                            });
+                    }
+                }
+            }
+        }).find(".modal-dialog").removeClass("edit-modal-dialog");
+    }
+
+</script>

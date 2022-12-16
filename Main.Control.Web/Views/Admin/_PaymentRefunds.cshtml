@@ -1,0 +1,113 @@
+﻿@using Main.Control.Core.Models;
+@model List<PaymentRefundLog>
+
+
+
+<div class="panel-body">
+    <div class="taC" id="dSuccessMsg">
+    </div>
+    <div id="adminList_wrapper" class="dataTables_wrapper no-footer">
+        <div class="clear"></div>
+        <table class="table table-bordered pack-table mBot10" id="TransactionTable">
+            <thead>
+                <tr>
+                    <td class="taL">
+                        Payment Processor
+                    </td>
+                    <td class="taL">
+                        Email Address
+                    </td>
+                    <td class="taL">
+                        Charge Back Type
+                    </td>
+                    <td class="taL">
+                        Paid Date
+                    </td>
+                    <td class="taL">
+                        Refund Date
+                    </td>
+                    <td class="taR">
+                        Paid Amount
+                    </td>
+                    <td class="taR">
+                        Refund Amount
+                    </td>
+                    <td>
+                        Transaction Reference Id
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count() > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                <tr>
+                    <td class="taL">
+                        @if (item.PaymentProcessorId == 1)
+                        {
+                            @Html.Raw("Authorize")
+                        }
+                        else if (item.PaymentProcessorId == 2)
+                        {
+                            @Html.Raw("Stripe")
+                        }
+                        else if (item.PaymentProcessorId == 4)
+                        {
+                            @Html.Raw("ACI")
+                        }
+                        else if (item.PaymentProcessorId == 5)
+                        {
+                            @Html.Raw("WELLSFARGO")
+                        }
+                        else
+                        {
+                            @Html.Raw("-")
+                        }
+                    </td>
+                    <td class="taL">
+                        @item.EmailAddress
+
+                    </td>
+                    <td class="taL">
+                        @item.ChargeBackType
+
+                    </td>
+                    <td class="taL">
+                        @(item.PaidDate.ToString("MM/dd/yyyy"))
+                    </td>
+                    <td class="taL">
+                        @(item.VoidRefundDate.ToString("MM/dd/yyyy"))
+                    </td>
+                    <td class="taR">
+                        @(item.PaidAmount.ToString("C2"))
+                    </td>
+                    <td class="taR">
+                        @(item.RefundAmount.ToString("C2"))
+                    </td>
+                    <td class="taR">
+                        @item.TransactionReferenceId
+                    </td>
+
+                </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <label>Total Void Amount: <span class="viewBtn">@(Model.Where(x=>x.ChargeBackType=="VOID").Sum(x => x.RefundAmount).ToString("C2"))</span></label>
+        <label>Total Refund Amount: <span class="viewBtn">@(Model.Where(x => x.ChargeBackType == "REFUND").Sum(x => x.RefundAmount).ToString("C2"))</span></label>
+    </div>
+    <div class="spacer20">
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        $("#TransactionTable").dataTable();
+    });
+</script>

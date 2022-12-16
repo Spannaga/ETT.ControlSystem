@@ -1,0 +1,116 @@
+﻿@model Main.Control.Core.Models.LeadDetails
+<div class="ui-widgets">
+    <div class="ui-widget-title">
+        <h4 class="floatL">
+            Additional Contacts
+        </h4>
+        @if (Model.CampaignAssignedDetailsId > 0)
+        {
+            <a class="btn btn_sm btn-primary floatR" href="javascript:void(0)" onclick="AddAdditionalContacts(@Model.CampaignAssignedDetailsId)">Add Contact<i id="AddContactSpinner" style="display:none;" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></a>
+        }
+        <div class="clear"></div>
+    </div>
+    <div class="ui-widget-contents">
+        <div class="table-responsive">
+            <table class="table table-bordered table_design" id="tblAdditionalContacts">
+                <thead class="table_head">
+                    <tr>
+                        <th class="contact_name">
+                            Name
+                        </th>
+                        <th class="contact_title">
+                            Title
+                        </th>
+                        <th class="contact_mail">
+                            Email
+                        </th>
+                        <th class="contact_phone">
+                            Phone
+                        </th>
+                        <th class="contact_action taC">
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody class="table_body">
+                    @if (Model != null && Model.AdditionalContactsList != null && Model.AdditionalContactsList.Count > 0)
+                    {
+                        foreach (var items in Model.AdditionalContactsList)
+                        {
+                            <tr>
+                                <td class="contact_name">
+                                    @if (!string.IsNullOrWhiteSpace(items.ContactName))
+                                    {
+                                        @Html.Raw(items.ContactName)
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("-")
+                                    }
+                                </td>
+                                <td class="contact_title">
+                                    @if (!string.IsNullOrWhiteSpace(items.ContactTitle))
+                                    {
+                                        @Html.Raw(items.ContactTitle)
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("-")
+                                    }
+                                </td>
+
+                                <td class="contact_mail">
+                                    @if (!string.IsNullOrWhiteSpace(items.ContactEmailAddress))
+                                    {
+                                        <span class="email_over" title="@Html.Raw(items.ContactEmailAddress)" data-toggle="tooltip">
+                                            @Html.Raw(items.ContactEmailAddress)
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("-")
+                                    }
+                                </td>
+
+                                <td class="contact_phone">
+                                    @if (!string.IsNullOrWhiteSpace(items.ContactPhone))
+                                    {
+                                        @Html.Raw(items.ContactPhone)
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("-")
+                                    }
+                                </td>
+
+                                <td class="contact_action taC">
+                                    <a href="javascript:void(0)" onclick="AddAdditionalContacts(@Model.CampaignAssignedDetailsId, @items.AdditionalContactsDetailsId)" data-toggle="tooltip" title="Edit"><i class="fa fa-1x fa-pencil fa_icon blue_icon"></i></a>
+                                    <a href="javascript:void(0)" onclick="DeleteAdditionalContacts(@items.AdditionalContactsDetailsId)" data-toggle="tooltip" title="Delete"><i class="fa fa-1x fa-trash fa_icon red_icon"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        $('#tblAdditionalContacts').dataTable({
+            "iDisplayLength": 10,
+            "language": {
+                "emptyTable": "You haven't added additional contacts yet"
+            },
+            "bSort": false,
+            "bStateSave": false,
+            //"paging": false,
+            //"bFilter": false,
+            "bInfo": false,
+            //"bLengthChange": false
+        });
+    });
+</script>

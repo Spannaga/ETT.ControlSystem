@@ -1,0 +1,346 @@
+﻿@using System.Web.Script.Serialization
+@using Main.Control.Core.Models
+@{
+    bool _adminSkuType = Main.Control.Web.Utilities.Utility.CheckAdminFromSession();
+    var roleType = Main.Control.Web.Utilities.Utility.GetAdminRoleFromSession();
+    var adminEmailAddress = Convert.ToString(Session["AdminEmailAddress"]);
+    bool isPaymentAccessible = false;
+    if (!string.IsNullOrWhiteSpace(adminEmailAddress))
+    {
+        string paymentsAccessEmails = Main.Control.Web.Utilities.Utility.GetAppSettings("PaymentsAccessEmails");
+        if (!string.IsNullOrWhiteSpace(paymentsAccessEmails) && paymentsAccessEmails.ToLower().Contains(adminEmailAddress.ToLower()))
+        {
+            isPaymentAccessible = true;
+        }
+
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewBag.Title</title>
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link href="~/Content/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    @Styles.Render("~/Content/jqueryuiCSS")
+    @Styles.Render("~/Content/DatePickerCSS")
+    @Styles.Render("~/Content/colorboxCSS")
+    @Styles.Render("~/Content/uploadifiveCSS")
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/ButtonStyleCSS")
+    @Styles.Render("~/Content/pluginCSS")
+    @Styles.Render("~/Content/dataTablesCSS")
+    <link href="/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Responsive.css" rel="stylesheet" type="text/css" />
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800' rel='stylesheet' type='text/css' />
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300|Roboto:100,300|Gloria+Hallelujah' rel='stylesheet' type='text/css' />
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/DatePicker")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/CommonJquery")
+    @Scripts.Render("~/bundles/colorboxJs")
+    @Scripts.Render("~/bundles/uploadifiveJs")
+    @Scripts.Render("~/bundles/ExpressACAForms")
+    @Scripts.Render("~/bundles/tmplJs")
+    @Scripts.Render("~/bundles/spinJs")
+    @Scripts.Render("~/bundles/scrollToJs")
+    @Scripts.Render("~/bundles/AccordianJs")
+    @Scripts.Render("~/bundles/ToastrJs")
+    @Scripts.Render("~/bundles/CreditValidJs")
+    @Scripts.Render("~/bundles/inputmask")
+    @Scripts.Render("~/bundles/dataTables")
+
+
+
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript" src="@Url.Content("~/Content/ckeditor/ckeditor.js")"></script>
+    <script src="/Scripts/jquery.creditCardValidator.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=@Main.Control.Web.Utilities.Utility.GetAppSettings("GoogleMapApiKey")"></script>
+    @RenderSection("ScriptStyleContent", required: false)
+
+    <!-- Google Tag Manager -->
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-TH6844P');</script>
+    <!-- End Google Tag Manager -->
+
+</head>
+<body class="sidebar-push HtmlPosition addQtipclass">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TH6844P"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+
+            <div class="navbar-header">
+                <a class="navbar-brand img-responsive nav-brand" href="javascript:void(0)" onclick="GotoDashboard();">
+                    @if (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"] != null
+&& HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToString().ToLower() == "campaign")
+                    {
+                        <img src="~/Content/Images/campaign_menu.png" style="width: 196px;" />
+                    }
+                    else
+                    {
+                        <img src="~/Content/Images/logo-lg.png" />
+                    }
+                </a>
+
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+
+            @if (!Request.FilePath.ToLower().Contains("noaccess"))
+            {
+                <div class="collapse navbar-collapse menuBar mainul" id="navbar">
+                    <ul class="nav navbar-nav navbar-right edit-nav">
+                        <li id="logindisplay">
+                            <dl style="" class="dropdown">
+                                <dt>
+                                    <a id="linkglobal">
+                                        @if (Session != null && Session["AdminUserId"] != null)
+                                        {
+
+                                            <span class="textOverflow">
+                                                @Html.Raw("Hi ") @if (Session != null && Session[Main.Control.Utilities.Infrastructure.SessionItemKey.AdminDisplayName] != null)
+                                                {
+                                                    @Html.Raw(Session[Main.Control.Utilities.Infrastructure.SessionItemKey.AdminDisplayName].ToString() + "!")
+                                                }
+                                                else if (Page.User != null && Page.User.Identity != null)
+                                                {
+                                                    @Html.Raw(Page.User.Identity.Name + "!")
+                                                }
+                                            </span>
+                                            <i class="glyphicon glyphicon-cog"></i>
+
+                                        }
+                                    </a>
+                                </dt>
+                                <dd>
+                                    <ul id="ulglobal" class="list-drop">
+                                        <li class="name">
+
+
+                                            @if (Session != null && Session[Main.Control.Utilities.Infrastructure.SessionItemKey.AdminDisplayName] != null)
+                                            {
+                                                @Html.Raw(Session[Main.Control.Utilities.Infrastructure.SessionItemKey.AdminDisplayName].ToString())
+                                            }
+                                            else if (Page.User != null && Page.User.Identity != null)
+                                            {
+                                                @Html.Raw(Page.User.Identity.Name)
+                                            }
+
+                                        </li>
+                                    </ul>
+                                </dd>
+                            </dl>
+                        </li>
+                        <li class="Signout">
+                            <a href="javascript:void(0);" onclick="Logoff();" class="head-icons signOut">
+                                <span><i class="fa fa-sign-out"></i></span>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right LeftBar" id="sidebar-menu">
+                        <li id="DashboardLink"><a href="javascript:void(0)" id=""><i class="fa fa-sort"></i> Switch Project</a></li>
+                        @if (_adminSkuType && roleType == AdminRoleType.Administrator.ToString())
+                        {
+                            
+                            <li id="ManageUserLink"><a href="/Admin/Index" id=""><i class="fa fa-user"></i> Manage Users</a></li>
+                            <li class="dropdownli dropdown-md" id="ReportMenulst">
+                                <a href="javascript:void(0)">Reports <i class="fa fa-chevron-down" aria-hidden="true"></i></a>
+                                <span class="dropdownli-content">
+                                    <a href="/Admin/PaymentTransactionReport/">Payment Report</a>
+                                    <a href="/Admin/PaymentRefunds/">Refund Report</a>
+                                    <a href="/Admin/PaymentReconcilationReport/">Reconciliation Report</a>
+                                </span>
+                            </li>
+                        }
+                        else if (isPaymentAccessible)
+                        {
+                            <li class="dropdownli dropdown-md" id="ReportMenulst">
+                                <a href="javascript:void(0)">Reports <i class="fa fa-chevron-down" aria-hidden="true"></i></a>
+                                <span class="dropdownli-content">
+                                    <a href="/Admin/PaymentTransactionReport/">Payment Report</a>
+                                    <a href="/Admin/PaymentRefunds/">Refund Report</a>
+                                    <a href="/Admin/PaymentReconcilationReport/">Reconciliation Report</a>
+                                </span>
+                            </li>
+                        }
+                    </ul>
+
+                </div>
+            }
+
+        </div>
+    </nav>
+
+    <div id="main">
+        @RenderBody()
+    </div>
+    <div class="footer">
+
+
+        <p>
+            © @DateTime.Now.Year.ToString()
+            <a href="http://www.spanenterprises.com" target="_blank">Span Enterprises LLC</a> All rights reserved.
+        </p>
+    </div>
+    <p id="back-top">
+        <a href="#top" title="Back to top"><span class="fa fa-angle-up"></span></a>
+    </p>
+    <div class="modal fade edit-modal modalBackground" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content" id="ModelBody">
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="modal fade edit-modal modalBackground" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content" id="ModelBody1">
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="overlay-disabled"></div>
+    <script type="text/javascript" src="~/Scripts/scripts.js"></script>
+</body>
+</html>
+<script type="text/javascript">
+    // hide #back-top first
+    $("#back-top").hide();
+    // fade in #back-top
+    $(function () {
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 100) {
+                $('#back-top').fadeIn();
+            } else {
+                $('#back-top').fadeOut();
+            }
+        });
+        // scroll body to 0px on click
+        $('#back-top a').click(function () {
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+    });
+    //Toggle Line Icon
+    //  document.querySelector("#nav-toggle")
+    //.addEventListener("click", function () {
+    //    this.classList.toggle("active");
+    //});
+    // fade in #back-top
+    $(function () {
+        ApplyPlusMinusStyle();
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 50) {
+                $('.page-header').css({ "box-shadow": "0px 0px 8px rgba(0,0,0,.15)", "border-color": "rgba(0,0,0,.35)" });
+            } else {
+                $('.page-header').css({ "box-shadow": "none", "border-color": "#dadada" });
+            }
+        });
+
+
+
+        $.ajaxSetup({
+            cache: false
+        });
+
+        //$('form').dirtyForms();
+
+        //Automatic tab index
+        var tabindex = 1001;
+        $('#main input, select').each(function () {
+            var $input = $(this);
+
+            $input.attr("tabindex", tabindex);
+            tabindex++;
+        });
+
+        isbrowser_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+        //AmountFormat();
+        $("#DashboardLink").click(function () {
+    debugger;
+
+     var pathName = window.location.pathname.split("/",3);
+    if(pathName[2] == "PaymentTransactionReport"){
+     window.open('_new').location.href = "/Admin/MainMenu";
+    }
+    else{
+            location.href = "/Admin/MainMenu";
+    
+    }
+       
+        });
+        $("#linkglobal").click(function () {
+            // Change the behaviour of onclick states for links within the menu.
+            var toggleId = "#" + this.id.replace(/^link/, "ul");
+            // Hides all other menus depending on JQuery id assigned to them
+            $("#ulglobal").not(toggleId).hide();
+
+            //Only toggles the menu we want since the menu could be showing and we want to hide it.
+            $(toggleId).toggle();
+
+            //Change the css class on the menu header to show the selected class.
+            if ($(toggleId).css("display") == "none") {
+                $(this).removeClass("selected");
+            } else {
+                $(this).addClass("selected");
+            }
+        });
+
+        $(".dropdown dd ul li a").click(function () {
+            //This is the default behaviour for all links within the menus
+            var text = $(this).html();
+            //  $(".dropdown dt a span").html(text);
+            $(".dropdown dd ul").hide();
+        });
+
+        $(document).bind('click', function (e) {
+            // Lets hide the menu when the page is clicked anywhere but the menu.
+            var $clicked = $(e.target);
+            if (!$clicked.parents().hasClass("dropdown")) {
+                $(".dropdown dd ul").hide();
+                $(".dropdown dt a").removeClass("selected");
+
+            }
+        });
+
+
+    });
+
+
+
+    function Logoff() {
+
+
+        top.location.href = "/Admin/SignOut/";
+    }
+
+
+
+
+
+
+</script>
